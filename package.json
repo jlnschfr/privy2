@@ -1,0 +1,25 @@
+{
+  "name": "privy-2",
+  "private": true,
+  "engines": {
+    "node": ">=v18.17.1"
+  },
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "@nuxt/eslint-config": "^0.2.0",
+    "@nuxtjs/color-mode": "^3.3.0",
+    "@nuxtjs/supabase": "^1.1.3",
+    "@nuxtjs/tailwindcss": "^6.8.0",
+    "eslint": "^8.50.0",
+    "nuxt": "^3.7.4",
+    "nuxt-svgo": "^3.5.5",
+    "typescript": "^5.2.2"
+  }
+}
