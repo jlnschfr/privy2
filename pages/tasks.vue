@@ -102,9 +102,9 @@ const fetchTasksFromServerRoute = async () => {
 </script>
 
 <template>
-  <div class="w-full my-[50px]">
-    <h1 class="mb-12 text-6xl font-bold u-text-white">Todo List.</h1>
-    <form class="flex gap-2 my-2" @submit.prevent="addTask">
+  <div class="my-[50px] w-full">
+    <h1 class="u-text-white mb-12 text-6xl font-bold">Todo List.</h1>
+    <form class="my-2 flex gap-2" @submit.prevent="addTask">
       <input
         v-model="newTask"
         :loading="loading"
@@ -124,7 +124,7 @@ const fetchTasksFromServerRoute = async () => {
         <li
           v-for="task of tasks"
           :key="task.id"
-          class="border-b border-gray-200 divide-y divide-gray-200"
+          class="divide-y divide-gray-200 border-b border-gray-200"
         >
           <div class="py-2">
             <div

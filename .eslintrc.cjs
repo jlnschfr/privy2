@@ -1,11 +1,15 @@
 module.exports = {
   root: true,
+  parser: "vue-eslint-parser",
   extends: [
     "@nuxt/eslint-config",
-    "@vue/eslint-config-typescript",
-    "@vue/eslint-config-prettier",
+    "@nuxtjs/eslint-config-typescript",
+    "plugin:prettier/recommended",
   ],
   parserOptions: {
-    ecmaVersion: "latest",
+    parser: "@typescript-eslint/parser",
+  },
+  rules: {
+    "no-console": 0,
   },
 };

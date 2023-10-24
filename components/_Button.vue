@@ -3,13 +3,13 @@
     :type="type"
     :disabled="disabled"
     :class="{
-      'bg-primary-500 text-neutral-600 border-primary-500 dark:border-primary-500 hover:bg-primary-600 dark-hover:bg-primary-600':
+      'dark-hover:bg-primary-600 border-primary-500 bg-primary-500 text-neutral-600 hover:bg-primary-600 dark:border-primary-500':
         primary,
-      'bg-secondary-500 text-neutral-600 border-secondary-500 dark:border-secondary-500 hover:bg-secondary-600 dark-hover:bg-secondary-600':
+      'dark-hover:bg-secondary-600 border-secondary-500 bg-secondary-500 text-neutral-600 hover:bg-secondary-600 dark:border-secondary-500':
         secondary,
-      'text-opacity-50 dark:text-opacity-50 cursor-not-allowed': disabled,
+      'cursor-not-allowed text-opacity-50 dark:text-opacity-50': disabled,
     }"
-    class="bg-transparent hover:bg-neutral-500 dark-hover:bg-neutral-200 text-neutral-200 dark:text-neutral-600 border-neutral-200 dark:border-neutral-400 border block px-2 md:px-4 py-0_5 privy-focus"
+    class="dark-hover:bg-neutral-200 privy-focus block border border-neutral-200 bg-transparent px-2 py-0_5 text-neutral-200 hover:bg-neutral-500 dark:border-neutral-400 dark:text-neutral-600 md:px-4"
     @click="$emit('click')"
   >
     <slot />

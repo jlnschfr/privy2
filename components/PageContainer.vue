@@ -1,6 +1,6 @@
 <template>
-  <div class="max-w-xl min-h-screen px-4 mx-auto sm:px-6 lg:px-8">
-    <div class="min-h-screen -mt-[50px] flex items-center justify-center">
+  <div class="sm:px-6 mx-auto min-h-screen max-w-xl px-4 lg:px-8">
+    <div class="-mt-[50px] flex min-h-screen items-center justify-center">
       <slot />
     </div>
   </div>

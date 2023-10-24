@@ -22,7 +22,7 @@ const logout = async () => {
 <template>
   <div>
     <Title>Nuxt 3 x Supabase</Title>
-    <div class="flex items-center md:justify-between justify-center">
+    <div class="flex items-center justify-center md:justify-between">
       <div class="hidden md:block">
         <button
           label="Source"
