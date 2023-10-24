@@ -1,18 +1,22 @@
 <script setup lang="ts">
-const client = useSupabaseClient()
-const user = useSupabaseUser()
-const colorMode = useColorMode()
+const client = useSupabaseClient();
+const user = useSupabaseUser();
+const colorMode = useColorMode();
 
 const toggleDark = () => {
-  colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
-}
+  colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
+};
 
-const colorModeIcon = computed(() => colorMode.preference === 'dark' ? 'i-heroicons-outline-moon' : 'i-heroicons-outline-sun')
+const colorModeIcon = computed(() =>
+  colorMode.preference === "dark"
+    ? "i-heroicons-outline-moon"
+    : "i-heroicons-outline-sun",
+);
 
 const logout = async () => {
-  await client.auth.signOut()
-  navigateTo('/')
-}
+  await client.auth.signOut();
+  navigateTo("/");
+};
 </script>
 
 <template>
@@ -40,14 +44,10 @@ const logout = async () => {
         </button>
       </div>
       <div class="flex items-center">
-        <button
-          variant="transparent"
-          :icon="colorModeIcon"
-          @click="toggleDark"
-        >
+        <button variant="transparent" :icon="colorModeIcon" @click="toggleDark">
           darkmode
         </button>
-        
+
         <button
           v-if="user"
           class="u-text-white"

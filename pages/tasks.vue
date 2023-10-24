@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { Database } from '~~/types/database.types'
+import { Database } from "~~/types/database.types";
 
-const client = useSupabaseClient<Database>()
-const user = useSupabaseUser()
+const client = useSupabaseClient<Database>();
+const user = useSupabaseUser();
 
-const tasksFromServer = ref()
-const isModalOpen = ref(false)
-const loading = ref(false)
-const newTask = ref('')
+const tasksFromServer = ref();
+const isModalOpen = ref(false);
+const loading = ref(false);
+const newTask = ref("");
 
 // console.log(user.value.id);
 
@@ -24,14 +24,12 @@ const newTask = ref('')
 //   }`
 
 //   const { data: affe } = await useAsyncQuery(query)
-  
 
-//   if (affe.value) {  
+//   if (affe.value) {
 
-//     // log response  
+//     // log response
 //     console.log(affe.value)
 //   }
-
 
 // const { data: test, error } = await client
 //   .from('tasks')
@@ -40,67 +38,73 @@ const newTask = ref('')
 // console.log(test);
 // console.log(error);
 
-const { data: tasks } = await useAsyncData('tasks', async () => {
-  const { data } = await client.from('tasks').select('id, title, completed').eq('user', user.value.id).order('created_at')
+const { data: tasks } = await useAsyncData("tasks", async () => {
+  const { data } = await client
+    .from("tasks")
+    .select("id, title, completed")
+    .eq("user", user.value.id)
+    .order("created_at");
 
-  return data
-})
+  return data;
+});
 
-async function addTask () {
-  if (newTask.value.trim().length === 0) { return }
+async function addTask() {
+  if (newTask.value.trim().length === 0) {
+    return;
+  }
 
-  loading.value = true
+  loading.value = true;
 
   console.log({
-      user: user.value.id,
-      title: newTask.value,
-      completed: false
-    });
-  
+    user: user.value.id,
+    title: newTask.value,
+    completed: false,
+  });
 
-  const { data } = await client.from('tasks')
+  const { data } = await client
+    .from("tasks")
     .upsert({
       user: user.value.id,
       title: newTask.value,
-      completed: false
+      completed: false,
     })
-    .select('id, title, completed')
-    .single()
+    .select("id, title, completed")
+    .single();
 
-    console.log(data);
-    
-  tasks.value.push(data)
-  newTask.value = ''
-  loading.value = false
+  console.log(data);
+
+  tasks.value.push(data);
+  newTask.value = "";
+  loading.value = false;
 }
 
 const completeTask = async (task: Task) => {
-  await client.from('tasks').update({ completed: task.completed }).match({ id: task.id })
-}
+  await client
+    .from("tasks")
+    .update({ completed: task.completed })
+    .match({ id: task.id });
+};
 
 const removeTask = async (task: Task) => {
-  tasks.value = tasks.value.filter(t => t.id !== task.id)
-  await client.from('tasks').delete().match({ id: task.id })
-}
+  tasks.value = tasks.value.filter((t) => t.id !== task.id);
+  await client.from("tasks").delete().match({ id: task.id });
+};
 
 const fetchTasksFromServerRoute = async () => {
-  const { data } = await useFetch('/api/tasks', { headers: useRequestHeaders(['cookie']), key: 'tasks-from-server' })
+  const { data } = await useFetch("/api/tasks", {
+    headers: useRequestHeaders(["cookie"]),
+    key: "tasks-from-server",
+  });
 
-  tasksFromServer.value = data
-  isModalOpen.value = true
-}
-
+  tasksFromServer.value = data;
+  isModalOpen.value = true;
+};
 </script>
 
 <template>
   <div class="w-full my-[50px]">
-    <h1 class="mb-12 text-6xl font-bold u-text-white">
-      Todo List.
-    </h1>
-    <form
-      class="flex gap-2 my-2"
-      @submit.prevent="addTask"
-    >
+    <h1 class="mb-12 text-6xl font-bold u-text-white">Todo List.</h1>
+    <form class="flex gap-2 my-2" @submit.prevent="addTask">
       <input
         v-model="newTask"
         :loading="loading"
@@ -112,18 +116,10 @@ const fetchTasksFromServerRoute = async () => {
         placeholder="Make a coffee"
         autofocus
         autocomplete="off"
-      >
-      <button
-        type="submit"
-        variant="white"
-      >
-        Add
-      </button>
+      />
+      <button type="submit" variant="white">Add</button>
     </form>
-    <div
-      v-if="tasks?.length > 0"
-      body-class="px-6 py-2 overflow-hidden"
-    >
+    <div v-if="tasks?.length > 0" body-class="px-6 py-2 overflow-hidden">
       <ul>
         <li
           v-for="task of tasks"
@@ -132,7 +128,11 @@ const fetchTasksFromServerRoute = async () => {
         >
           <div class="py-2">
             <div
-              :label-class="`block font-medium ${task.completed ? 'line-through u-text-gray-500' : 'u-text-gray-700'}`"
+              :label-class="`block font-medium ${
+                task.completed
+                  ? 'line-through u-text-gray-500'
+                  : 'u-text-gray-700'
+              }`"
               :name="String(task.id)"
               wrapper-class="flex items-center justify-between w-full"
             >
@@ -145,7 +145,7 @@ const fetchTasksFromServerRoute = async () => {
                     :name="String(task.id)"
                     icon-off="heroicons-solid:x"
                     icon-on="heroicons-solid:check"
-                  >
+                  />
                 </div>
                 <button
                   class="ml-3 text-red-600"
@@ -172,13 +172,15 @@ const fetchTasksFromServerRoute = async () => {
           href="https://nuxt.com/docs/guide/directory-structure/server"
           target="_blank"
           class="text-primary-500 underline"
-        >Nuxt Server route</a>
+          >Nuxt Server route</a
+        >
         with the use of the
         <a
           href="https://supabase.nuxtjs.org/usage/services/server-supabase-client"
           target="_blank"
           class="text-primary-500 underline"
-        >serverSupabaseClient</a>:
+          >serverSupabaseClient</a
+        >:
       </h2>
       <pre>
         {{ tasksFromServer }}

@@ -1,17 +1,19 @@
 <script setup lang="ts">
-const user = useSupabaseUser()
+const user = useSupabaseUser();
 
-watch(user, () => {
-  if (user.value) {
-    return navigateTo('/tasks')
-  }
-}, { immediate: true })
+watch(
+  user,
+  () => {
+    if (user.value) {
+      return navigateTo("/tasks");
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
   <div>
-    <p class="u-text-black">
-      Redirecting...
-    </p>
+    <p class="u-text-black">Redirecting...</p>
   </div>
 </template>

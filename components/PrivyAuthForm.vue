@@ -7,7 +7,7 @@
       <SvgoPrivy class="w-5" />
     </header>
 
-    <Button type="submit" class="w-full mt-6">Login with Github</Button>
+    <Button type="submit" class="w-full mt-6"> Login with Github </Button>
   </form>
 </template>
 
