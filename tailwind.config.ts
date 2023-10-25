@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default <Partial<Config>>{
+  darkMode: "class",
   theme: {
     fontFamily: {
       body: ["Nunito", "sans-serif"],
@@ -74,30 +75,5 @@ export default <Partial<Config>>{
         border: "border",
       },
     },
-  },
-  variants: {
-    backgroundColor: [
-      "dark",
-      "dark-hover",
-      "dark-group-hover",
-      "dark-even",
-      "dark-odd",
-      "hover",
-      "responsive",
-    ],
-    borderColor: [
-      "dark",
-      "dark-focus",
-      "dark-focus-within",
-      "hover",
-      "focus",
-      "focus-within",
-      "responsive",
-    ],
-    textOpacity: ["dark", "dark-hover", "dark-active", "hover", "responsive"],
-    textColor: ["dark", "dark-hover", "dark-active", "hover", "responsive"],
-    placeholderColor: ["dark", "hover", "responsive"],
-    opacity: ["group-hover", "focus", "responsive"],
-    margin: ["first", "last"],
   },
 };

@@ -7,14 +7,13 @@
       <SvgoPrivy class="w-5" />
     </header>
 
-    <Button type="submit" class="mt-6 w-full"> Login with Github </Button>
+    <Button type="submit" class="mt-6 w-full">Login with Github</Button>
   </form>
 </template>
 
 <script setup lang="ts">
 const user = useSupabaseUser();
 const { auth } = useSupabaseClient();
-
 const redirectTo = `${useRuntimeConfig().public.baseUrl}/confirm`;
 
 watchEffect(() => {

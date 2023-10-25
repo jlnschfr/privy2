@@ -5,6 +5,9 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "nuxt-svgo",
   ],
+  colorMode: {
+    classSuffix: "",
+  },
   runtimeConfig: {
     public: {
       baseUrl: process.env.BASE_URL || "http://localhost:3000",
