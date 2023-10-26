@@ -35,5 +35,8 @@
     "stylelint-order": "^6.0.3",
     "typescript": "^5.2.2",
     "vue-tsc": "^1.8.20"
+  },
+  "dependencies": {
+    "lodash.debounce": "^4.0.8"
   }
 }

@@ -21,7 +21,7 @@ const logout = async () => {
 
 <template>
   <div>
-    <Title>Nuxt 3 x Supabase</Title>
+    <Title>Privy Notes</Title>
     <div class="flex items-center justify-center md:justify-between">
       <div class="hidden md:block">
         <button

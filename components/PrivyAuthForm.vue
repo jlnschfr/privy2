@@ -18,7 +18,7 @@ const redirectTo = `${useRuntimeConfig().public.baseUrl}/confirm`;
 
 watchEffect(() => {
   if (user.value) {
-    navigateTo("/tasks");
+    navigateTo("/notes");
   }
 });
 
