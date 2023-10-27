@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useGetNote } from "./../../composables/supabase/getNote";
-import { useCreateNote } from "./../../composables/supabase/createNote";
-import { useUpdateNote } from "./../../composables/supabase/updateNote";
-import { useDeleteNote } from "./../../composables/supabase/deleteNote";
+import { useGetNote } from "@/composables/supabase/getNote";
+import { useCreateNote } from "@/composables/supabase/createNote";
+import { useUpdateNote } from "@/composables/supabase/updateNote";
+import { useDeleteNote } from "@/composables/supabase/deleteNote";
 
 const route = useRoute();
 const title: Ref<string> = ref("");

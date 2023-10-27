@@ -1,4 +1,4 @@
-import { Database } from "~~/types/database.types";
+import { Database } from "@/types/database.types";
 
 export async function useDeleteNote(id: string): Promise<Note> {
   const client = useSupabaseClient<Database>();

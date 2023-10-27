@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import debounce from "lodash.debounce";
-import { useTitleHeight } from "./../composables/titleHeight";
+import { useTitleHeight } from "@/composables/titleHeight";
 
 export interface Props {
   modelValue: string;

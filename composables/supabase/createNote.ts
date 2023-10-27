@@ -1,4 +1,4 @@
-import { Database } from "~~/types/database.types";
+import { Database } from "@/types/database.types";
 
 export async function useCreateNote(details: Partial<Note>): Promise<Note> {
   const client = useSupabaseClient<Database>();
