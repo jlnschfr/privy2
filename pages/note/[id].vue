@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import debounce from "lodash.debounce";
 import { useGetNote } from "./../../composables/supabase/getNote";
 import { useCreateNote } from "./../../composables/supabase/createNote";
 import { useUpdateNote } from "./../../composables/supabase/updateNote";
@@ -10,11 +9,11 @@ const title: Ref<string> = ref("");
 const id: Ref<string> = ref(route.params.id as string);
 const isEmpty: ComputedRef<boolean> = computed(() => id.value === "new");
 
-const addNote = debounce(() => {
+function createNote() {
   if (isEmpty.value) {
     useCreateNote({ title: title.value, favorite: false });
   }
-}, 500);
+}
 
 function updateTitle() {
   useUpdateNote(id.value, { title: title.value });
@@ -25,7 +24,7 @@ function deleteNote() {
 }
 
 if (isEmpty.value) {
-  watch(title, addNote);
+  watch(title, createNote);
   // handle also other changes (tabs, tasks, ...)
 } else {
   const note: Ref<Note> = await useGetNote(id.value);

@@ -1,30 +1,29 @@
 <script setup lang="ts">
-defineProps(["modelValue"]);
-defineEmits(["update:modelValue"]);
+import debounce from "lodash.debounce";
+import { useTitleHeight } from "./../composables/titleHeight";
+
+export interface Props {
+  modelValue: string;
+}
+
+defineProps<Props>();
+const emit = defineEmits(["update:modelValue"]);
+
+const textarea: Ref<any> = ref(null);
+const { updateTextareaHeight } = useTitleHeight(textarea);
+
+const handleInput = debounce((e) => {
+  updateTextareaHeight();
+  emit("update:modelValue", (e.target as HTMLTextAreaElement).value);
+}, 500);
 </script>
 
 <template>
   <textarea
+    ref="textarea"
     :value="modelValue"
-    class="privy-focus h-5 resize-none overflow-hidden bg-transparent text-2xl font-bold"
+    class="h-5 resize-none overflow-hidden bg-transparent text-2xl font-bold"
     placeholder="Title"
-    @input="
-      $emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)
-    "
+    @input="handleInput"
   />
 </template>
-
-<!-- <script>
-import TextareaHeightUpdater from "@/mixins/textarea-height-updater.js";
-
-export default {
-  mixins: [TextareaHeightUpdater],
-  props: {
-    value: {
-      type: String,
-      required: false,
-      default: "",
-    },
-  },
-};
-</script> -->
