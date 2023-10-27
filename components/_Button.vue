@@ -1,3 +1,19 @@
+<script setup lang="ts">
+export interface Props {
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  primary?: boolean;
+  secondary?: boolean;
+}
+
+withDefaults(defineProps<Props>(), {
+  type: "button",
+  disabled: false,
+  primary: false,
+  secondary: false,
+});
+</script>
+
 <template>
   <button
     :type="type"
@@ -16,19 +32,3 @@
     <slot />
   </button>
 </template>
-
-<script setup lang="ts">
-export interface Props {
-  type?: "button" | "submit" | "reset";
-  disabled?: boolean;
-  primary?: boolean;
-  secondary?: boolean;
-}
-
-withDefaults(defineProps<Props>(), {
-  type: "button",
-  disabled: false,
-  primary: false,
-  secondary: false,
-});
-</script>
