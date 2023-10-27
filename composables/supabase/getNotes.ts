@@ -7,7 +7,7 @@ export async function useGetNotes(): Promise<Ref<Note[]>> {
   const { data: notes } = await useAsyncData("notes", async () => {
     const { data } = await client
       .from("notes")
-      .select("id, created_at, title, favorite, tags, user_id")
+      .select("id, created_at, edited_at, title, favorite, tags, user_id")
       .match({ user_id: user.value.id })
       .order("created_at");
 

@@ -11,7 +11,9 @@ export async function useUpdateNote(
     .from("notes")
     .update({ ...details })
     .match({ id, user_id: user.value.id })
-    .select("id, created_at, title, positions, favorite, tags, user_id")
+    .select(
+      "id, created_at, edited_at, title, positions, favorite, tags, user_id",
+    )
     .single();
 
   return note;

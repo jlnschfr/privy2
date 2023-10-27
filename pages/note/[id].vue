@@ -17,7 +17,10 @@ function createNote() {
 }
 
 function updateTitle() {
-  useUpdateNote(id.value, { title: title.value });
+  useUpdateNote(id.value, {
+    title: title.value,
+    edited_at: new Date().toString(),
+  });
 }
 
 function deleteNote() {
@@ -26,12 +29,13 @@ function deleteNote() {
 
 if (isEmpty.value) {
   watch(title, createNote);
-  // handle also other changes (tabs, tasks, ...)
+  // handle also other initial changes (tabs, tasks, ...)
 } else {
   const note: Ref<Note> = await useGetNote(id.value);
   title.value = note.value.title;
-  date.value = note.value.created_at;
+  date.value = note.value.edited_at;
   watch(title, updateTitle);
+  // watch other parts
 }
 
 function createMarkdown() {

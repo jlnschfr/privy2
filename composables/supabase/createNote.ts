@@ -11,7 +11,7 @@ export async function useCreateNote(details: Partial<Note>): Promise<Note> {
       ...(details.title && { title: details.title }),
       ...(details.favorite && { favorite: details.favorite }),
     })
-    .select("id, created_at, title, favorite, tags, user_id")
+    .select("id, created_at, edited_at, title, favorite, tags, user_id")
     .single();
 
   await navigateTo({

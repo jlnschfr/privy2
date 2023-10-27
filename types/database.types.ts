@@ -5,6 +5,7 @@ export interface Database {
         Row: {
           id: number;
           created_at?: string;
+          edited_at: string;
           title: string;
           positions?: string;
           favorite: boolean;
@@ -14,6 +15,7 @@ export interface Database {
         Insert: {
           id?: number;
           created_at?: string;
+          edited_at?: string;
           title: string;
           positions?: string;
           favorite: boolean;
@@ -23,6 +25,7 @@ export interface Database {
         Update: {
           id?: number;
           created_at?: string;
+          edited_at?: string;
           title?: string;
           positions?: string;
           favorite?: boolean;

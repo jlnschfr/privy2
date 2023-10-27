@@ -7,7 +7,9 @@ export async function useGetNote(id: string): Promise<Ref<Note>> {
   const { data: note } = await useAsyncData("notes", async () => {
     const { data } = await client
       .from("notes")
-      .select("id, created_at, title, positions, favorite, tags, user_id")
+      .select(
+        "id, created_at, edited_at, title, positions, favorite, tags, user_id",
+      )
       .match({ id, user_id: user.value.id })
       .single();
 
