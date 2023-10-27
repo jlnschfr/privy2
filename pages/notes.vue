@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useGetNotes } from "./../composables/supabase/getNotes";
-const { notes } = await useGetNotes();
+const notes: Ref<Note[]> = await useGetNotes();
 </script>
 
 <template>

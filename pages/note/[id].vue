@@ -1,19 +1,18 @@
-<script setup>
+<script setup lang="ts">
 import debounce from "lodash.debounce";
-import { useGetNote } from "./../composables/supabase/getNote";
-import { useAddNote } from "./../composables/supabase/addNote";
-import { useUpdateNote } from "./../composables/supabase/updateNote";
-import { useDeleteNote } from "./../composables/supabase/deleteNote";
+import { useGetNote } from "./../../composables/supabase/getNote";
+import { useCreateNote } from "./../../composables/supabase/createNote";
+import { useUpdateNote } from "./../../composables/supabase/updateNote";
+import { useDeleteNote } from "./../../composables/supabase/deleteNote";
 
 const route = useRoute();
-
-const title = ref("");
-const id = ref(route.params.id);
-const isEmpty = computed(() => id.value === "new");
+const title: Ref<string> = ref("");
+const id: Ref<string> = ref(route.params.id as string);
+const isEmpty: ComputedRef<boolean> = computed(() => id.value === "new");
 
 const addNote = debounce(() => {
   if (isEmpty.value) {
-    useAddNote({ title: title.value, favorite: false });
+    useCreateNote({ title: title.value, favorite: false });
   }
 }, 500);
 
@@ -29,12 +28,14 @@ if (isEmpty.value) {
   watch(title, addNote);
   // handle also other changes (tabs, tasks, ...)
 } else {
-  const { note } = await useGetNote(id.value);
+  const note: Ref<Note> = await useGetNote(id.value);
   title.value = note.value.title;
   watch(title, updateTitle);
 }
 
-function createMarkdown() {}
+function createMarkdown() {
+  console.log("click");
+}
 
 function createTask() {}
 </script>
@@ -77,3 +78,4 @@ function createTask() {}
     </footer>
   </section>
 </template>
+../../composables/supabase/createNote

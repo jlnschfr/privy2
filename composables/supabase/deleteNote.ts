@@ -1,6 +1,6 @@
 import { Database } from "~~/types/database.types";
 
-export async function useDeleteNote(id: number) {
+export async function useDeleteNote(id: string): Promise<Note> {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
@@ -13,5 +13,5 @@ export async function useDeleteNote(id: number) {
     path: "/notes",
   });
 
-  return { note };
+  return note;
 }

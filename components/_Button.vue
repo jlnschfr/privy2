@@ -12,7 +12,6 @@
       'cursor-not-allowed text-opacity-50 dark:text-opacity-50': disabled,
     }"
     class="block border px-2 py-0_5 transition-colors md:px-4"
-    @click="$emit('click')"
   >
     <slot />
   </button>
@@ -25,8 +24,6 @@ export interface Props {
   primary?: boolean;
   secondary?: boolean;
 }
-
-defineEmits(["click"]);
 
 withDefaults(defineProps<Props>(), {
   type: "button",

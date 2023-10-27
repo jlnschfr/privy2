@@ -1,6 +1,6 @@
 import { Database } from "~~/types/database.types";
 
-export async function useAddNote(details: Note) {
+export async function useCreateNote(details: Partial<Note>): Promise<Note> {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
@@ -18,5 +18,5 @@ export async function useAddNote(details: Note) {
     path: `/note/${note.id}`,
   });
 
-  return { note };
+  return note;
 }

@@ -1,6 +1,6 @@
 import { Database } from "~~/types/database.types";
 
-export async function useGetNotes() {
+export async function useGetNotes(): Promise<Ref<Note[]>> {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
@@ -13,5 +13,5 @@ export async function useGetNotes() {
 
     return data;
   });
-  return { notes };
+  return notes;
 }
