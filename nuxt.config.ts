@@ -5,6 +5,9 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "nuxt-svgo",
   ],
+  typescript: {
+    typeCheck: true,
+  },
   colorMode: {
     classSuffix: "",
   },

@@ -1,0 +1,22 @@
+import { Database } from "~~/types/database.types";
+
+export async function useAddNote(details: Note) {
+  const client = useSupabaseClient<Database>();
+  const user = useSupabaseUser();
+
+  const { data: note } = await client
+    .from("notes")
+    .upsert({
+      user_id: user.value.id,
+      ...(details.title && { title: details.title }),
+      ...(details.favorite && { favorite: details.favorite }),
+    })
+    .select("id, created_at, title, favorite, tags, user_id")
+    .single();
+
+  await navigateTo({
+    path: `/note/${note.id}`,
+  });
+
+  return { note };
+}

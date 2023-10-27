@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useGetNotes } from "./../composables/supabase/getNotes.js";
+import { useGetNotes } from "./../composables/supabase/getNotes";
 const { notes } = await useGetNotes();
 </script>
 

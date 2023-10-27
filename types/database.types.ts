@@ -1,35 +1,59 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json }
-  | Json[];
-
 export interface Database {
   public: {
     Tables: {
-      tasks: {
+      notes: {
         Row: {
-          completed: boolean | null;
-          created_at: string | null;
           id: number;
-          title: string | null;
-          user: string;
+          created_at?: string;
+          title: string;
+          positions?: string;
+          favorite: boolean;
+          tags: string;
+          user_id?: string;
         };
         Insert: {
-          completed?: boolean | null;
-          created_at?: string | null;
           id?: number;
-          title?: string | null;
-          user: string;
+          created_at?: string;
+          title: string;
+          positions?: string;
+          favorite: boolean;
+          tags?: string;
+          user_id: string;
         };
         Update: {
-          completed?: boolean | null;
-          created_at?: string | null;
           id?: number;
-          title?: string | null;
-          user?: string;
+          created_at?: string;
+          title?: string;
+          positions?: string;
+          favorite?: boolean;
+          tags?: string;
+          user_id?: string;
+        };
+      };
+      tasks: {
+        Row: {
+          id: number;
+          created_at: string;
+          title: string;
+          completed: boolean;
+          user_id: string;
+          note_id: string;
+        };
+        Insert: {
+          id?: number;
+          created_at?: string;
+          title?: string;
+          completed?: boolean;
+          user_id: string;
+          note_id?: string;
+        };
+        Update: {
+          id?: number;
+          created_at?: string;
+          completed?: boolean;
+          title?: string;
+          user_id?: string;
+          note_id?: string;
         };
       };
     };
