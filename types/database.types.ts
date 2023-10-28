@@ -3,7 +3,7 @@ export interface Database {
     Tables: {
       notes: {
         Row: {
-          id: number;
+          id: string;
           created_at?: string;
           edited_at: string;
           title: string;
@@ -13,7 +13,7 @@ export interface Database {
           user_id?: string;
         };
         Insert: {
-          id?: number;
+          id?: string;
           created_at?: string;
           edited_at?: string;
           title: string;
@@ -23,7 +23,7 @@ export interface Database {
           user_id: string;
         };
         Update: {
-          id?: number;
+          id?: string;
           created_at?: string;
           edited_at?: string;
           title?: string;

@@ -1,5 +1,5 @@
 declare interface Note {
-  id: number;
+  id: string;
   created_at: string;
   edited_at: string;
   title: string;

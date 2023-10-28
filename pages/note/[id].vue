@@ -1,52 +1,54 @@
 <script setup lang="ts">
-import { useGetNote } from "@/composables/supabase/getNote";
-import { useCreateNote } from "@/composables/supabase/createNote";
-import { useUpdateNote } from "@/composables/supabase/updateNote";
-import { useDeleteNote } from "@/composables/supabase/deleteNote";
+import { useNoteStore } from "@/stores/NoteStore";
 
+const noteStore = useNoteStore();
 const route = useRoute();
 const title: Ref<string> = ref("");
 const date: Ref<string> = ref(new Date().toISOString());
 const id: Ref<string> = ref(route.params.id as string);
 const isEmpty: ComputedRef<boolean> = computed(() => id.value === "new");
 
-function createNote() {
+const note: Ref<Note> = ref();
+
+function addNote() {
   if (isEmpty.value) {
-    useCreateNote({ title: title.value, favorite: false });
+    noteStore.addNote({ title: title.value, favorite: false });
   }
 }
 
-function updateTitle() {
+function updateDate() {
   date.value = new Date().toISOString();
+}
 
-  useUpdateNote(id.value, {
+function updateTitle() {
+  updateDate();
+
+  noteStore.updateNote(id.value, {
     title: title.value,
     edited_at: date.value,
   });
 }
 
 function deleteNote() {
-  useDeleteNote(id.value);
+  noteStore.deleteNote(id.value);
 }
 
+function createMarkdown() {}
+
+function createTask() {}
+
 if (isEmpty.value) {
-  watch(title, createNote);
+  watch(title, addNote);
   // handle also other initial changes (tabs, tasks, ...)
 } else {
-  const note: Ref<Note> = await useGetNote(id.value);
-  title.value = note.value.title;
-  date.value = note.value.edited_at;
-  tags.value = note.value.tags;
+  const note: Note = noteStore.getNote(id.value);
+
+  title.value = note.title;
+  date.value = note.edited_at;
 
   watch(title, updateTitle);
   // watch other parts
 }
-
-function createMarkdown() {
-  console.log("click");
-}
-
-function createTask() {}
 </script>
 
 <template>
