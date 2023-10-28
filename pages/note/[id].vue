@@ -6,7 +6,7 @@ import { useDeleteNote } from "@/composables/supabase/deleteNote";
 
 const route = useRoute();
 const title: Ref<string> = ref("");
-const date: Ref<string> = ref(new Date().toString());
+const date: Ref<string> = ref(new Date().toISOString());
 const id: Ref<string> = ref(route.params.id as string);
 const isEmpty: ComputedRef<boolean> = computed(() => id.value === "new");
 
@@ -17,9 +17,11 @@ function createNote() {
 }
 
 function updateTitle() {
+  date.value = new Date().toISOString();
+
   useUpdateNote(id.value, {
     title: title.value,
-    edited_at: new Date().toString(),
+    edited_at: date.value,
   });
 }
 
@@ -34,6 +36,8 @@ if (isEmpty.value) {
   const note: Ref<Note> = await useGetNote(id.value);
   title.value = note.value.title;
   date.value = note.value.edited_at;
+  tags.value = note.value.tags;
+
   watch(title, updateTitle);
   // watch other parts
 }
@@ -55,7 +59,7 @@ function createTask() {}
       >
         <PrivyDate :date="date" />
         <TitleTextarea v-model="title" class="mr-2 flex-auto" />
-        <!-- <PrivyNoteInteraction :note="note" /> -->
+        <PrivyNoteInteraction :note="note" />
       </header>
 
       <div>
