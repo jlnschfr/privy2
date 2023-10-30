@@ -9,7 +9,7 @@ const route = useRoute();
 const noteStore = useNoteStore();
 const snackbarStore = useSnackbarStore();
 
-const note: ComputedRef<Note> = computed(() => noteStore.getNote(props.noteId));
+const note: ComputedRef<Note> = computed(() => noteStore.get(props.noteId));
 
 function remove() {
   const alreadyTrashed = Boolean(
@@ -17,17 +17,17 @@ function remove() {
   );
 
   if (alreadyTrashed) {
-    noteStore.deleteNote(props.noteId);
+    noteStore.remove(props.noteId);
   } else {
     const tags = [...note.value.tags, { text: "trash" }];
-    noteStore.updateNote(props.noteId, { tags });
+    noteStore.update(props.noteId, { tags });
   }
 
   if (route.name === "note-id") {
     navigateTo("/notes");
   }
 
-  snackbarStore.showSnackbar({
+  snackbarStore.show({
     text: "Item deleted",
     action: "undo",
     callback: () => {
@@ -38,16 +38,16 @@ function remove() {
 
 function undoRemove(note: Note, alreadyTrashed: boolean) {
   if (alreadyTrashed) {
-    noteStore.addNote(note);
+    noteStore.add(note);
   } else {
     const index = note.tags.findIndex((el) => el.text === "Trash");
     note.tags.splice(index, 1);
-    noteStore.updateNote(note.id, note);
+    noteStore.update(note.id, note);
   }
 }
 
 function toggleFav() {
-  noteStore.updateNote(props.noteId, {
+  noteStore.update(props.noteId, {
     favorite: !note.value.favorite,
     edited_at: new Date().toISOString(),
   });

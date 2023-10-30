@@ -19,7 +19,7 @@ watchEffect(() => {
 <template>
   <div class="Task flex items-center">
     <Checkbox v-model="isValid" />
-    <Input
+    <TextInput
       v-model="text"
       :label="false"
       :border="false"

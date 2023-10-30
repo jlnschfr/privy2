@@ -2,7 +2,6 @@
 import { v4 as uuid } from "uuid";
 
 export interface Props {
-  type?: "text" | "checkbox" | "radio";
   disabled?: boolean;
   modelValue: string;
   placeholder?: string;
@@ -11,7 +10,6 @@ export interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  type: "text",
   disabled: false,
   placeholder: "Placeholder",
   border: true,
@@ -44,8 +42,8 @@ const id: ComputedRef<string> = computed(() => uuid());
         'cursor-not-allowed': disabled,
       }"
       :value="modelValue"
-      :type="type"
       :placeholder="placeholder"
+      type="text"
       autocomplete="off"
       @input="
         $emit('update:modelValue', ($event.target as HTMLInputElement).value)

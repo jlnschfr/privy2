@@ -3,12 +3,12 @@ const timeout: Ref<any> = ref();
 const activeElement: Ref<HTMLElement> = ref();
 const button = ref(null);
 
-const sbStore = useSnackbarStore();
-const snackbar: ComputedRef<Snackbar> = computed(() => sbStore.snackbar);
+const snackbarStore = useSnackbarStore();
+const snackbar: ComputedRef<Snackbar> = computed(() => snackbarStore.snackbar);
 const callback: ComputedRef<Function> = computed(() => snackbar.value.callback);
 const text: ComputedRef<string> = computed(() => snackbar.value.text);
 const action: ComputedRef<string> = computed(() => snackbar.value.action);
-const isActive: ComputedRef<boolean> = computed(() => sbStore.snackbarIsActive);
+const isActive: ComputedRef<boolean> = computed(() => snackbarStore.isActive);
 
 watch(isActive, async () => {
   if (isActive.value) {
@@ -21,7 +21,7 @@ watch(isActive, async () => {
     button.value.focus();
 
     timeout.value = setTimeout(() => {
-      sbStore.hideSnackbar();
+      snackbarStore.hide();
     }, 8000);
   } else if (timeout.value) {
     clearTimeout(timeout.value);
@@ -30,7 +30,7 @@ watch(isActive, async () => {
 
 function undo() {
   callback.value();
-  sbStore.hideSnackbar();
+  snackbarStore.hide();
 
   if (activeElement.value) {
     activeElement.value.focus();
@@ -47,7 +47,7 @@ function undo() {
       <p class="flex-auto text-neutral-600">{{ text }}</p>
       <button
         ref="button"
-        class="privy-focus ml-5 font-bold text-secondary-500"
+        class="ml-5 font-bold text-secondary-500"
         @click="undo"
       >
         {{ action }}

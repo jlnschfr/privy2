@@ -9,18 +9,18 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
-  const getNotes = computed(() => {
+  const getAll = computed(() => {
     if (!notes.value.length) return {};
     return notes.value;
   });
 
-  const getNote = (id: string): Note => {
+  const get = (id: string): Note => {
     if (!notes.value.length) return;
     const data = notes.value.find((note) => note.id === id);
     return data;
   };
 
-  const fetchNotes = async () => {
+  const fetchAll = async () => {
     const { data } = await client
       .from("notes")
       .select("id, created_at, edited_at, title, favorite, tags, user_id")
@@ -30,7 +30,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     notes.value = data;
   };
 
-  const addNote = async (details: Partial<Note>) => {
+  const add = async (details: Partial<Note>) => {
     const { data } = await client
       .from("notes")
       .upsert({
@@ -48,7 +48,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     });
   };
 
-  const updateNote = async (id: string, details: Partial<Note>) => {
+  const update = async (id: string, details: Partial<Note>) => {
     const { data } = await client
       .from("notes")
       .update({ ...details })
@@ -63,7 +63,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     );
   };
 
-  const deleteNote = async (id: string) => {
+  const remove = async (id: string) => {
     await client.from("notes").delete().match({ id, user_id: user.value.id });
 
     const index = notes.value.findIndex((note) => note.id === id);
@@ -78,11 +78,11 @@ export const useNoteStore = defineStore("NoteStore", () => {
     notes,
     isSyncing,
     currentTag,
-    getNotes,
-    getNote,
-    fetchNotes,
-    addNote,
-    updateNote,
-    deleteNote,
+    getAll,
+    get,
+    fetchAll,
+    add,
+    update,
+    remove,
   };
 });

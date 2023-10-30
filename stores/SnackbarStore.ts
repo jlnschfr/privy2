@@ -2,25 +2,25 @@ import { defineStore } from "pinia";
 
 export const useSnackbarStore = defineStore("SnackbarStore", () => {
   const snackbar: Ref<Snackbar> = ref();
-  const snackbarIsActive: Ref<boolean> = ref(false);
+  const isActive: Ref<boolean> = ref(false);
 
-  const showSnackbar = (payload: Snackbar) => {
-    snackbarIsActive.value = false;
+  const show = (payload: Snackbar) => {
+    isActive.value = false;
 
     setTimeout(() => {
       snackbar.value = payload;
-      snackbarIsActive.value = true;
+      isActive.value = true;
     }, 100);
   };
 
-  const hideSnackbar = () => {
-    snackbarIsActive.value = false;
+  const hide = () => {
+    isActive.value = false;
   };
 
   return {
     snackbar,
-    snackbarIsActive,
-    showSnackbar,
-    hideSnackbar,
+    isActive,
+    show,
+    hide,
   };
 });

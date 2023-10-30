@@ -15,9 +15,9 @@ const id: Ref<string> = ref(uuid());
   <div>
     <input
       :id="id"
+      :value="modelValue"
       class="visuallyhidden"
       type="checkbox"
-      :value="modelValue"
       @input="
         $emit('update:modelValue', ($event.target as HTMLInputElement).checked)
       "

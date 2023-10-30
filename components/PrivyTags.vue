@@ -6,13 +6,13 @@ const props = defineProps<Props>();
 const noteStore = useNoteStore();
 
 const tags: ComputedRef<Tag[]> = computed(
-  () => noteStore.getNote(props.noteId)?.tags,
+  () => noteStore.get(props.noteId)?.tags,
 );
 const input: Ref<string> = ref("");
 
 function addTag() {
   if (input.value && !tags.value.find((tag) => tag.text === input.value)) {
-    noteStore.updateNote(props.noteId, {
+    noteStore.update(props.noteId, {
       tags: [...tags.value, { text: input.value }],
     });
     input.value = "";
@@ -24,7 +24,7 @@ function removeTag(text: string) {
   if (index >= 0) {
     const newTags = [...tags.value];
     newTags.splice(index, 1);
-    noteStore.updateNote(props.noteId, {
+    noteStore.update(props.noteId, {
       tags: newTags,
     });
   }
@@ -49,7 +49,7 @@ function removeTag(text: string) {
         </button>
       </li>
     </ul>
-    <Input
+    <TextInput
       v-model="input"
       class="mt-1"
       placeholder="Your Tag"

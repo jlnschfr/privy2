@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const noteStore = useNoteStore();
-await noteStore.fetchNotes();
+await noteStore.fetchAll();
 </script>
 
 <template>
