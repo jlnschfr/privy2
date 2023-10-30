@@ -1,6 +1,10 @@
 <script setup lang="ts">
+const user = useSupabaseUser();
 const noteStore = useNoteStore();
-await noteStore.fetchAll();
+
+if (user.value) {
+  await noteStore.fetchAll();
+}
 </script>
 
 <template>

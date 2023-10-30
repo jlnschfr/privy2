@@ -1,36 +1,32 @@
 <script setup lang="ts">
 import DOMPurify from "isomorphic-dompurify";
 import { marked } from "marked";
-import debounce from "lodash.debounce";
 import { useTextareaHeight } from "@/composables/textareaHeight";
 
 export interface Props {
-  id: string;
-  data?: Markdown;
+  modelValue: Markdown;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  data: () => {
-    return { text: "" };
-  },
-});
+const props = defineProps<Props>();
+const emit = defineEmits(["update:modelValue"]);
 
-const emit = defineEmits(["update"]);
-
+const text: Ref<string> = ref(props.modelValue.text);
 const isEditable: Ref<boolean> = ref(false);
 const textarea: Ref<HTMLTextAreaElement> = ref();
 const { updateTextareaHeight } = useTextareaHeight(textarea);
 
 const compiledMarkdown: ComputedRef<any> = computed(() => {
-  const convertedHTML = marked(props.data.text);
+  const convertedHTML = marked(text.value);
   const purifiedHTML = DOMPurify.sanitize(convertedHTML);
   return purifiedHTML;
 });
 
-const onInput = debounce((event) => {
-  emit("update", { id: props.id, data: event.target.value });
+watchEffect(() => {
+  emit("update:modelValue", {
+    data: { text: text.value },
+  });
   updateTextareaHeight();
-}, 25);
+});
 
 function onBlur() {
   isEditable.value = false;
@@ -49,9 +45,8 @@ async function onClickOrEnter() {
     <textarea
       v-if="isEditable"
       ref="textarea"
-      :value="data.text"
+      v-model="text"
       class="h-1 w-full resize-none overflow-hidden bg-transparent"
-      @input="onInput"
       @blur="onBlur"
     ></textarea>
     <div
