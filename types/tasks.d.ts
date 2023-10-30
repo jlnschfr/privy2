@@ -1,4 +1,4 @@
 declare interface Task {
-  state: boolean;
+  isValid: boolean;
   text: string;
 }

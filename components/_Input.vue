@@ -48,7 +48,7 @@ const id: ComputedRef<string> = computed(() => uuid());
       :placeholder="placeholder"
       autocomplete="off"
       @input="
-        $emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)
+        $emit('update:modelValue', ($event.target as HTMLInputElement).value)
       "
     />
   </div>
