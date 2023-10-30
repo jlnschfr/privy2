@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useNoteStore } from "@/stores/NoteStore";
-
 const noteStore = useNoteStore();
 await noteStore.fetchNotes();
 </script>

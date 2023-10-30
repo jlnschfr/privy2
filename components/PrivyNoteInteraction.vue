@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useNoteStore } from "@/stores/NoteStore";
-
 export interface Props {
   noteId: string;
 }

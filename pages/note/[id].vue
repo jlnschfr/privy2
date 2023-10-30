@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useNoteStore } from "@/stores/NoteStore";
-
 const noteStore = useNoteStore();
 const route = useRoute();
 const title: Ref<string> = ref("");
