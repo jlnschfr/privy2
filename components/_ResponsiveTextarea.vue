@@ -9,7 +9,7 @@ export interface Props {
 defineProps<Props>();
 const emit = defineEmits(["update:modelValue"]);
 
-const textarea: Ref<any> = ref(null);
+const textarea: Ref<HTMLTextAreaElement> = ref(null);
 const { updateTextareaHeight } = useTextareaHeight(textarea);
 
 const handleInput = debounce((e) => {
