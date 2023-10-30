@@ -58,7 +58,6 @@ function toggleFav() {
   <div class="flex items-center">
     <IconButton
       label="add note to favorites"
-      styling="primary"
       class="mr-2"
       :class="{
         'text-secondary-500': note?.favorite,

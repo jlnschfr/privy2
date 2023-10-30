@@ -3,21 +3,22 @@ export interface Props {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   label: string;
-  styling: "primary" | "secondary";
+  styling?: "primary" | "secondary";
   secondary?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {
   type: "button",
   disabled: false,
+  styling: "primary",
 });
 </script>
 
 <template>
   <button
+    :type="type"
     :disabled="disabled"
     :aria-label="label"
-    :type="type"
     :class="{
       'border-neutral-200 bg-transparent hover:bg-neutral-500 dark:border-neutral-400 dark:hover:bg-neutral-200':
         styling === 'primary',

@@ -1,6 +1,6 @@
 import debounce from "lodash.debounce";
 
-export function useTitleHeight(textArea: Ref<HTMLTextAreaElement>) {
+export function useTextareaHeight(textArea: Ref<HTMLTextAreaElement>) {
   const resizeHandler: Ref<any> = ref();
 
   function updateTextareaHeight() {

@@ -51,8 +51,8 @@ if (isEmpty.value) {
       <header
         class="flex items-center border-b border-neutral-400 p-3 transition duration-300 dark:border-neutral-200 md:p-4"
       >
-        <PrivyDate :date="date" />
-        <TitleTextarea v-model="title" class="mr-2 flex-auto" />
+        <Date :date="date" />
+        <ResponsiveTextarea v-model="title" class="mr-2 flex-auto" />
         <PrivyNoteInteraction :note-id="id" />
       </header>
 
@@ -72,7 +72,7 @@ if (isEmpty.value) {
         <PrivyTags :note-id="id" />
       </aside>
       <nav class="mt-6 flex flex-none md:mt-0 md:justify-between">
-        <Button class="mr-4" @click="createMarkdown"> Add Markdown </Button>
+        <Button class="mr-4" @click="createMarkdown">Add Markdown</Button>
         <Button @click="createTask">Add Task</Button>
       </nav>
     </footer>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import debounce from "lodash.debounce";
-import { useTitleHeight } from "@/composables/titleHeight";
+import { useTextareaHeight } from "@/composables/textareaHeight";
 
 export interface Props {
   modelValue: string;
@@ -10,7 +10,7 @@ defineProps<Props>();
 const emit = defineEmits(["update:modelValue"]);
 
 const textarea: Ref<any> = ref(null);
-const { updateTextareaHeight } = useTitleHeight(textarea);
+const { updateTextareaHeight } = useTextareaHeight(textarea);
 
 const handleInput = debounce((e) => {
   updateTextareaHeight();
