@@ -9,7 +9,7 @@ export interface Database {
           title: string;
           positions?: string;
           favorite: boolean;
-          tags: string;
+          tags: Tag[];
           user_id?: string;
         };
         Insert: {
@@ -19,7 +19,7 @@ export interface Database {
           title: string;
           positions?: string;
           favorite: boolean;
-          tags?: string;
+          tags?: Tag[];
           user_id: string;
         };
         Update: {
@@ -29,7 +29,7 @@ export interface Database {
           title?: string;
           positions?: string;
           favorite?: boolean;
-          tags?: string;
+          tags?: Tag[];
           user_id?: string;
         };
       };

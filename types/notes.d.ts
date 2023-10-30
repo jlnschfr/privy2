@@ -5,6 +5,6 @@ declare interface Note {
   title: string;
   positions?: string;
   favorite: boolean;
-  tags: string;
+  tags: Tag[];
   user_id: string;
 }

@@ -1,94 +1,87 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
+import { useNoteStore } from "@/stores/NoteStore";
+
 export interface Props {
-  isFavorite: boolean;
-  tags: string;
+  noteId: string;
 }
 
-withDefaults(defineProps<Props>(), {
-  type: "button",
-  disabled: false,
-});
-</script> -->
+const props = defineProps<Props>();
+
+const route = useRoute();
+const noteStore = useNoteStore();
+const note: ComputedRef<Note> = computed(() => noteStore.getNote(props.noteId));
+
+console.log(note.value);
+
+function remove() {
+  const alreadyTrashed = note.value.tags.find(
+    (el) => el.text.toLowerCase() === "trash",
+  );
+
+  if (alreadyTrashed) {
+    noteStore.deleteNote(props.noteId);
+  } else {
+    const tags = [...note.value.tags, { text: "trash" }];
+    noteStore.updateNote(props.noteId, { tags });
+  }
+
+  if (route.name === "note-id") {
+    navigateTo("/notes");
+  }
+}
+
+// this.$store.dispatch("showSnackbar", {
+//   text: "Item deleted",
+//   action: "undo",
+//   callback: () => {
+//     this.undoRemove(note, alreadyTrashed);
+//   },
+// });
+
+// function undoRemove(note, alreadyTrashed) {
+//     if (alreadyTrashed) {
+//       this.$store.dispatch("addNote", note);
+//     } else {
+//       const index = note.tags.findIndex((el) => el.text === "Trash");
+//       note.tags.splice(index, 1);
+//       this.$store.dispatch("updateNote", note);
+//     }
+//   },
+
+function toggleFav() {
+  noteStore.updateNote(props.noteId, {
+    favorite: !note.value.favorite,
+    edited_at: new Date().toISOString(),
+  });
+}
+</script>
 
 <template>
   <div class="flex items-center">
     <IconButton
       label="add note to favorites"
-      class="mr-2 hover:bg-neutral-500 dark:hover:bg-neutral-200"
+      class="mr-2"
       :class="{
-        'text-secondary-500': false,
+        'text-secondary-500': note?.favorite,
       }"
-      @click="toggleFav(note)"
+      :disabled="!note"
+      @click="toggleFav()"
     >
       <SvgoHeart
         aria-hidden="true"
         class="w-2"
         :class="{
-          'fill-current': false,
+          'fill-current': note?.favorite,
         }"
       />
     </IconButton>
     <IconButton
       label="delete note"
-      class="bg-primary-500 text-neutral-600 hover:bg-primary-600"
-      @click="remove(note)"
+      styling="secondary"
+      :disabled="!note"
+      @click="remove()"
     >
       <SvgoTrash aria-hidden="true" class="fill w-2"
     /></IconButton>
   </div>
 </template>
-
-<!-- <script>
-export default {
-  computed: {
-    currentRoute() {
-      return this.$route.name;
-    },
-  },
-
-  methods: {
-    remove(note) {
-      const alreadyTrashed = this.note.tags.find((el) => el.text === "Trash");
-
-      if (alreadyTrashed) {
-        this.$store.dispatch("deleteNote", note);
-      } else {
-        note.tags.push({ text: "Trash" });
-        this.$store.dispatch("updateNote", note);
-      }
-
-      if (this.currentRoute === "note") {
-        this.$router.push(`/notes/`);
-      }
-
-      this.$store.dispatch("showSnackbar", {
-        text: "Item deleted",
-        action: "undo",
-        callback: () => {
-          this.undoRemove(note, alreadyTrashed);
-        },
-      });
-    },
-
-    undoRemove(note, alreadyTrashed) {
-      if (alreadyTrashed) {
-        this.$store.dispatch("addNote", note);
-      } else {
-        const index = note.tags.findIndex((el) => el.text === "Trash");
-        note.tags.splice(index, 1);
-        this.$store.dispatch("updateNote", note);
-      }
-    },
-
-    toggleFav(note) {
-      const data = {
-        ...note,
-        isFav: !this.note.isFav,
-      };
-
-      data.createdDate = new Date().toISOString();
-      this.$store.dispatch("updateNote", data);
-    },
-  },
-};
-</script> -->

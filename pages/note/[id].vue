@@ -8,8 +8,6 @@ const date: Ref<string> = ref(new Date().toISOString());
 const id: Ref<string> = ref(route.params.id as string);
 const isEmpty: ComputedRef<boolean> = computed(() => id.value === "new");
 
-const note: Ref<Note> = ref();
-
 function addNote() {
   if (isEmpty.value) {
     noteStore.addNote({ title: title.value, favorite: false });
@@ -27,10 +25,6 @@ function updateTitle() {
     title: title.value,
     edited_at: date.value,
   });
-}
-
-function deleteNote() {
-  noteStore.deleteNote(id.value);
 }
 
 function createMarkdown() {}
@@ -61,14 +55,11 @@ if (isEmpty.value) {
       >
         <PrivyDate :date="date" />
         <TitleTextarea v-model="title" class="mr-2 flex-auto" />
-        <PrivyNoteInteraction :note="note" />
+        <PrivyNoteInteraction :note-id="id" />
       </header>
 
       <div>
-        <NuxtLink to="/notes">All Notes</NuxtLink>
-        <span>Note ID: {{ $route.params.id }}</span>
-        <!-- <textarea v-model="title" placeholder="new todo"></textarea> -->
-        <Button @click="deleteNote">Delete</Button>
+        <p><NuxtLink to="/notes">All Notes</NuxtLink></p>
       </div>
 
       <div class="sm:p-4 p-3">
