@@ -10,7 +10,6 @@ export interface Props {
 withDefaults(defineProps<Props>(), {
   type: "button",
   disabled: false,
-  styling: "primary",
 });
 </script>
 

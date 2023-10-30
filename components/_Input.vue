@@ -1,10 +1,35 @@
+<script setup lang="ts">
+import { v4 as uuid } from "uuid";
+
+export interface Props {
+  type?: "text" | "checkbox" | "radio";
+  disabled?: boolean;
+  modelValue: string;
+  placeholder?: string;
+  border?: boolean;
+  label?: boolean;
+}
+
+withDefaults(defineProps<Props>(), {
+  type: "text",
+  disabled: false,
+  placeholder: "Placeholder",
+  border: true,
+  label: true,
+});
+
+defineEmits(["update:modelValue"]);
+
+const id: ComputedRef<string> = computed(() => uuid());
+</script>
+
 <template>
   <div class="w-full">
     <label
       v-if="label"
       :for="id"
       :class="{
-        'translate-y-1/2 opacity-0': !value,
+        'translate-y-1/2 opacity-0': !modelValue,
       }"
       class="block transform text-sm text-neutral-200 transition-all dark:text-neutral-300"
     >
@@ -16,53 +41,16 @@
       :class="{
         'border-b border-neutral-200 dark:border-neutral-400': border,
       }"
-      :value="value"
+      :value="modelValue"
       :type="type"
       :placeholder="placeholder"
       autocomplete="off"
-      @input="$emit('input', $event.target.value)"
-      @keydown.enter="$emit('enter', $event.target.value)"
-      @focus="$emit('focus')"
+      @input="
+        $emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)
+      "
     />
   </div>
 </template>
-
-<script>
-export default {
-  props: {
-    type: {
-      type: String,
-      required: false,
-      default: "text",
-    },
-    value: {
-      type: String,
-      required: false,
-      default: "",
-    },
-    placeholder: {
-      type: String,
-      required: false,
-      default: "Placeholder",
-    },
-    border: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
-    label: {
-      type: Boolean,
-      required: false,
-      default: true,
-    },
-  },
-  computed: {
-    id() {
-      return "test";
-    },
-  },
-};
-</script>
 
 <style scoped>
 .text-decoration-inherit {

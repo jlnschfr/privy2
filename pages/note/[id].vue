@@ -69,7 +69,7 @@ if (isEmpty.value) {
       class="flex flex-col justify-between border-t border-neutral-400 p-3 transition duration-300 dark:border-neutral-200 md:flex-row md:items-end md:p-4"
     >
       <aside class="w-full flex-shrink md:mr-4 md:max-w-tags">
-        <!-- <Tags :tags="tags" @changed="tags = $event" /> -->
+        <PrivyTags :note-id="id" />
       </aside>
       <nav class="mt-6 flex flex-none md:mt-0 md:justify-between">
         <Button class="mr-4" @click="createMarkdown"> Add Markdown </Button>
