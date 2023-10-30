@@ -8,7 +8,7 @@ const isEmpty: ComputedRef<boolean> = computed(() => id.value === "new");
 
 function addNote() {
   if (isEmpty.value) {
-    noteStore.addNote({ title: title.value, favorite: false });
+    noteStore.add({ title: title.value, favorite: false });
   }
 }
 
@@ -19,7 +19,7 @@ function updateDate() {
 function updateTitle() {
   updateDate();
 
-  noteStore.updateNote(id.value, {
+  noteStore.update(id.value, {
     title: title.value,
     edited_at: date.value,
   });
@@ -33,7 +33,7 @@ if (isEmpty.value) {
   watch(title, addNote);
   // handle also other initial changes (tabs, tasks, ...)
 } else {
-  const note: Note = noteStore.getNote(id.value);
+  const note: Note = noteStore.get(id.value);
 
   title.value = note.title;
   date.value = note.edited_at;
