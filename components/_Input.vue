@@ -37,9 +37,11 @@ const id: ComputedRef<string> = computed(() => uuid());
     </label>
     <input
       :id="id"
-      class="text-decoration-inherit privy-focus block w-full appearance-none bg-transparent py-1 leading-normal placeholder-neutral-200 dark:placeholder-neutral-400"
+      :disabled="disabled"
+      class="text-decoration-inherit block w-full appearance-none bg-transparent py-1 leading-normal placeholder-neutral-200 dark:placeholder-neutral-400"
       :class="{
         'border-b border-neutral-200 dark:border-neutral-400': border,
+        'cursor-not-allowed': disabled,
       }"
       :value="modelValue"
       :type="type"

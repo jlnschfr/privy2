@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Tags } from "#build/components";
-
 export interface Props {
   noteId: string;
 }
@@ -8,7 +6,7 @@ const props = defineProps<Props>();
 const noteStore = useNoteStore();
 
 const tags: ComputedRef<Tag[]> = computed(
-  () => noteStore.getNote(props.noteId).tags,
+  () => noteStore.getNote(props.noteId)?.tags,
 );
 const input: Ref<string> = ref("");
 
@@ -56,6 +54,7 @@ function removeTag(text: string) {
       class="mt-1"
       placeholder="Your Tag"
       type="text"
+      :disabled="noteId === 'new'"
       @keydown.enter="addTag"
     />
   </div>
