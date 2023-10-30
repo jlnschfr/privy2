@@ -7,13 +7,13 @@ const props = defineProps<Props>();
 
 const route = useRoute();
 const noteStore = useNoteStore();
+const snackbarStore = useSnackbarStore();
+
 const note: ComputedRef<Note> = computed(() => noteStore.getNote(props.noteId));
 
-console.log(note.value);
-
 function remove() {
-  const alreadyTrashed = note.value.tags.find(
-    (el) => el.text.toLowerCase() === "trash",
+  const alreadyTrashed = Boolean(
+    note.value.tags.find((el) => el.text.toLowerCase() === "trash"),
   );
 
   if (alreadyTrashed) {
@@ -26,25 +26,25 @@ function remove() {
   if (route.name === "note-id") {
     navigateTo("/notes");
   }
+
+  snackbarStore.showSnackbar({
+    text: "Item deleted",
+    action: "undo",
+    callback: () => {
+      undoRemove(note.value, alreadyTrashed);
+    },
+  });
 }
 
-// this.$store.dispatch("showSnackbar", {
-//   text: "Item deleted",
-//   action: "undo",
-//   callback: () => {
-//     this.undoRemove(note, alreadyTrashed);
-//   },
-// });
-
-// function undoRemove(note, alreadyTrashed) {
-//     if (alreadyTrashed) {
-//       this.$store.dispatch("addNote", note);
-//     } else {
-//       const index = note.tags.findIndex((el) => el.text === "Trash");
-//       note.tags.splice(index, 1);
-//       this.$store.dispatch("updateNote", note);
-//     }
-//   },
+function undoRemove(note: Note, alreadyTrashed: boolean) {
+  if (alreadyTrashed) {
+    noteStore.addNote(note);
+  } else {
+    const index = note.tags.findIndex((el) => el.text === "Trash");
+    note.tags.splice(index, 1);
+    noteStore.updateNote(note.id, note);
+  }
+}
 
 function toggleFav() {
   noteStore.updateNote(props.noteId, {

@@ -9,5 +9,6 @@ await noteStore.fetchNotes();
   >
     <AppHeader />
     <NuxtPage />
+    <PrivySnackbar />
   </div>
 </template>
