@@ -1,4 +1,10 @@
 declare interface Task {
-  isValid: boolean;
+  id: string;
+  type: "task";
+  data: TaskData;
+}
+
+declare interface TaskData {
   text: string;
+  isValid: boolean;
 }
