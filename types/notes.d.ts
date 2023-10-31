@@ -3,7 +3,7 @@ declare interface Note {
   created_at: string;
   edited_at: string;
   title: string;
-  items?: string;
+  items?: (Markdown | Task)[];
   favorite: boolean;
   tags: Tag[];
   user_id: string;
