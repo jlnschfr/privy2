@@ -7,7 +7,7 @@ export interface Database {
           created_at?: string;
           edited_at: string;
           title: string;
-          positions?: string;
+          items: (Markdown | Task)[];
           favorite: boolean;
           tags: Tag[];
           user_id?: string;
@@ -17,7 +17,7 @@ export interface Database {
           created_at?: string;
           edited_at?: string;
           title: string;
-          positions?: string;
+          items?: (Markdown | Task)[];
           favorite: boolean;
           tags?: Tag[];
           user_id: string;
@@ -27,36 +27,10 @@ export interface Database {
           created_at?: string;
           edited_at?: string;
           title?: string;
-          positions?: string;
+          items?: (Markdown | Task)[];
           favorite?: boolean;
           tags?: Tag[];
           user_id?: string;
-        };
-      };
-      tasks: {
-        Row: {
-          id: number;
-          created_at: string;
-          title: string;
-          completed: boolean;
-          user_id: string;
-          note_id: string;
-        };
-        Insert: {
-          id?: number;
-          created_at?: string;
-          title?: string;
-          completed?: boolean;
-          user_id: string;
-          note_id?: string;
-        };
-        Update: {
-          id?: number;
-          created_at?: string;
-          completed?: boolean;
-          title?: string;
-          user_id?: string;
-          note_id?: string;
         };
       };
     };
