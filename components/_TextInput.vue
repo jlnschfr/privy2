@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { v4 as uuid } from "uuid";
 
-export interface Props {
+interface Props {
   disabled?: boolean;
   modelValue: string;
   placeholder?: string;
   border?: boolean;
   label?: boolean;
+}
+interface Emits {
+  (e: "update:modelValue", value: string): void;
 }
 
 withDefaults(defineProps<Props>(), {
@@ -15,8 +18,7 @@ withDefaults(defineProps<Props>(), {
   border: true,
   label: true,
 });
-
-defineEmits(["update:modelValue"]);
+defineEmits<Emits>();
 
 const id: ComputedRef<string> = computed(() => uuid());
 </script>

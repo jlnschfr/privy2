@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { createDateString } from "@/utils/date";
 
-export interface Props {
+interface Props {
   date: string;
 }
 

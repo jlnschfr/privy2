@@ -1,32 +1,41 @@
 <script setup lang="ts">
 import DOMPurify from "isomorphic-dompurify";
 import { marked } from "marked";
+import debounce from "lodash.debounce";
 import { useTextareaHeight } from "@/composables/textareaHeight";
 
-export interface Props {
+interface Props {
   modelValue: Markdown;
+}
+interface Emits {
+  (e: "update:modelValue", markdown: Markdown): void;
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits<Emits>();
 
-const text: Ref<string> = ref(props.modelValue.text);
+const text: Ref<string> = ref(props.modelValue.data.text);
 const isEditable: Ref<boolean> = ref(false);
+
 const textarea: Ref<HTMLTextAreaElement> = ref();
 const { updateTextareaHeight } = useTextareaHeight(textarea);
 
-const compiledMarkdown: ComputedRef<any> = computed(() => {
+const compiledMarkdown: ComputedRef<string> = computed(() => {
   const convertedHTML = marked(text.value);
   const purifiedHTML = DOMPurify.sanitize(convertedHTML);
   return purifiedHTML;
 });
 
-watchEffect(() => {
-  emit("update:modelValue", {
-    data: { text: text.value },
-  });
-  updateTextareaHeight();
-});
+watch(
+  text,
+  debounce(() => {
+    emit("update:modelValue", {
+      ...props.modelValue,
+      data: { text: text.value },
+    });
+    updateTextareaHeight();
+  }, 250),
+);
 
 function onBlur() {
   isEditable.value = false;

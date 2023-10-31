@@ -2,12 +2,15 @@
 import debounce from "lodash.debounce";
 import { useTextareaHeight } from "@/composables/textareaHeight";
 
-export interface Props {
+interface Props {
   modelValue: string;
+}
+interface Emits {
+  (e: "update:modelValue", value: string): void;
 }
 
 defineProps<Props>();
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits<Emits>();
 
 const textarea: Ref<HTMLTextAreaElement> = ref(null);
 const { updateTextareaHeight } = useTextareaHeight(textarea);

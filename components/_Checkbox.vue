@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { v4 as uuid } from "uuid";
 
-export interface Props {
+interface Props {
   modelValue: boolean;
+}
+interface Emits {
+  (e: "update:modelValue", isChecked: boolean): void;
 }
 
 defineProps<Props>();
-defineEmits(["update:modelValue"]);
+defineEmits<Emits>();
 
 const id: Ref<string> = ref(uuid());
 </script>

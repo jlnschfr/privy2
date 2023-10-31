@@ -1,19 +1,28 @@
 <script setup lang="ts">
-export interface Props {
+import debounce from "lodash.debounce";
+
+interface Props {
   modelValue: Task;
+}
+interface Emits {
+  (e: "update:modelValue", task: Task): void;
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits<Emits>();
 
-const text: Ref<string> = ref(props.modelValue.text);
-const isValid: Ref<boolean> = ref(props.modelValue.isValid);
+const text: Ref<string> = ref(props.modelValue.data.text);
+const isValid: Ref<boolean> = ref(props.modelValue.data.isValid);
 
-watchEffect(() => {
-  emit("update:modelValue", {
-    data: { text: text.value, isValid: isValid.value },
-  });
-});
+watch(
+  [text, isValid],
+  debounce(() => {
+    emit("update:modelValue", {
+      ...props.modelValue,
+      data: { text: text.value, isValid: isValid.value },
+    });
+  }, 250),
+);
 </script>
 
 <template>
