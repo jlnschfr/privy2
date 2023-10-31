@@ -15,7 +15,7 @@ const { updateTextareaHeight } = useTextareaHeight(textarea);
 const onInput = debounce((e) => {
   updateTextareaHeight();
   emit("update:modelValue", (e.target as HTMLTextAreaElement).value);
-}, 500);
+}, 1500);
 </script>
 
 <template>
