@@ -54,7 +54,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .update({ ...details })
       .match({ id, user_id: user.value.id })
       .select(
-        "id, created_at, edited_at, title, positions, favorite, tags, user_id",
+        "id, created_at, edited_at, title, items, favorite, tags, user_id",
       )
       .single();
 
