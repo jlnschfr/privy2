@@ -23,7 +23,9 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const fetchAll = async () => {
     const { data } = await client
       .from("notes")
-      .select("id, created_at, edited_at, title, favorite, tags, user_id")
+      .select(
+        "id, created_at, edited_at, items, title, favorite, tags, user_id",
+      )
       .match({ user_id: user.value.id })
       .order("created_at");
 
@@ -38,7 +40,9 @@ export const useNoteStore = defineStore("NoteStore", () => {
         ...(details.title && { title: details.title }),
         ...(details.favorite && { favorite: details.favorite }),
       })
-      .select("id, created_at, edited_at, title, favorite, tags, user_id")
+      .select(
+        "id, created_at, edited_at, title, items, favorite, tags, user_id",
+      )
       .single();
 
     notes.value.push(data);

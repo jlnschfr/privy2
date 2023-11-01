@@ -7,7 +7,7 @@ export interface Database {
           created_at?: string;
           edited_at: string;
           title: string;
-          items: (Markdown | Task)[];
+          items: Items;
           favorite: boolean;
           tags: Tag[];
           user_id?: string;
@@ -17,7 +17,7 @@ export interface Database {
           created_at?: string;
           edited_at?: string;
           title: string;
-          items?: (Markdown | Task)[];
+          items?: Items;
           favorite: boolean;
           tags?: Tag[];
           user_id: string;
@@ -27,7 +27,7 @@ export interface Database {
           created_at?: string;
           edited_at?: string;
           title?: string;
-          items?: (Markdown | Task)[];
+          items?: Items;
           favorite?: boolean;
           tags?: Tag[];
           user_id?: string;

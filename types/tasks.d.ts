@@ -1,6 +1,6 @@
 declare interface Task {
   id: string;
-  type: "task";
+  type: "Task";
   data: TaskData;
 }
 

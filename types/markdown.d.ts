@@ -1,6 +1,6 @@
 declare interface Markdown {
   id: string;
-  type: "markdown";
+  type: "Markdown";
   data: MarkdownData;
 }
 
