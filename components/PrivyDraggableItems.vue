@@ -11,8 +11,9 @@ const noteStore = useNoteStore();
 const snackbarStore = useSnackbarStore();
 
 const items: Ref<Item[]> = ref(
-  props.noteId !== "new" ? noteStore.get(props.noteId).items : [],
+  props.noteId !== "new" ? [...noteStore.get(props.noteId).items] : [],
 );
+
 const storeItems: ComputedRef<Item[]> = computed(
   () => noteStore.get(props.noteId)?.items,
 );
@@ -26,10 +27,6 @@ function onItemDelete(id: string) {
   const index = items.value.findIndex((item) => item.id === id);
   items.value.splice(index, 1);
 
-  noteStore.update(props.noteId, {
-    items: items.value,
-  });
-
   snackbarStore.show({
     text: "Item deleted",
     action: "undo",
@@ -39,10 +36,8 @@ function onItemDelete(id: string) {
   });
 }
 
-function undoRemove(items: Item[]) {
-  noteStore.update(props.noteId, {
-    items,
-  });
+function undoRemove(oldItems: Item[]) {
+  items.value = oldItems;
 }
 
 function getComponent(name: string) {
@@ -101,28 +96,26 @@ function sortItems() {
 watch(
   items,
   (newItems: Item[], oldItems: Item[]) => {
-    noteStore.update(props.noteId, {
-      items: items.value,
-    });
-
     if (newItems.length > oldItems.length) {
       focusLastAddedItem();
     }
 
-    sortItems();
-  },
-  { deep: true },
-);
-
-watch(
-  storeItems,
-  () => {
     if (!isEqual(storeItems.value, items.value)) {
-      items.value = noteStore.get(props.noteId).items;
+      noteStore.update(props.noteId, {
+        items: items.value,
+      });
+
+      sortItems();
     }
   },
   { deep: true },
 );
+
+watch(storeItems, () => {
+  if (!isEqual(storeItems.value, items.value)) {
+    items.value = [...storeItems.value];
+  }
+});
 </script>
 
 <template>
