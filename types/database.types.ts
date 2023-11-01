@@ -16,9 +16,9 @@ export interface Database {
           id?: string;
           created_at?: string;
           edited_at?: string;
-          title: string;
+          title?: string;
           items?: Items;
-          favorite: boolean;
+          favorite?: boolean;
           tags?: Tag[];
           user_id: string;
         };

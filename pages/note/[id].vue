@@ -1,46 +1,52 @@
 <script setup lang="ts">
+import { v4 as uuid } from "uuid";
+
 const noteStore = useNoteStore();
 const route = useRoute();
+
+const id: ComputedRef<string> = computed(() => route.params.id as string);
+const isNew: ComputedRef<boolean> = computed(() => id.value === "new");
+
+if (isNew.value) {
+  await noteStore.add({ id: uuid() });
+}
+
+const note: ComputedRef<Note> = computed(() => noteStore.get(id.value));
+const items: ComputedRef<Items> = computed(() => note.value.items);
 const title: Ref<string> = ref("");
-const date: Ref<string> = ref(new Date().toISOString());
-const id: Ref<string> = ref(route.params.id as string);
-const isEmpty: ComputedRef<boolean> = computed(() => id.value === "new");
 
-function addNote() {
-  if (isEmpty.value) {
-    noteStore.add({ title: title.value, favorite: false });
-  }
-}
-
-function updateDate() {
-  date.value = new Date().toISOString();
-}
-
-function updateTitle() {
-  updateDate();
+function createMarkdown() {
+  const item: Markdown = {
+    id: uuid(),
+    type: "Markdown",
+    data: {
+      text: "",
+    },
+  };
 
   noteStore.update(id.value, {
-    title: title.value,
-    edited_at: date.value,
+    items: [...items.value, item],
   });
 }
 
-function createMarkdown() {}
+function createTask() {
+  const item: Task = {
+    id: uuid(),
+    type: "Task",
+    data: {
+      text: "",
+      isValid: false,
+    },
+  };
 
-function createTask() {}
-
-if (isEmpty.value) {
-  watch(title, addNote);
-  // handle also other initial changes (tabs, tasks, ...)
-} else {
-  const note: Note = noteStore.get(id.value);
-
-  title.value = note.title;
-  date.value = note.edited_at;
-
-  watch(title, updateTitle);
-  // watch other parts
+  noteStore.update(id.value, {
+    items: [...items.value, item],
+  });
 }
+
+watch(title, () => {
+  noteStore.update(id.value, { title: title.value });
+});
 </script>
 
 <template>
@@ -51,7 +57,7 @@ if (isEmpty.value) {
       <header
         class="flex items-center border-b border-neutral-400 p-3 transition duration-300 dark:border-neutral-200 md:p-4"
       >
-        <Date :date="date" />
+        <Date :date="note.edited_at" />
         <ResponsiveTextarea v-model="title" class="mr-2 flex-auto" />
         <PrivyNoteInteraction :note-id="id" />
       </header>
@@ -61,7 +67,7 @@ if (isEmpty.value) {
       </div>
 
       <div class="sm:p-4 p-3">
-        <!-- <PrivyDraggableItems :items="items" @changed="items = $event" /> -->
+        <PrivyDraggableItems :note-id="id" />
       </div>
     </article>
 

@@ -37,8 +37,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .from("notes")
       .upsert({
         user_id: user.value.id,
-        ...(details.title && { title: details.title }),
-        ...(details.favorite && { favorite: details.favorite }),
+        ...details,
       })
       .select(
         "id, created_at, edited_at, title, items, favorite, tags, user_id",
@@ -55,7 +54,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const update = async (id: string, details: Partial<Note>) => {
     const { data } = await client
       .from("notes")
-      .update({ ...details })
+      .update({ ...details, edited_at: new Date().toISOString() })
       .match({ id, user_id: user.value.id })
       .select(
         "id, created_at, edited_at, title, items, favorite, tags, user_id",
