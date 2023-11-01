@@ -12,7 +12,7 @@ if (isNew.value) {
 }
 
 const note: ComputedRef<Note> = computed(() => noteStore.get(id.value));
-const items: ComputedRef<Items> = computed(() => note.value.items);
+const items: ComputedRef<Item[]> = computed(() => note.value.items);
 const title: Ref<string> = ref("");
 
 function createMarkdown() {
@@ -42,6 +42,34 @@ function createTask() {
   noteStore.update(id.value, {
     items: [...items.value, item],
   });
+}
+
+onMounted(() => {
+  window.addEventListener("keydown", handleKeyUp);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeyUp);
+});
+
+function handleKeyUp(event: KeyboardEvent) {
+  const focusEl = document.activeElement;
+
+  if (focusEl === document.querySelector("body") || focusEl.closest(".Task")) {
+    if (event.code === "Enter" && event.shiftKey) {
+      createMarkdown();
+    } else if (event.code === "Enter") {
+      const draggableItem = focusEl.closest(".draggable-item");
+
+      if (draggableItem) {
+        // const id = draggableItem.dataset.id;
+        // const index = items.value.findIndex((item) => item.id === id);
+        createTask();
+      } else {
+        createTask();
+      }
+    }
+  }
 }
 
 watch(title, () => {

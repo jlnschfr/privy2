@@ -10,10 +10,10 @@ const props = defineProps<Props>();
 const noteStore = useNoteStore();
 const snackbarStore = useSnackbarStore();
 
-const items: Ref<Items> = ref(
+const items: Ref<Item[]> = ref(
   props.noteId !== "new" ? noteStore.get(props.noteId).items : [],
 );
-const storeItems: ComputedRef<Items> = computed(
+const storeItems: ComputedRef<Item[]> = computed(
   () => noteStore.get(props.noteId)?.items,
 );
 
@@ -39,7 +39,7 @@ function onItemDelete(id: string) {
   });
 }
 
-function undoRemove(items: Items) {
+function undoRemove(items: Item[]) {
   noteStore.update(props.noteId, {
     items,
   });
@@ -57,11 +57,13 @@ function getComponent(name: string) {
 }
 
 function focusLastAddedItem() {
-  // use debounce instead
   setTimeout(() => {
-    const item: Markdown | Task = items.value[items.value.length - 1];
+    const filteredItems: Item[] = items.value.filter(
+      (item) => !(item.type === "Task" && item.data.isValid),
+    );
+    const item: Item = filteredItems[filteredItems.length - 1];
 
-    if (item) {
+    if (item && item.data.text === "") {
       const task: HTMLInputElement = document
         .querySelector(`[data-id='${item.id}']`)
         .querySelector(".Task input[type=text]");
@@ -98,7 +100,7 @@ function sortItems() {
 
 watch(
   items,
-  (newItems: Items, oldItems: Items) => {
+  (newItems: Item[], oldItems: Item[]) => {
     noteStore.update(props.noteId, {
       items: items.value,
     });
