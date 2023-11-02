@@ -114,10 +114,6 @@ function focusItem(type: "task" | "markdown", item: Item) {
         <PrivyNoteInteraction :note-id="id" />
       </header>
 
-      <div>
-        <p><NuxtLink to="/notes">All Notes</NuxtLink></p>
-      </div>
-
       <div class="sm:p-4 p-3">
         <PrivyDraggableItems :note-id="id" />
       </div>

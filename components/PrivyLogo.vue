@@ -1,5 +1,5 @@
 <script setup lang="ts">
-export interface Props {
+interface Props {
   width?: string;
 }
 const props = withDefaults(defineProps<Props>(), {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-export interface Props {
+interface Props {
   noteId: string;
 }
 const props = defineProps<Props>();

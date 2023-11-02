@@ -9,7 +9,7 @@ interface Emits {
 }
 
 defineProps<Props>();
-defineEmits<Emits>();
+const emit = defineEmits<Emits>();
 
 const id: Ref<string> = ref(uuid());
 </script>
@@ -21,7 +21,7 @@ const id: Ref<string> = ref(uuid());
       :value="modelValue"
       class="visuallyhidden"
       type="checkbox"
-      @input="$emit('update:modelValue', !modelValue)"
+      @input="emit('update:modelValue', !modelValue)"
     />
     <label aria-label="checkbox" :for="id" class="flex items-center pr-2">
       <span

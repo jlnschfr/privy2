@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { useViewport } from "@/composables/viewport";
 
-export interface Props {
+interface Props {
   isActive: boolean;
 }
-defineProps<Props>();
+interface Emits {
+  (e: "toggle-drawer"): void;
+}
 
+const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
+
+const route = useRoute();
 const client = useSupabaseClient();
 const colorMode = useColorMode();
 const tagStore = useTagStore();
@@ -30,6 +36,15 @@ async function logout() {
   await client.auth.signOut();
   navigateTo("/");
 }
+
+watch(
+  () => route.name,
+  () => {
+    if (props.isActive && isMobile.value) {
+      emit("toggle-drawer");
+    }
+  },
+);
 </script>
 
 <template>
@@ -121,7 +136,7 @@ async function logout() {
       <div
         v-if="isActive"
         class="fixed left-0 top-0 z-40 h-screen w-screen bg-neutral-200 bg-opacity-75"
-        @click="$emit('toggle-drawer')"
+        @click="emit('toggle-drawer')"
       ></div>
     </transition>
   </section>

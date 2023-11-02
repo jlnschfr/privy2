@@ -1,5 +1,5 @@
 <script setup lang="ts">
-export interface Props {
+interface Props {
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   styling?: "primary" | "secondary" | "tertiary";

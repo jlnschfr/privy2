@@ -18,7 +18,7 @@ withDefaults(defineProps<Props>(), {
   border: true,
   label: true,
 });
-defineEmits<Emits>();
+const emit = defineEmits<Emits>();
 
 const id: ComputedRef<string> = computed(() => uuid());
 </script>
@@ -48,7 +48,7 @@ const id: ComputedRef<string> = computed(() => uuid());
       type="text"
       autocomplete="off"
       @input="
-        $emit('update:modelValue', ($event.target as HTMLInputElement).value)
+        emit('update:modelValue', ($event.target as HTMLInputElement).value)
       "
     />
   </div>
