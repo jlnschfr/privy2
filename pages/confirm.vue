@@ -13,7 +13,9 @@ watch(
 </script>
 
 <template>
-  <div>
-    <p class="u-text-black">Redirecting...</p>
-  </div>
+  <NuxtLayout name="blank">
+    <div>
+      <p class="u-text-black">Redirecting...</p>
+    </div>
+  </NuxtLayout>
 </template>

@@ -1,3 +1,5 @@
 <template>
-  <PrivyAuthForm />
+  <NuxtLayout name="blank">
+    <PrivyAuthForm />
+  </NuxtLayout>
 </template>

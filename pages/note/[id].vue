@@ -102,35 +102,37 @@ function focusItem(type: "task" | "markdown", item: Item) {
 </script>
 
 <template>
-  <section
-    class="mx-auto flex min-h-detail max-w-3xl flex-col justify-between bg-neutral-600 shadow-xl transition duration-300 dark:bg-neutral-100"
-  >
-    <article>
-      <header
-        class="flex items-center border-b border-neutral-400 p-3 transition duration-300 dark:border-neutral-200 md:p-4"
-      >
-        <Date :date="note.edited_at" />
-        <ResponsiveTextarea v-model="title" class="mr-2 flex-auto" />
-        <PrivyNoteInteraction :note-id="id" />
-      </header>
-
-      <div class="sm:p-4 p-3">
-        <PrivyDraggableItems :note-id="id" />
-      </div>
-    </article>
-
-    <footer
-      class="flex flex-col justify-between border-t border-neutral-400 p-3 transition duration-300 dark:border-neutral-200 md:flex-row md:items-end md:p-4"
+  <NuxtLayout name="default">
+    <section
+      class="mx-auto flex min-h-detail max-w-3xl flex-col justify-between bg-neutral-600 shadow-xl transition duration-300 dark:bg-neutral-100"
     >
-      <aside class="w-full flex-shrink md:mr-4 md:max-w-tags">
-        <PrivyTags :note-id="id" />
-      </aside>
-      <nav class="mt-6 flex flex-none md:mt-0 md:justify-between">
-        <Button class="mr-4" @click="createItem('markdown')"
-          >Add Markdown</Button
+      <article>
+        <header
+          class="flex items-center border-b border-neutral-400 p-3 transition duration-300 dark:border-neutral-200 md:p-4"
         >
-        <Button @click="createItem('task')">Add Task</Button>
-      </nav>
-    </footer>
-  </section>
+          <Date :date="note.edited_at" />
+          <ResponsiveTextarea v-model="title" class="mr-2 flex-auto" />
+          <PrivyNoteInteraction :note-id="id" />
+        </header>
+
+        <div class="sm:p-4 p-3">
+          <PrivyDraggableItems :note-id="id" />
+        </div>
+      </article>
+
+      <footer
+        class="flex flex-col justify-between border-t border-neutral-400 p-3 transition duration-300 dark:border-neutral-200 md:flex-row md:items-end md:p-4"
+      >
+        <aside class="w-full flex-shrink md:mr-4 md:max-w-tags">
+          <PrivyTags :note-id="id" />
+        </aside>
+        <nav class="mt-6 flex flex-none md:mt-0 md:justify-between">
+          <Button class="mr-4" @click="createItem('markdown')"
+            >Add Markdown</Button
+          >
+          <Button @click="createItem('task')">Add Task</Button>
+        </nav>
+      </footer>
+    </section>
+  </NuxtLayout>
 </template>
