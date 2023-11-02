@@ -9,10 +9,11 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
-  const getAll = computed(() => {
-    if (!notes.value.length) return {};
-    return notes.value;
-  });
+  const notesNotTrashed: ComputedRef<Note[]> = computed(() =>
+    notes.value.filter(
+      (note) => !note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
+    ),
+  );
 
   const get = (id: string): Note => {
     if (!notes.value.length) return;
@@ -81,7 +82,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     notes,
     isSyncing,
     currentTag,
-    getAll,
+    notesNotTrashed,
     get,
     fetchAll,
     add,
