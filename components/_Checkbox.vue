@@ -21,9 +21,7 @@ const id: Ref<string> = ref(uuid());
       :value="modelValue"
       class="visuallyhidden"
       type="checkbox"
-      @input="
-        $emit('update:modelValue', ($event.target as HTMLInputElement).checked)
-      "
+      @input="$emit('update:modelValue', !modelValue)"
     />
     <label aria-label="checkbox" :for="id" class="flex items-center pr-2">
       <span

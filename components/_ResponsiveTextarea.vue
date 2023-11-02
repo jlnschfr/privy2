@@ -17,8 +17,9 @@ const { updateTextareaHeight } = useTextareaHeight(textarea);
 
 const onInput = debounce((e) => {
   updateTextareaHeight();
+
   emit("update:modelValue", (e.target as HTMLTextAreaElement).value);
-}, 1500);
+}, 500);
 </script>
 
 <template>
@@ -27,6 +28,7 @@ const onInput = debounce((e) => {
     :value="modelValue"
     class="h-5 resize-none overflow-hidden bg-transparent text-2xl font-bold"
     placeholder="Title"
+    autocomplete="false"
     @input="onInput"
   />
 </template>
