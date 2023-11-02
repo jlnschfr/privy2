@@ -2,12 +2,11 @@ import { defineStore } from "pinia";
 import { Database } from "@/types/database.types";
 
 export const useNoteStore = defineStore("NoteStore", () => {
-  const notes: Ref<Note[]> = ref([]);
-  const isSyncing: Ref<boolean> = ref(false);
-  const currentTag: Ref<string> = ref("");
-
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
+
+  const notes: Ref<Note[]> = ref([]);
+  const isSyncing: Ref<boolean> = ref(false);
 
   const notesNotTrashed: ComputedRef<Note[]> = computed(() =>
     notes.value.filter(
@@ -15,11 +14,11 @@ export const useNoteStore = defineStore("NoteStore", () => {
     ),
   );
 
-  const get = (id: string): Note => {
-    if (!notes.value.length) return;
-    const data = notes.value.find((note) => note.id === id);
-    return data;
-  };
+  const notesTrashed: ComputedRef<Note[]> = computed(() =>
+    notes.value.filter((note) =>
+      note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
+    ),
+  );
 
   const fetchAll = async () => {
     const { data } = await client
@@ -31,6 +30,28 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .order("created_at");
 
     notes.value = data;
+  };
+
+  const get = (id: string): Note => {
+    if (!notes.value.length) return;
+    const data = notes.value.find((note) => note.id === id);
+    return data;
+  };
+
+  const getFiltered = (filter: string): Note[] => {
+    if (!notes.value.length) return;
+
+    if (filter === "Trash") {
+      return notesTrashed.value;
+    } else if (filter) {
+      return notesNotTrashed.value.filter((note) =>
+        note.tags.some(
+          (tag) => tag.text.toLowerCase() === filter.toLowerCase(),
+        ),
+      );
+    } else {
+      return notesNotTrashed.value;
+    }
   };
 
   const add = async (details: Partial<Note>) => {
@@ -81,10 +102,11 @@ export const useNoteStore = defineStore("NoteStore", () => {
   return {
     notes,
     isSyncing,
-    currentTag,
+    notesTrashed,
     notesNotTrashed,
-    get,
     fetchAll,
+    get,
+    getFiltered,
     add,
     update,
     remove,

@@ -23,10 +23,15 @@ export const useTagStore = defineStore("TagStore", () => {
       : noteStore.notesNotTrashed.length;
   };
 
+  const setActiveTag = (tag: string) => {
+    activeTag.value = tag;
+  };
+
   return {
     activeTag,
     availableTags,
     uniqueTags,
     getTagAmount,
+    setActiveTag,
   };
 });
