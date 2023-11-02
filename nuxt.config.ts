@@ -24,5 +24,9 @@ export default defineNuxtConfig({
     },
   },
   svgo: { defaultImport: "component" },
-  css: ["~/assets/css/fonts.css", "~/assets/css/utils.css"],
+  css: [
+    "~/assets/css/fonts.css",
+    "~/assets/css/utils.css",
+    "~/assets/css/transitions.css",
+  ],
 });

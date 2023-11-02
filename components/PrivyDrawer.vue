@@ -141,16 +141,3 @@ watch(
     </transition>
   </section>
 </template>
-
-<!-- <script>
-export default {
-
-  watch: {
-    $route(to, from) {
-      if (this.isActive && this.isMobile) {
-        this.$emit("toggle-drawer");
-      }
-    },
-  },
-};
-</script> -->
