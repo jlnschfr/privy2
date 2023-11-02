@@ -51,31 +51,6 @@ function getComponent(name: string) {
   }
 }
 
-function focusLastAddedItem() {
-  setTimeout(() => {
-    const filteredItems: Item[] = items.value.filter(
-      (item) => !(item.type === "Task" && item.data.isValid),
-    );
-    const item: Item = filteredItems[filteredItems.length - 1];
-
-    if (item && item.data.text === "") {
-      const task: HTMLInputElement = document
-        .querySelector(`[data-id='${item.id}']`)
-        .querySelector(".Task input[type=text]");
-
-      const markdown: HTMLTextAreaElement = document
-        .querySelector(`[data-id='${item.id}']`)
-        .querySelector(".Markdown");
-
-      if (task) {
-        task.focus();
-      } else if (markdown) {
-        markdown.click();
-      }
-    }
-  }, 150);
-}
-
 function sortItems() {
   items.value.sort((a, b) => {
     const aValid = "isValid" in a.data ? a.data.isValid : false;
@@ -95,11 +70,7 @@ function sortItems() {
 
 watch(
   items,
-  (newItems: Item[], oldItems: Item[]) => {
-    if (newItems.length > oldItems.length) {
-      focusLastAddedItem();
-    }
-
+  () => {
     if (!isEqual(storeItems.value, items.value)) {
       noteStore.update(props.noteId, {
         items: items.value,
@@ -114,6 +85,8 @@ watch(
 watch(storeItems, () => {
   if (!isEqual(storeItems.value, items.value)) {
     items.value = [...storeItems.value];
+
+    sortItems();
   }
 });
 </script>
