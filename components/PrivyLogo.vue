@@ -14,12 +14,9 @@ const paths: ComputedRef<SVGElement[]> = computed(() => [
   ...svg.value.$el.querySelectorAll("path"),
 ]);
 
-watch(
-  () => route.name,
-  () => {
-    animatePaths();
-  },
-);
+watch([() => route.params, () => route.name], () => {
+  animatePaths();
+});
 
 function animatePaths() {
   if (paths.value) {
