@@ -94,9 +94,9 @@ export const useNoteStore = defineStore("NoteStore", () => {
     const index = notes.value.findIndex((note) => note.id === id);
     notes.value.splice(index, 1);
 
-    await navigateTo({
-      path: "/notes",
-    });
+    // await navigateTo({
+    //   path: "/notes",
+    // });
   };
 
   return {

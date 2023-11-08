@@ -19,12 +19,12 @@ function remove() {
   if (alreadyTrashed) {
     noteStore.remove(props.noteId);
   } else {
-    const tags = [...note.value.tags, { text: "trash" }];
+    const tags: Tag[] = [...note.value.tags, { text: "trash" }];
     noteStore.update(props.noteId, { tags });
   }
 
   if (route.name === "note-id") {
-    navigateTo("/notes");
+    navigateTo({ path: "/notes", query: { ...route.query } });
   }
 
   snackbarStore.show({
@@ -40,7 +40,9 @@ function undoRemove(note: Note, alreadyTrashed: boolean) {
   if (alreadyTrashed) {
     noteStore.add(note);
   } else {
-    const index = note.tags.findIndex((el) => el.text === "Trash");
+    const index = note.tags.findIndex(
+      (el) => el.text.toLowerCase() === "trash",
+    );
     note.tags.splice(index, 1);
     noteStore.update(note.id, note);
   }
