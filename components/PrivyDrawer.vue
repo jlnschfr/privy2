@@ -106,7 +106,7 @@ watch(
         </div>
         <footer class="mt-4 px-6">
           <ul class="w-full">
-            <!-- <li><Weather /></li> -->
+            <li><Weather /></li>
             <li class="mt-2">
               <button
                 class="privy-focus flex items-center hover:text-neutral-400"
