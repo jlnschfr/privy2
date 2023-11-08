@@ -9,9 +9,9 @@ const route = useRoute();
 const noteStore = useNoteStore();
 const snackbarStore = useSnackbarStore();
 
-const note: ComputedRef<Note> = computed(() => noteStore.get(props.noteId));
+const note: Ref<Note> = ref(noteStore.get(props.noteId));
 
-function remove() {
+async function remove() {
   const alreadyTrashed = Boolean(
     note.value.tags.find((el) => el.text.toLowerCase() === "trash"),
   );
@@ -19,12 +19,13 @@ function remove() {
   if (alreadyTrashed) {
     noteStore.remove(props.noteId);
   } else {
-    const tags: Tag[] = [...note.value.tags, { text: "trash" }];
-    noteStore.update(props.noteId, { tags });
+    note.value.tags = [...note.value.tags, { text: "trash" }];
+    noteStore.update(props.noteId, { tags: note.value.tags });
   }
 
+  await nextTick();
   if (route.name === "note-id") {
-    navigateTo({ path: "/notes", query: { ...route.query } });
+    navigateTo("/notes");
   }
 
   snackbarStore.show({
@@ -38,7 +39,7 @@ function remove() {
 
 function undoRemove(note: Note, alreadyTrashed: boolean) {
   if (alreadyTrashed) {
-    noteStore.add(note);
+    noteStore.add(note, { redirect: false });
   } else {
     const index = note.tags.findIndex(
       (el) => el.text.toLowerCase() === "trash",

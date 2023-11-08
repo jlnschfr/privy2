@@ -9,7 +9,7 @@ const id: ComputedRef<string> = computed(() => route.params.id as string);
 const isNew: ComputedRef<boolean> = computed(() => id.value === "new");
 
 if (isNew.value) {
-  await noteStore.add({ id: uuid() });
+  await noteStore.add({ id: uuid() }, { redirect: true });
 }
 
 const note: ComputedRef<Note> = computed(() => noteStore.get(id.value));
@@ -22,17 +22,7 @@ watch(title, () => {
 });
 
 watch(tags, () => {
-  let queryTag: string = queryParams.activeTag.value || "";
-
-  if (
-    (!queryTag && tags.value.length) ||
-    (queryTag && tags.value.find((tag) => tag.text === queryTag))
-  ) {
-    queryTag = tags.value[0].text;
-  } else if (queryTag && !tags.value.length) {
-    queryTag = "";
-  }
-
+  const queryTag: string = tags.value.length ? tags.value[0].text : "";
   queryParams.setActiveTag(queryTag);
 });
 

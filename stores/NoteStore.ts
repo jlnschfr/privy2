@@ -54,7 +54,10 @@ export const useNoteStore = defineStore("NoteStore", () => {
     }
   };
 
-  const add = async (details: Partial<Note>) => {
+  const add = async (
+    details: Partial<Note>,
+    options: { redirect: boolean },
+  ) => {
     const { data } = await client
       .from("notes")
       .upsert({
@@ -68,9 +71,11 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
     notes.value.push(data);
 
-    await navigateTo({
-      path: `/note/${data.id}`,
-    });
+    if (options.redirect) {
+      await navigateTo({
+        path: `/note/${data.id}`,
+      });
+    }
   };
 
   const update = async (id: string, details: Partial<Note>) => {
