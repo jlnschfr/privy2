@@ -18,24 +18,33 @@ onUnmounted(() => {
 });
 
 async function checkWeather() {
-  // check if stored weather is not older then 0.5 hours
   const location: PrivyLocation = locationStore.location;
-  const weather = locationStore.weather;
-  const offset = 1800000;
+  const weather: PrivyWeather = locationStore.weather;
 
-  if (location && weather && weather.date?.getTime() + offset > new Date()) {
-    applyLocationAndWeather(location, weather.data);
+  const offset: number = 1800000;
+  const cachedTimestamp: number = weather?.date?.getTime() + offset;
+  const nowTimestamp: number = new Date().getTime();
+
+  // check if stored weather is not older then 0.5 hours
+  if (location && weather && cachedTimestamp > nowTimestamp) {
+    applyLocationAndWeather(location, weather);
   } else {
     try {
-      const location: PrivyLocation = await getLocation();
-      const weather = await getWeather(location.lat, location.long);
-      console.log(location);
-      console.log(weather);
+      const newLocation: PrivyLocation = await getLocation();
+      const newWeatherData: PrivyWeatherData = await getWeather(
+        newLocation.lat,
+        newLocation.long,
+      );
 
-      locationStore.location = location;
-      locationStore.weather = weather;
+      const newWeather: PrivyWeather = {
+        date: new Date(),
+        data: newWeatherData,
+      };
 
-      applyLocationAndWeather(location, weather);
+      locationStore.location = newLocation;
+      locationStore.weather = newWeather;
+
+      applyLocationAndWeather(newLocation, newWeather);
     } catch (err) {
       // console.log(err)
     }
@@ -49,9 +58,9 @@ function getLocation(): Promise<PrivyLocation> {
     } else {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
-          const lat = position.coords.latitude;
-          const long = position.coords.longitude;
-          const city = await getCity(lat, long);
+          const lat: number = position.coords.latitude;
+          const long: number = position.coords.longitude;
+          const city: string = await getCity(lat, long);
           resolve({ lat, long, city });
         },
         () => {
@@ -80,16 +89,16 @@ function getCity(lat: number, long: number): Promise<string> {
   });
 }
 
-function getWeather(lat: number, long: number): Promise<any> {
+function getWeather(lat: number, long: number): Promise<PrivyWeatherData> {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
-    const url = new URL("http://api.weatherapi.com/v1/current.json");
+    const url: URL = new URL("http://api.weatherapi.com/v1/current.json");
     url.searchParams.set("aqi", "no");
     url.searchParams.set("key", "8e53893c18944438bdf142917230811");
     url.searchParams.set("q", `${lat},${long}`);
-    const response = await fetch(url);
+    const response: Response = await fetch(url);
     if (response.ok) {
-      const json = await response.json();
+      const json: PrivyWeatherData = await response.json();
       resolve(json);
     } else {
       reject(new Error("Can't fetch Weather Data"));
@@ -97,45 +106,73 @@ function getWeather(lat: number, long: number): Promise<any> {
   });
 }
 
-function applyLocationAndWeather(location: PrivyLocation, weather: any) {
-  const isNight = !weather.current.is_day;
-  const iconMap = generateIconMap(isNight);
+function applyLocationAndWeather(
+  location: PrivyLocation,
+  weather: PrivyWeather,
+) {
+  const { current } = weather.data;
 
-  temperature.value = weather.current.temp_c;
-  description.value = weather.current.condition.text;
-  icon.value = iconMap[weather.current.condition.text];
+  temperature.value = current.temp_c;
+  description.value = current.condition.text;
+  icon.value = getIcon(current.condition.text);
   city.value = location.city;
   active.value = true;
 }
 
-function generateIconMap(isNight: boolean) {
-  return {
-    freezing_rain_heavy: "SvgoWeatherSleetWiSleet",
-    freezing_rain: "SvgoWeatherSleetWiSleet",
-    freezing_rain_light: "SvgoWeatherSleetWiSleet",
-    freezing_drizzle: "SvgoWeatherSleetWiSleet",
-    ice_pellets_heavy: "SvgoWeatherSleetWiHail",
-    ice_pellets: "SvgoWeatherSleetWiHail",
-    ice_pellets_light: "SvgoWeatherSleetWiHail",
-    snow_heavy: "SvgoWeatherSleetWiSnow",
-    snow: "SvgoWeatherSleetWiSnow",
-    snow_light: "SvgoWeatherSleetWiSnow",
-    flurries: "SvgoWeatherSleetWiCloudyGusts",
-    tstorm: "SvgoWeatherSleetWiThunderstorm",
-    rain_heavy: "SvgoWeatherSleetWiRain",
-    rain: "SvgoWeatherSleetWiRain",
-    rain_light: "SvgoWeatherSleetWiRain",
-    drizzle: "SvgoWeatherSleetWiSprinkle",
-    fog_light: "SvgoWeatherSleetWiFog",
-    fog: "SvgoWeatherSleetWiFog",
-    cloudy: "SvgoWeatherSleetWiCloudy",
-    mostly_cloudy: "SvgoWeatherSleetWiCloudy",
-    partly_cloudy: "SvgoWeatherSleetWiCloudy",
-    mostly_clear: "SvgoWeatherSleetWiCloudy",
-    clear: isNight
-      ? "SvgoWeatherSleetWiNightClear"
-      : "SvgoWeatherSleetWiDaySunny",
+function getIcon(icon: string): string {
+  const iconMap = {
+    Clear: "SvgoWeatherClear",
+    Sunny: "SvgoWeatherSunny",
+    "Partly cloudy": "SvgoWeatherCloudy",
+    Cloudy: "SvgoWeatherCloudy",
+    Overcast: "SvgoWeatherPartlyCloudy",
+    Mist: "SvgoWeatherMist",
+    "Patchy rain possible": "SvgoWeatherRain",
+    "Patchy snow possible": "SvgoWeatherSnow",
+    "Patchy sleet possible": "SvgoWeatherSleet",
+    "Patchy freezing drizzle possible": "SvgoWeatherDrizzle",
+    "Thundery outbreaks possible": "SvgoWeatherThunder",
+    "Blowing snow": "SvgoWeatherSnow",
+    Blizzard: "SvgoWeatherBlizzard",
+    Fog: "SvgoWeatherFog",
+    "Freezing fog": "SvgoWeatherFog",
+    "Patchy light drizzle": "SvgoWeatherDrizzle",
+    "Light drizzle": "SvgoWeatherDrizzle",
+    "Freezing drizzle": "SvgoWeatherDrizzle",
+    "Heavy freezing drizzle": "SvgoWeatherDrizzle",
+    "Patchy light rain": "SvgoWeatherRain",
+    "Light rain": "SvgoWeatherRain",
+    "Moderate rain at times": "SvgoWeatherRain",
+    "Moderate rain": "SvgoWeatherRain",
+    "Heavy rain at times": "SvgoWeatherRain",
+    "Heavy rain": "SvgoWeatherRain",
+    "Light freezing rain": "SvgoWeatherRain",
+    "Moderate or heavy freezing rain": "SvgoWeatherRain",
+    "Light sleet": "SvgoWeatherSleet",
+    "Moderate or heavy sleet": "SvgoWeatherSleet",
+    "Patchy light snow": "SvgoWeatherSnow",
+    "Light snow": "SvgoWeatherSnow",
+    "Patchy moderate snow": "SvgoWeatherSnow",
+    "Moderate snow": "SvgoWeatherSnow",
+    "Patchy heavy snow": "SvgoWeatherSnow",
+    "Heavy snow": "SvgoWeatherSnow",
+    "Ice pellets": "SvgoWeatherIcePellets",
+    "Light rain shower": "SvgoWeatherDrizzle",
+    "Moderate or heavy rain shower": "SvgoWeatherRain",
+    "Torrential rain shower": "SvgoWeatherRain",
+    "Light sleet showers": "SvgoWeatherSleet",
+    "Moderate or heavy sleet showers": "SvgoWeatherSleet",
+    "Light snow showers": "SvgoWeatherSnow",
+    "Moderate or heavy snow showers": "SvgoWeatherSnow",
+    "Light showers of ice pellets": "SvgoWeatherIcePellets",
+    "Moderate or heavy showers of ice pellets": "SvgoWeatherIcePellets",
+    "Patchy light rain with thunder": "SvgoWeatherThunder",
+    "Moderate or heavy rain with thunder": "SvgoWeatherThunder",
+    "Patchy light snow with thunder": "SvgoWeatherThunder",
+    "Moderate or heavy snow with thunder": "SvgoWeatherThunder",
   } as any;
+
+  return iconMap[icon];
 }
 </script>
 
@@ -145,171 +182,11 @@ function generateIconMap(isNight: boolean) {
     <div v-if="temperature !== ''" class="mt-2 flex items-center">
       <component :is="icon" class="w-6 fill-current" />
       <div>
-        <p class="text-2xl leading-none">{{ Math.round(temperature) }}°</p>
+        <p class="text-2xl leading-none">
+          {{ Math.round(parseInt(temperature)) }}°
+        </p>
         <p>{{ description }}</p>
       </div>
     </div>
   </div>
 </template>
-
-<!-- <script>
-export default {
-  components: {
-    CloudlyGustsIcon: () => import("@/assets/svg/weather/wi-cloudy-gusts.svg"),
-    CloudlyIcon: () => import("@/assets/svg/weather/wi-cloudy.svg"),
-    DaySunnyOvercastIcon: () =>
-      import("@/assets/svg/weather/wi-day-sunny-overcast.svg"),
-    DaySunnyIcon: () => import("@/assets/svg/weather/wi-day-sunny.svg"),
-    FogIcon: () => import("@/assets/svg/weather/wi-fog.svg"),
-    HailIcon: () => import("@/assets/svg/weather/wi-hail.svg"),
-    NightClearIcon: () => import("@/assets/svg/weather/wi-night-clear.svg"),
-    NightCloudyIcon: () => import("@/assets/svg/weather/wi-night-cloudy.svg"),
-    RainIcon: () => import("@/assets/svg/weather/wi-rain.svg"),
-    SleetIcon: () => import("@/assets/svg/weather/wi-sleet.svg"),
-    SnowIcon: () => import("@/assets/svg/weather/wi-snow.svg"),
-    SprinkleIcon: () => import("@/assets/svg/weather/wi-sprinkle.svg"),
-    ThunderstormIcon: () => import("@/assets/svg/weather/wi-thunderstorm.svg"),
-  },
-  data() {
-    return {
-      temperature: "",
-      city: "",
-      description: "",
-      icon: "",
-      active: false,
-    };
-  },
-  mounted() {
-    this.interval = setInterval(this.checkWeather.bind(this), 300000);
-    this.checkWeather();
-  },
-
-  unmounted() {
-    clearInterval(this.interval);
-  },
-
-  methods: {
-    async checkWeather() {
-      // check if stored weather is not older then 0.5 hours
-      const location = this.$store.getters.getLocation();
-      const weather = this.$store.getters.getWeather();
-      const offset = 1800000;
-
-      if (
-        location &&
-        weather &&
-        weather.date?.getTime() + offset > new Date()
-      ) {
-        this.applyLocationAndWeather(location, weather.data);
-      } else {
-        try {
-          const location = await this.getLocation();
-          const weather = await this.getWeather(location.lat, location.lon);
-
-          this.$store.dispatch("setLocation", location);
-          this.$store.dispatch("setWeather", weather);
-
-          this.applyLocationAndWeather(location, weather);
-        } catch (err) {
-          // console.log(err)
-        }
-      }
-    },
-
-    getLocation() {
-      return new Promise((resolve, reject) => {
-        if (!navigator.geolocation) {
-          reject(new Error("Browser doesn't support Geolocation API"));
-        } else {
-          navigator.geolocation.getCurrentPosition(
-            async (position) => {
-              const lat = position.coords.latitude;
-              const lon = position.coords.longitude;
-              const city = await this.getCity(lat, lon);
-              resolve({ lat, lon, city });
-            },
-            () => {
-              reject(new Error("Browser doesn't support Geolocation API"));
-            },
-          );
-        }
-      });
-    },
-
-    getCity(lat, lon) {
-      // eslint-disable-next-line no-async-promise-executor
-      return new Promise(async (resolve, reject) => {
-        const url = new URL("https://nominatim.openstreetmap.org/reverse");
-        url.searchParams.set("format", "json");
-        url.searchParams.set("lat", lat);
-        url.searchParams.set("lon", lon);
-        const response = await fetch(url);
-        if (response.ok) {
-          const json = await response.json();
-          resolve(`${json.address?.suburb}, ${json.address?.country}`);
-        } else {
-          reject(new Error("Can't fetch Location Data"));
-        }
-      });
-    },
-
-    getWeather(lat, lon) {
-      // eslint-disable-next-line no-async-promise-executor
-      return new Promise(async (resolve, reject) => {
-        const url = new URL("https://api.climacell.co/v3/weather/realtime");
-        url.searchParams.set("unit_system", "si");
-        url.searchParams.set("apikey", "Kp2il3y21251KTFaYzh82Dmq63h6YmTW");
-        url.searchParams.set("lat", lat);
-        url.searchParams.set("lon", lon);
-        url.searchParams.set("fields", "temp,weather_code,sunset");
-        const response = await fetch(url);
-        if (response.ok) {
-          const json = await response.json();
-          resolve(json);
-        } else {
-          reject(new Error("Can't fetch Weather Data"));
-        }
-      });
-    },
-
-    applyLocationAndWeather(location, weather) {
-      const isNight = new Date(weather.sunset.value) < new Date();
-      const iconMap = this.generateIconMap(isNight);
-
-      this.temperature = weather.temp.value;
-      this.description = weather.weather_code.value.replace("_", " ");
-      this.icon = iconMap[weather.weather_code.value];
-      this.city = location.city;
-      this.active = true;
-    },
-
-    generateIconMap(isNight) {
-      return {
-        freezing_rain_heavy: "SleetIcon",
-        freezing_rain: "SleetIcon",
-        freezing_rain_light: "SleetIcon",
-        freezing_drizzle: "SleetIcon",
-        ice_pellets_heavy: "HailIcon",
-        ice_pellets: "HailIcon",
-        ice_pellets_light: "HailIcon",
-        snow_heavy: "SnowIcon",
-        snow: "SnowIcon",
-        snow_light: "SnowIcon",
-        flurries: "CloudlyGustsIcon",
-        tstorm: "ThunderstormIcon",
-        rain_heavy: "RainIcon",
-        rain: "RainIcon",
-        rain_light: "RainIcon",
-        drizzle: "SprinkleIcon",
-        fog_light: "FogIcon",
-        fog: "FogIcon",
-        cloudy: "CloudlyIcon",
-        mostly_cloudy: "CloudlyIcon",
-        partly_cloudy: "CloudlyIcon",
-        mostly_clear: "CloudlyIcon",
-        clear: isNight ? "NightClearIcon" : "DaySunnyIcon",
-      };
-    },
-  },
-};
-</script> -->
