@@ -1,14 +1,19 @@
 import { defineStore } from "pinia";
 
 export const useTagStore = defineStore("TagStore", () => {
+  const route = useRoute();
   const noteStore = useNoteStore();
-  const activeTag: Ref<string> = ref("");
+
+  const activeTag: ComputedRef<string> = computed(() =>
+    route.query.tag ? (route.query.tag as string) : "",
+  );
 
   const availableTags: ComputedRef<string[]> = computed(() =>
     noteStore.notesNotTrashed
       .flatMap((note) => note.tags)
       .map((note) => note.text),
   );
+
   const uniqueTags: ComputedRef<string[]> = computed(() =>
     availableTags.value
       .filter(
@@ -23,15 +28,10 @@ export const useTagStore = defineStore("TagStore", () => {
       : noteStore.notesNotTrashed.length;
   };
 
-  const setActiveTag = (tag: string) => {
-    activeTag.value = tag;
-  };
-
   return {
     activeTag,
     availableTags,
     uniqueTags,
     getTagAmount,
-    setActiveTag,
   };
 });
