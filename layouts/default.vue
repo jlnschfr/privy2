@@ -1,4 +1,7 @@
 <script setup lang="ts">
+const route = useRoute();
+
+const showButton: ComputedRef<boolean> = computed(() => route.name === "notes");
 const showDrawer: Ref<boolean> = ref(false);
 </script>
 
@@ -14,6 +17,7 @@ const showDrawer: Ref<boolean> = ref(false);
     <main class="relative p-4vw md:pl-app">
       <slot />
     </main>
+    <FloatingActionButton :is-active="showButton" />
     <Snackbar />
   </div>
 </template>
