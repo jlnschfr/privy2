@@ -1,8 +1,9 @@
 <script setup lang="ts">
-function beforeEnter(el: HTMLElement) {
-  el.style.transitionDelay =
-    Number(el.dataset.index) < 6
-      ? `${Number(el.dataset.index) * 25}ms`
+function beforeEnter(el: Element) {
+  const element = el as HTMLElement;
+  element.style.transitionDelay =
+    Number(element.dataset.index) < 6
+      ? `${Number(element.dataset.index) * 25}ms`
       : `${6 * 25}ms`;
 }
 </script>
