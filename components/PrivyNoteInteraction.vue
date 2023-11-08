@@ -63,7 +63,7 @@ function toggleFav() {
         'text-secondary-500': note?.favorite,
       }"
       :disabled="!note"
-      @click="toggleFav()"
+      @click.stop="toggleFav()"
     >
       <SvgoHeart
         aria-hidden="true"
@@ -77,7 +77,7 @@ function toggleFav() {
       label="delete note"
       styling="secondary"
       :disabled="!note"
-      @click="remove()"
+      @click.stop="remove()"
     >
       <SvgoTrash aria-hidden="true" class="fill w-2"
     /></IconButton>

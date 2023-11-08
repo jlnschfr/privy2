@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 
 const noteStore = useNoteStore();
 const route = useRoute();
+const queryParams = useQueryParams();
 
 const id: ComputedRef<string> = computed(() => route.params.id as string);
 const isNew: ComputedRef<boolean> = computed(() => id.value === "new");
@@ -13,10 +14,26 @@ if (isNew.value) {
 
 const note: ComputedRef<Note> = computed(() => noteStore.get(id.value));
 const items: ComputedRef<Item[]> = computed(() => note.value.items);
+const tags: ComputedRef<Tag[]> = computed(() => note.value.tags);
 const title: Ref<string> = ref(note.value ? note.value.title : "");
 
 watch(title, () => {
   noteStore.update(id.value, { title: title.value });
+});
+
+watch(tags, () => {
+  let queryTag: string = queryParams.activeTag.value || "";
+
+  if (
+    (!queryTag && tags.value.length) ||
+    (queryTag && tags.value.find((tag) => tag.text === queryTag))
+  ) {
+    queryTag = tags.value[0].text;
+  } else if (queryTag && !tags.value.length) {
+    queryTag = "";
+  }
+
+  queryParams.setActiveTag(queryTag);
 });
 
 onMounted(() => {

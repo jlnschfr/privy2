@@ -1,6 +1,16 @@
+<script setup lang="ts">
+const noteStore = useNoteStore();
+const queryParams = useQueryParams();
+
+const { activeTag } = queryParams;
+const notes: ComputedRef<Note[]> = computed(() =>
+  noteStore.getFiltered(activeTag.value),
+);
+</script>
+
 <template>
   <div class="relative">
-    <StaggeredTransition
+    <div
       class="mb-6 grid grid-cols-1 items-center gap-4vw pb-4vw md:grid-cols-2 md:pb-0 lg:grid-cols-3 lg:gap-2vw"
     >
       <PrivyNoteTeaser
@@ -9,22 +19,6 @@
         :note="note"
         :data-index="key"
       />
-    </StaggeredTransition>
+    </div>
   </div>
 </template>
-
-<script>
-export default {
-  components: {
-    PrivyNoteTeaser: () => import("@/components/PrivyNoteTeaser"),
-    StaggeredTransition: () => import("@/components/_StaggeredTransition"),
-  },
-
-  props: {
-    notes: {
-      type: Array,
-      required: true,
-    },
-  },
-};
-</script>

@@ -1,15 +1,49 @@
+<script setup lang="ts">
+interface Props {
+  note: Note;
+}
+
+const props = defineProps<Props>();
+
+const queryParams = useQueryParams();
+const { activeTag } = queryParams;
+
+const tasks: ComputedRef<Task[]> = computed(
+  () => props.note.items.filter((item) => item.type === "Task") as Task[],
+);
+
+const doneTasks: ComputedRef<Task[]> = computed(() =>
+  tasks.value.filter((item) => item.data?.isValid),
+);
+
+function open(id: string) {
+  let tag: string = "";
+
+  if (activeTag.value) {
+    tag = activeTag.value;
+  } else if (props.note.tags.length) {
+    tag = props.note.tags[0].text;
+  }
+
+  navigateTo(`/note/${id}/?tag=${tag}`);
+}
+</script>
+
 <template>
   <article
-    class="PrivyNoteTeaser privy-focus cursor-pointer bg-neutral-600 shadow-lg transition duration-300 dark:bg-neutral-100"
+    class="PrivyNoteTeaser cursor-pointer bg-neutral-600 shadow-lg transition duration-300 dark:bg-neutral-100"
     tabindex="0"
     @keyup.enter="open(note.id)"
     @click="open(note.id)"
   >
     <div
       class="sm:p-4 flex p-3"
-      :class="{ 'items-center': !tasks.length, 'items-end': tasks.length }"
+      :class="{
+        'items-center': !tasks.length,
+        'items-end': tasks.length,
+      }"
     >
-      <PrivyDate :date="note.createdDate" />
+      <Date :date="note.created_at" />
 
       <div>
         <h2 class="w-full hyphens-auto text-2xl font-bold leading-none">
@@ -17,7 +51,7 @@
         </h2>
         <p v-if="tasks.length" class="mt-0_5">
           <span>{{ tasks.length }} tasks</span>
-          <span>{{ done.length }} done</span>
+          <span>{{ doneTasks.length }} done</span>
         </p>
       </div>
     </div>
@@ -32,55 +66,10 @@
         </p>
         <p v-if="note.tags.length > 1">+{{ note.tags.length - 1 }}</p>
       </div>
-      <PrivyNoteInteraction :note="note" />
+      <PrivyNoteInteraction :note-id="note.id" />
     </div>
   </article>
 </template>
-
-<script>
-import { first } from "@/utils/array";
-
-export default {
-  components: {
-    PrivyDate: () => import("@/components/PrivyDate"),
-    PrivyNoteInteraction: () => import("@/components/PrivyNoteInteraction"),
-  },
-
-  props: {
-    note: {
-      type: Object,
-      required: true,
-    },
-  },
-
-  computed: {
-    tasks() {
-      return this.note.items.filter((item) => {
-        return item.type === "Task";
-      });
-    },
-    done() {
-      return this.tasks.filter((item) => {
-        return item.data && item.data.state;
-      });
-    },
-  },
-
-  methods: {
-    open(id) {
-      let tag = "";
-
-      if (this.$route.query.tag) {
-        tag = this.$route.query.tag;
-      } else if (first(this.note.tags)) {
-        tag = first(this.note.tags).text;
-      }
-
-      this.$router.push(`/note/?id=${id}&tag=${tag}`);
-    },
-  },
-};
-</script>
 
 <style scoped>
 .hyphens-auto {

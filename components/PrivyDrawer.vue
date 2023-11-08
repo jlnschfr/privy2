@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useViewport } from "@/composables/viewport";
-
 interface Props {
   isActive: boolean;
 }
@@ -16,9 +14,11 @@ const client = useSupabaseClient();
 const colorMode = useColorMode();
 const tagStore = useTagStore();
 const viewport = useViewport();
+const queryParams = useQueryParams();
 
 const { isMobile } = viewport;
-const activeTag: ComputedRef<string> = computed(() => tagStore.activeTag);
+const { activeTag } = queryParams;
+
 const tags: ComputedRef<string[]> = computed(() => tagStore.uniqueTags);
 const isDarkMode: ComputedRef<boolean> = computed(
   () => colorMode.value === "dark",

@@ -1,7 +1,7 @@
 <template>
   <div>
     <NuxtLayout name="default">
-      <!-- <PrivyNoteOverview /> -->
+      <PrivyNoteOverview />
 
       <Button @click="navigateTo('/note/new')">add note</Button>
     </NuxtLayout>
