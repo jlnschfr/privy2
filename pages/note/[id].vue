@@ -13,9 +13,9 @@ if (isNew.value) {
 }
 
 const note: ComputedRef<Note> = computed(() => noteStore.get(id.value));
-const items: ComputedRef<Item[]> = computed(() => note.value.items);
-const tags: ComputedRef<Tag[]> = computed(() => note.value.tags);
-const title: Ref<string> = ref(note.value ? note.value.title : "");
+const items: ComputedRef<Item[]> = computed(() => note.value?.items);
+const tags: ComputedRef<Tag[]> = computed(() => note.value?.tags);
+const title: Ref<string> = ref(note.value?.title);
 
 watch(title, () => {
   noteStore.update(id.value, { title: title.value });

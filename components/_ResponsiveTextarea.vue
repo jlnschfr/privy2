@@ -9,7 +9,7 @@ interface Emits {
   (e: "update:modelValue", value: string): void;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const textarea: Ref<HTMLTextAreaElement> = ref(null);
@@ -20,6 +20,12 @@ const onInput = debounce((e) => {
 
   emit("update:modelValue", (e.target as HTMLTextAreaElement).value);
 }, 500);
+
+onMounted(() => {
+  if (props.modelValue === "") {
+    textarea.value.focus();
+  }
+});
 </script>
 
 <template>
