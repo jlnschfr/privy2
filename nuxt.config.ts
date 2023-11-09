@@ -1,9 +1,27 @@
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: "Privy Notes",
+      htmlAttrs: { lang: "en" },
+      meta: [
+        { charset: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        {
+          hid: "description",
+          name: "description",
+          content: "Great notes for great people",
+        },
+      ],
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+      bodyAttrs: { class: "bg-neutral-500 dark:bg-neutral-50" },
+    },
+  },
   modules: [
     "@nuxtjs/supabase",
     "@nuxtjs/color-mode",
     "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
+    "@vite-pwa/nuxt",
     "nuxt-svgo",
   ],
   typescript: {
