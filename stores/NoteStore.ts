@@ -30,6 +30,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .order("created_at");
 
     notes.value = data;
+    sortNotes();
   };
 
   const get = (id: string): Note => {
@@ -70,6 +71,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .single();
 
     notes.value.push(data);
+    sortNotes();
 
     if (options.redirect) {
       await navigateTo({
@@ -91,6 +93,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     notes.value = notes.value.map((note) =>
       note.id === data.id ? data : note,
     );
+    sortNotes();
   };
 
   const remove = async (id: string) => {
@@ -98,10 +101,25 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
     const index = notes.value.findIndex((note) => note.id === id);
     notes.value.splice(index, 1);
+    sortNotes();
+  };
 
-    // await navigateTo({
-    //   path: "/notes",
-    // });
+  const sortNotes = () => {
+    notes.value.sort((a, b) => {
+      if (a.favorite || b.favorite) {
+        if (a.favorite && !b.favorite) {
+          return -1;
+        } else if (a.favorite && b.favorite) {
+          return Date.parse(a.edited_at) >= Date.parse(b.edited_at) ? -1 : 1;
+        } else {
+          return 1;
+        }
+      } else if (Date.parse(a.edited_at) >= Date.parse(b.edited_at)) {
+        return -1;
+      } else {
+        return 1;
+      }
+    });
   };
 
   return {
