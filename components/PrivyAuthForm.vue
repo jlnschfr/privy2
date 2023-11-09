@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const user = useSupabaseUser();
 const { auth } = useSupabaseClient();
-const redirectTo: string = `${useRuntimeConfig().public.baseUrl}/confirm`;
+const redirectTo: string = `${useRuntimeConfig().public.baseUrl}/notes`;
 
 watchEffect(() => {
   if (user.value) {
