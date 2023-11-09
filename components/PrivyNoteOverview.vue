@@ -24,7 +24,7 @@ function getDelay(index: number): string {
       <PrivyNoteTeaser
         v-for="(note, key) in notes"
         :key="note.id + Math.random()"
-        :note="note"
+        :note-id="note.id"
         :style="{ transitionDelay: getDelay(key) }"
       />
     </TransitionGroup>

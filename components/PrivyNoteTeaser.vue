@@ -1,28 +1,28 @@
 <script setup lang="ts">
 interface Props {
-  note: Note;
+  noteId: string;
 }
 
 const props = defineProps<Props>();
-
+const noteStore = useNoteStore();
 const queryParams = useQueryParams();
 const { activeTag } = queryParams;
 
 const tasks: ComputedRef<Task[]> = computed(
-  () => props.note.items.filter((item) => item.type === "Task") as Task[],
+  () => note.value.items.filter((item) => item.type === "Task") as Task[],
 );
-
 const doneTasks: ComputedRef<Task[]> = computed(() =>
   tasks.value.filter((item) => item.data?.isValid),
 );
+const note: Ref<Note> = ref(noteStore.get(props.noteId));
 
 function open(id: string) {
   let tag: string = "";
 
   if (activeTag.value) {
     tag = activeTag.value;
-  } else if (props.note.tags.length) {
-    tag = props.note.tags[0].text;
+  } else if (note.value.tags.length) {
+    tag = note.value.tags[0].text;
   }
 
   navigateTo(`/note/${id}/?tag=${tag}`);
