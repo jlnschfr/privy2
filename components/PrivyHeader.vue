@@ -3,6 +3,11 @@ interface Emits {
   (e: "toggle-drawer"): void;
 }
 const emit = defineEmits<Emits>();
+
+const user = useSupabaseUser();
+const noteStore = useNoteStore();
+
+const isSyncing: ComputedRef<boolean> = computed(() => noteStore.isSyncing);
 </script>
 
 <template>
@@ -13,7 +18,7 @@ const emit = defineEmits<Emits>();
       <h1 aria-label="Privy Notes" class="mr-2">
         <PrivyLogo />
       </h1>
-      <!-- <Spinner :is-active="isSyncing || !(notes && user)" /> -->
+      <Spinner :is-active="isSyncing || !user" />
     </div>
     <nav class="flex items-center">
       <nuxt-link to="/admin/" class="flex items-center justify-center">

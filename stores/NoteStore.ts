@@ -21,6 +21,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   );
 
   const fetchAll = async () => {
+    isSyncing.value = true;
     const { data } = await client
       .from("notes")
       .select(
@@ -30,6 +31,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .order("created_at");
 
     notes.value = data;
+    isSyncing.value = false;
     sortNotes();
   };
 
@@ -59,6 +61,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     details: Partial<Note>,
     options: { redirect: boolean },
   ) => {
+    isSyncing.value = true;
     const { data } = await client
       .from("notes")
       .upsert({
@@ -71,6 +74,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .single();
 
     notes.value.push(data);
+    isSyncing.value = false;
     sortNotes();
 
     if (options.redirect) {
@@ -81,6 +85,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   };
 
   const update = async (id: string, details: Partial<Note>) => {
+    isSyncing.value = true;
     const { data } = await client
       .from("notes")
       .update({ ...details, edited_at: new Date().toISOString() })
@@ -93,14 +98,17 @@ export const useNoteStore = defineStore("NoteStore", () => {
     notes.value = notes.value.map((note) =>
       note.id === data.id ? data : note,
     );
+    isSyncing.value = false;
     sortNotes();
   };
 
   const remove = async (id: string) => {
+    isSyncing.value = true;
     await client.from("notes").delete().match({ id, user_id: user.value.id });
 
     const index = notes.value.findIndex((note) => note.id === id);
     notes.value.splice(index, 1);
+    isSyncing.value = false;
     sortNotes();
   };
 

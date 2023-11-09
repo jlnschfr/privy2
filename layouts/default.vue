@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const route = useRoute();
+const user = useSupabaseUser();
+const noteStore = useNoteStore();
 
+const isSyncing: ComputedRef<boolean> = computed(() => noteStore.isSyncing);
 const showButton: ComputedRef<boolean> = computed(() => route.name === "notes");
 const showDrawer: Ref<boolean> = ref(false);
 </script>
@@ -15,6 +18,10 @@ const showDrawer: Ref<boolean> = ref(false);
       @toggle-drawer="showDrawer = !showDrawer"
     />
     <main class="relative p-4vw md:pl-app">
+      <Spinner
+        :is-active="isSyncing || !user"
+        class="fixed bottom-2vw hidden md:block"
+      />
       <slot />
     </main>
     <FloatingActionButton :is-active="showButton" />
