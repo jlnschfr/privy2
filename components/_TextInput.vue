@@ -20,7 +20,7 @@ withDefaults(defineProps<Props>(), {
 });
 const emit = defineEmits<Emits>();
 
-const id: ComputedRef<string> = computed(() => uuid());
+const id: Ref<string> = ref(uuid());
 </script>
 
 <template>
@@ -38,7 +38,7 @@ const id: ComputedRef<string> = computed(() => uuid());
     <input
       :id="id"
       :disabled="disabled"
-      class="text-decoration-inherit block w-full appearance-none bg-transparent py-1 leading-normal placeholder-neutral-200 dark:placeholder-neutral-400"
+      class="block w-full appearance-none bg-transparent py-1 leading-normal decoration-inherit placeholder-neutral-200 dark:placeholder-neutral-400"
       :class="{
         'border-b border-neutral-200 dark:border-neutral-400': border,
         'cursor-not-allowed': disabled,
@@ -53,9 +53,3 @@ const id: ComputedRef<string> = computed(() => uuid());
     />
   </div>
 </template>
-
-<style scoped>
-.text-decoration-inherit {
-  text-decoration: inherit;
-}
-</style>

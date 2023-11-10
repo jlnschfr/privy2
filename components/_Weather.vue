@@ -125,7 +125,7 @@ function getIcon(icon: string): string {
     Sunny: "SvgoWeatherSunny",
     "Partly cloudy": "SvgoWeatherCloudy",
     Cloudy: "SvgoWeatherCloudy",
-    Overcast: "SvgoWeatherPartlyCloudy",
+    Overcast: "SvgoWeatherCloudy",
     Mist: "SvgoWeatherMist",
     "Patchy rain possible": "SvgoWeatherRain",
     "Patchy snow possible": "SvgoWeatherSnow",

@@ -24,7 +24,12 @@ const showDrawer: Ref<boolean> = ref(false);
       />
       <slot />
     </main>
-    <FloatingActionButton :is-active="showButton" />
+    <FloatingActionButton
+      redirect="/note/new"
+      label="Add a new note"
+      tabindex="0"
+      :is-active="showButton"
+    />
     <Snackbar />
   </div>
 </template>

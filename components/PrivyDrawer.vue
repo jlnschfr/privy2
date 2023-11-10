@@ -67,7 +67,7 @@ watch(
               <li>
                 <nuxt-link
                   to="/notes/"
-                  class="privy-focus flex items-center hover:text-neutral-400"
+                  class="flex items-center hover:text-neutral-400"
                   :class="{
                     'text-neutral-600 hover:text-neutral-600': activeTag === '',
                   }"
@@ -78,7 +78,7 @@ watch(
               <li class="mt-2">
                 <nuxt-link
                   to="/notes/?tag=Trash"
-                  class="privy-focus flex items-center hover:text-neutral-400"
+                  class="flex items-center hover:text-neutral-400"
                   :class="{
                     'text-neutral-600 hover:text-neutral-600':
                       activeTag === 'Trash',
@@ -92,7 +92,7 @@ watch(
                 <div class="flex justify-between">
                   <nuxt-link
                     :to="`/notes/?tag=${tag}`"
-                    class="privy-focus flex items-center hover:text-neutral-400"
+                    class="flex items-center hover:text-neutral-400"
                     :class="{
                       'text-neutral-600 hover:text-neutral-600':
                         tag === activeTag,
@@ -111,7 +111,7 @@ watch(
             <li><Weather /></li>
             <li class="mt-2">
               <button
-                class="privy-focus flex items-center hover:text-neutral-400"
+                class="flex items-center hover:text-neutral-400"
                 @click="toggleDarkMode()"
               >
                 <span v-if="isDarkMode" class="flex"
@@ -124,7 +124,7 @@ watch(
             </li>
             <li class="mt-2">
               <button
-                class="privy-focus flex items-center hover:text-neutral-400"
+                class="flex items-center hover:text-neutral-400"
                 @click="logout"
               >
                 <SvgoLogout class="mr-1 w-2" /> Logout

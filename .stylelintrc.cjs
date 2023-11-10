@@ -4,5 +4,6 @@ module.exports = {
   rules: {
     "order/properties-alphabetical-order": true,
     "order/order": ["custom-properties", "declarations"],
+    "function-no-unknown": null,
   },
 };

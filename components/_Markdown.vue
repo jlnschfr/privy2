@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import DOMPurify from "isomorphic-dompurify";
-import { marked } from "marked";
 import debounce from "lodash.debounce";
+import { marked } from "marked";
 import { useTextareaHeight } from "@/composables/textareaHeight";
 
 interface Props {
@@ -16,7 +16,6 @@ const emit = defineEmits<Emits>();
 
 const text: Ref<string> = ref(props.modelValue.data.text);
 const isEditable: Ref<boolean> = ref(false);
-
 const textarea: Ref<HTMLTextAreaElement> = ref();
 const { updateTextareaHeight } = useTextareaHeight(textarea);
 

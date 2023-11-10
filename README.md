@@ -59,3 +59,8 @@ npm run build
 ```
 
 Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment).
+
+## Convention
+
+- Privy components mostly get an note-id and will idependently set or get data to the pinia store
+- Generic components (prefixed by \_) expect data passed down as props. When they process data, a v-model two way data binding is used

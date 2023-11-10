@@ -8,7 +8,6 @@ interface Props {
 const props = defineProps<Props>();
 
 const noteStore = useNoteStore();
-const snackbarStore = useSnackbarStore();
 
 const items: Ref<Item[]> = ref(
   props.noteId !== "new" ? [...noteStore.get(props.noteId).items] : [],
@@ -18,9 +17,29 @@ const storeItems: ComputedRef<Item[]> = computed(
   () => noteStore.get(props.noteId)?.items,
 );
 
-function onStart() {
-  window.navigator.vibrate(10);
-}
+watch(
+  items,
+  () => {
+    if (!isEqual(storeItems.value, items.value)) {
+      noteStore.update(props.noteId, {
+        items: items.value,
+      });
+
+      sortItems();
+    }
+  },
+  { deep: true },
+);
+
+watch(storeItems, () => {
+  if (!isEqual(storeItems.value, items.value)) {
+    items.value = [...storeItems.value];
+
+    sortItems();
+  }
+});
+
+const snackbarStore = useSnackbarStore();
 
 function onItemDelete(id: string) {
   const itemsBackup = [...items.value];
@@ -68,27 +87,9 @@ function sortItems() {
   });
 }
 
-watch(
-  items,
-  () => {
-    if (!isEqual(storeItems.value, items.value)) {
-      noteStore.update(props.noteId, {
-        items: items.value,
-      });
-
-      sortItems();
-    }
-  },
-  { deep: true },
-);
-
-watch(storeItems, () => {
-  if (!isEqual(storeItems.value, items.value)) {
-    items.value = [...storeItems.value];
-
-    sortItems();
-  }
-});
+function onStart() {
+  window.navigator.vibrate(10);
+}
 </script>
 
 <template>
