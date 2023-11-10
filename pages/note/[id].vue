@@ -12,7 +12,5 @@ if (isNew.value) {
 </script>
 
 <template>
-  <NuxtLayout name="default">
-    <PrivyNoteDetail :note-id="id" />
-  </NuxtLayout>
+  <PrivyNoteDetail :note-id="id" />
 </template>

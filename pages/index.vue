@@ -1,5 +1,9 @@
+<script setup lang="ts">
+definePageMeta({
+  layout: "blank",
+});
+</script>
+
 <template>
-  <NuxtLayout name="blank">
-    <PrivyAuthForm />
-  </NuxtLayout>
+  <PrivyAuthForm />
 </template>

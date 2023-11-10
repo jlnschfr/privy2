@@ -1,5 +1,3 @@
 <template>
-  <NuxtLayout name="default">
-    <PrivyNoteOverview />
-  </NuxtLayout>
+  <PrivyNoteOverview />
 </template>

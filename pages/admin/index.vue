@@ -1,5 +1,3 @@
 <template>
-  <NuxtLayout name="default">
-    <PrivyAdmin />
-  </NuxtLayout>
+  <PrivyAdmin />
 </template>

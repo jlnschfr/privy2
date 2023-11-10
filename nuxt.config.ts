@@ -15,6 +15,8 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
       bodyAttrs: { class: "bg-neutral-500 dark:bg-neutral-50" },
     },
+    pageTransition: { name: "slide", mode: "out-in" },
+    layoutTransition: { name: "fade", mode: "out-in" },
   },
   modules: [
     "@nuxtjs/supabase",
