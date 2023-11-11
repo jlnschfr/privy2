@@ -43,7 +43,7 @@ function removeTag(text: string) {
         {{ tag.text }}
         <button
           aria-label="remove tag"
-          class="ml-1 inline"
+          class="privy-focus-white ml-1 inline"
           @click="removeTag(tag.text)"
         >
           <SvgoCross class="w-2 fill-current" />

@@ -120,7 +120,7 @@ function onStart() {
           </button>
           <button
             aria-label="remove item"
-            class="absolute inset-y-1/2 right-0 flex h-3 w-3 -translate-y-1/2 translate-x-1/2 transform justify-center opacity-100 transition-opacity duration-300 focus:opacity-100 group-hover:opacity-100 md:opacity-0"
+            class="privy-focus absolute inset-y-1/2 right-0 flex h-3 w-3 -translate-y-1/2 translate-x-1/2 transform justify-center opacity-100 transition-opacity duration-300 focus:opacity-100 group-hover:opacity-100 md:opacity-0"
             @click="onItemDelete(element.id)"
           >
             <SvgoCross class="w-2 fill-current" />

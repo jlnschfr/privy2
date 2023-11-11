@@ -53,13 +53,13 @@ async function onClickOrEnter() {
       v-if="isEditable"
       ref="textarea"
       v-model="text"
-      class="h-1 w-full resize-none overflow-hidden bg-transparent"
+      class="privy-focus h-1 w-full resize-none overflow-hidden bg-transparent"
       @blur="onBlur"
     ></textarea>
     <div
       v-if="!isEditable"
       tabindex="0"
-      class="Markdown"
+      class="Markdown privy-focus"
       @click="onClickOrEnter"
       @keyup.enter="onClickOrEnter"
       v-html="compiledMarkdown"

@@ -22,7 +22,9 @@ const onInput = debounce((e) => {
 
 onMounted(() => {
   if (props.modelValue === "") {
-    textarea.value.focus();
+    setTimeout(() => {
+      textarea.value.focus();
+    }, 500);
   }
 });
 </script>
@@ -31,7 +33,7 @@ onMounted(() => {
   <textarea
     ref="textarea"
     :value="modelValue"
-    class="h-5 resize-none overflow-hidden bg-transparent text-2xl font-bold"
+    class="privy-focus h-5 resize-none overflow-hidden bg-transparent text-2xl font-bold"
     placeholder="Title"
     autocomplete="false"
     @input="onInput"

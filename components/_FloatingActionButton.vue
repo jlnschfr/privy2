@@ -17,7 +17,7 @@ withDefaults(defineProps<Props>(), {
         :aria-label="label"
         :tabindex="tabindex"
         :to="redirect"
-        class="flex h-16 w-16 items-center justify-center rounded-full bg-secondary-500 text-white shadow-lg hover:bg-secondary-600"
+        class="privy-focus-offset flex h-16 w-16 items-center justify-center rounded-full bg-secondary-500 text-white shadow-lg hover:bg-secondary-600"
       >
         <SvgoPlus class="w-3 fill-current" />
       </nuxt-link>

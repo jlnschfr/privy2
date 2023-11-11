@@ -25,7 +25,7 @@ withDefaults(defineProps<Props>(), {
         styling === 'secondary',
       'cursor-not-allowed': disabled,
     }"
-    class="flex h-4 w-4 items-center justify-center rounded-full border transition-colors"
+    class="privy-focus-offset flex h-4 w-4 items-center justify-center rounded-full border"
   >
     <slot />
   </button>

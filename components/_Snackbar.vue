@@ -40,14 +40,15 @@ function undo() {
 </script>
 
 <template>
-  <transition v-if="isActive" name="fade">
+  <transition name="fade">
     <div
+      v-if="isActive"
       class="fixed bottom-2vw left-50 flex min-w-snackbar -translate-x-1/2 transform items-center justify-between bg-neutral-200 px-3 py-2 shadow-lg md:left-app"
     >
       <p class="flex-auto text-neutral-600">{{ text }}</p>
       <button
         ref="button"
-        class="ml-5 font-bold text-secondary-500"
+        class="privy-focus ml-5 font-bold text-secondary-500"
         @click="undo"
       >
         {{ action }}

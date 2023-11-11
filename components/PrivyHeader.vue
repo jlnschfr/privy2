@@ -21,7 +21,10 @@ const isSyncing: ComputedRef<boolean> = computed(() => noteStore.isSyncing);
       <Spinner :is-active="isSyncing || !user" />
     </div>
     <nav class="flex items-center">
-      <nuxt-link to="/admin/" class="flex items-center justify-center">
+      <nuxt-link
+        to="/admin/"
+        class="privy-focus flex items-center justify-center"
+      >
         My Privy
       </nuxt-link>
       <p class="ml-2 block md:hidden" @click="emit('toggle-drawer')">

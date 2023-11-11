@@ -24,7 +24,7 @@ withDefaults(defineProps<Props>(), {
         styling === 'tertiary',
       'cursor-not-allowed text-opacity-50 dark:text-opacity-50': disabled,
     }"
-    class="block border px-2 py-0_5 transition-colors md:px-4"
+    class="privy-focus block border px-2 py-0_5 md:px-4"
   >
     <slot />
   </button>
