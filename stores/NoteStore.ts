@@ -20,21 +20,6 @@ export const useNoteStore = defineStore("NoteStore", () => {
     ),
   );
 
-  const fetchAll = async () => {
-    isSyncing.value = true;
-    const { data } = await client
-      .from("notes")
-      .select(
-        "id, created_at, edited_at, items, title, favorite, tags, user_id",
-      )
-      .match({ user_id: user.value.id })
-      .order("created_at");
-
-    notes.value = data;
-    isSyncing.value = false;
-    sortNotes();
-  };
-
   const get = (id: string): Note => {
     if (!notes.value.length) return;
     const data = notes.value.find((note) => note.id === id);
@@ -57,11 +42,26 @@ export const useNoteStore = defineStore("NoteStore", () => {
     }
   };
 
+  const fetchAll = async () => {
+    setIsSyncing(true);
+    const { data } = await client
+      .from("notes")
+      .select(
+        "id, created_at, edited_at, items, title, favorite, tags, user_id",
+      )
+      .match({ user_id: user.value.id })
+      .order("created_at");
+
+    notes.value = data;
+    setIsSyncing(false, 500);
+    sortNotes();
+  };
+
   const add = async (
     details: Partial<Note>,
     options: { redirect: boolean },
   ) => {
-    isSyncing.value = true;
+    setIsSyncing(true);
     const { data } = await client
       .from("notes")
       .upsert({
@@ -74,7 +74,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .single();
 
     notes.value.push(data);
-    isSyncing.value = false;
+    setIsSyncing(false, 500);
     sortNotes();
 
     if (options.redirect) {
@@ -85,7 +85,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   };
 
   const update = async (id: string, details: Partial<Note>) => {
-    isSyncing.value = true;
+    setIsSyncing(true);
     const { data } = await client
       .from("notes")
       .update({ ...details, edited_at: new Date().toISOString() })
@@ -98,17 +98,17 @@ export const useNoteStore = defineStore("NoteStore", () => {
     notes.value = notes.value.map((note) =>
       note.id === data.id ? data : note,
     );
-    isSyncing.value = false;
+    setIsSyncing(false, 500);
     sortNotes();
   };
 
   const remove = async (id: string) => {
-    isSyncing.value = true;
+    setIsSyncing(true);
     await client.from("notes").delete().match({ id, user_id: user.value.id });
 
     const index = notes.value.findIndex((note) => note.id === id);
     notes.value.splice(index, 1);
-    isSyncing.value = false;
+    setIsSyncing(false, 500);
     sortNotes();
   };
 
@@ -128,6 +128,12 @@ export const useNoteStore = defineStore("NoteStore", () => {
         return 1;
       }
     });
+  };
+
+  const setIsSyncing = (value: boolean, delay: number = 0) => {
+    setTimeout(() => {
+      isSyncing.value = value;
+    }, delay);
   };
 
   return {
