@@ -5,7 +5,6 @@ interface Props {
   tabindex: string;
   redirect: string;
 }
-
 withDefaults(defineProps<Props>(), {
   isActive: false,
 });

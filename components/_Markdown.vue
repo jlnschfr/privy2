@@ -10,7 +10,6 @@ interface Props {
 interface Emits {
   (e: "update:modelValue", markdown: Markdown): void;
 }
-
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 

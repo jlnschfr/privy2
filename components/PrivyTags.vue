@@ -3,6 +3,7 @@ interface Props {
   noteId: string;
 }
 const props = defineProps<Props>();
+
 const noteStore = useNoteStore();
 
 const tags: ComputedRef<Tag[]> = computed(

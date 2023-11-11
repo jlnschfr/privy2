@@ -9,7 +9,7 @@ export function useViewport() {
   }
 
   onMounted(() => {
-    resizeHandler.value = debounce(handleResize, 500);
+    resizeHandler.value = debounce(handleResize, 150);
     window.addEventListener("resize", resizeHandler.value);
     handleResize();
   });

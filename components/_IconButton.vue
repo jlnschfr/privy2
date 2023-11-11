@@ -6,7 +6,6 @@ interface Props {
   styling?: "primary" | "secondary";
   secondary?: boolean;
 }
-
 withDefaults(defineProps<Props>(), {
   type: "button",
   disabled: false,

@@ -7,17 +7,17 @@ interface Props {
 const props = defineProps<Props>();
 
 const noteStore = useNoteStore();
-const queryParams = useQueryParams();
-
 const id: ComputedRef<string> = computed(() => props.noteId);
 const note: ComputedRef<Note> = computed(() => noteStore.get(id.value));
 const items: ComputedRef<Item[]> = computed(() => note.value?.items);
-const tags: ComputedRef<Tag[]> = computed(() => note.value?.tags);
 const title: Ref<string> = ref(note.value?.title);
 
 watch(title, () => {
   noteStore.update(id.value, { title: title.value });
 });
+
+const tags: ComputedRef<Tag[]> = computed(() => note.value?.tags);
+const queryParams = useQueryParams();
 
 watch(tags, () => {
   const queryTag: string = tags.value.length ? tags.value[0].text : "";

@@ -4,7 +4,6 @@ import { createDateString } from "@/utils/date";
 interface Props {
   date: string;
 }
-
 const props = defineProps<Props>();
 
 const month: ComputedRef<string> = computed(() =>

@@ -2,13 +2,11 @@
 interface Props {
   noteId: string;
 }
-
 const props = defineProps<Props>();
 
 const route = useRoute();
 const noteStore = useNoteStore();
 const snackbarStore = useSnackbarStore();
-
 const note: Ref<Note> = ref(noteStore.get(props.noteId));
 
 async function remove() {
@@ -37,15 +35,15 @@ async function remove() {
   });
 }
 
-function undoRemove(note: Note, alreadyTrashed: boolean) {
+function undoRemove(deletedNote: Note, alreadyTrashed: boolean) {
   if (alreadyTrashed) {
-    noteStore.add(note, { redirect: false });
+    noteStore.add(deletedNote, { redirect: false });
   } else {
-    const index = note.tags.findIndex(
+    const index = deletedNote.tags.findIndex(
       (el) => el.text.toLowerCase() === "trash",
     );
-    note.tags.splice(index, 1);
-    noteStore.update(note.id, note);
+    deletedNote.tags.splice(index, 1);
+    noteStore.update(deletedNote.id, deletedNote);
   }
 }
 

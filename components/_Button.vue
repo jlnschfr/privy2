@@ -4,7 +4,6 @@ interface Props {
   disabled?: boolean;
   styling?: "primary" | "secondary" | "tertiary";
 }
-
 withDefaults(defineProps<Props>(), {
   type: "button",
   disabled: false,

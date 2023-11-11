@@ -2,19 +2,19 @@
 interface Props {
   noteId: string;
 }
-
 const props = defineProps<Props>();
+
 const noteStore = useNoteStore();
 const queryParams = useQueryParams();
 const { activeTag } = queryParams;
 
+const note: ComputedRef<Note> = computed(() => noteStore.get(props.noteId));
 const tasks: ComputedRef<Task[]> = computed(
   () => note.value.items.filter((item) => item.type === "Task") as Task[],
 );
 const doneTasks: ComputedRef<Task[]> = computed(() =>
   tasks.value.filter((item) => item.data?.isValid),
 );
-const note: Ref<Note> = ref(noteStore.get(props.noteId));
 
 function open(id: string) {
   let tag: string = "";
@@ -31,7 +31,7 @@ function open(id: string) {
 
 <template>
   <article
-    class="PrivyNoteTeaser cursor-pointer bg-neutral-600 shadow-lg transition duration-300 dark:bg-neutral-100"
+    class="cursor-pointer bg-neutral-600 shadow-lg duration-300 dark:bg-neutral-100"
     tabindex="0"
     @keyup.enter="open(note.id)"
     @click="open(note.id)"
@@ -43,7 +43,7 @@ function open(id: string) {
         'items-end': tasks.length,
       }"
     >
-      <Date :date="note.created_at" />
+      <Date :date="note.edited_at" />
 
       <div>
         <h2 class="w-full hyphens-auto text-2xl font-bold leading-none">
@@ -70,9 +70,3 @@ function open(id: string) {
     </div>
   </article>
 </template>
-
-<style scoped>
-.hyphens-auto {
-  hyphens: auto;
-}
-</style>

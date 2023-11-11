@@ -7,7 +7,6 @@ interface Props {
 interface Emits {
   (e: "update:modelValue", isChecked: boolean): void;
 }
-
 defineProps<Props>();
 const emit = defineEmits<Emits>();
 

@@ -11,7 +11,6 @@ interface Props {
 interface Emits {
   (e: "update:modelValue", value: string): void;
 }
-
 withDefaults(defineProps<Props>(), {
   disabled: false,
   placeholder: "Placeholder",

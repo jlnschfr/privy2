@@ -15,7 +15,7 @@ function getDelay(index: number): string {
 
 <template>
   <div class="relative">
-    <TransitionGroup
+    <div
       tag="div"
       name="staggered-transition"
       mode="out-in"
@@ -27,7 +27,7 @@ function getDelay(index: number): string {
         :note-id="note.id"
         :style="{ transitionDelay: getDelay(key) }"
       />
-    </TransitionGroup>
+    </div>
   </div>
 </template>
 

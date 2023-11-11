@@ -5,7 +5,6 @@ interface Props {
 interface Emits {
   (e: "toggle-drawer"): void;
 }
-
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
