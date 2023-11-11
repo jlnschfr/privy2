@@ -6,6 +6,7 @@ interface Props {
   noteId: string;
 }
 const props = defineProps<Props>();
+
 const noteStore = useNoteStore();
 
 const items: Ref<Item[]> = ref(
