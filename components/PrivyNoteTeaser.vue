@@ -49,7 +49,7 @@ function open(id: string) {
         <h2 class="w-full hyphens-auto text-2xl font-bold leading-none">
           {{ note.title }}
         </h2>
-        <p v-if="tasks.length" class="mt-0_5">
+        <p v-if="tasks.length" class="mt-0_5 flex gap-1">
           <span>{{ tasks.length }} tasks</span>
           <span>{{ doneTasks.length }} done</span>
         </p>
