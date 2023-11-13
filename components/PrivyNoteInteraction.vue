@@ -8,6 +8,7 @@ const route = useRoute();
 const noteStore = useNoteStore();
 const snackbarStore = useSnackbarStore();
 const note: Ref<Note> = ref(noteStore.get(props.noteId));
+const isFavorite: Ref<boolean> = ref(noteStore.get(props.noteId).favorite);
 
 async function remove() {
   const alreadyTrashed = Boolean(
@@ -48,8 +49,10 @@ function undoRemove(deletedNote: Note, alreadyTrashed: boolean) {
 }
 
 function toggleFav() {
+  isFavorite.value = !isFavorite.value;
+
   noteStore.update(props.noteId, {
-    favorite: !note.value.favorite,
+    favorite: isFavorite.value,
     edited_at: new Date().toISOString(),
   });
 }
@@ -61,7 +64,7 @@ function toggleFav() {
       label="add note to favorites"
       class="mr-2"
       :class="{
-        'text-secondary-500': note?.favorite,
+        'text-secondary-500': isFavorite,
       }"
       :disabled="!note"
       @click.stop="toggleFav()"
@@ -70,7 +73,7 @@ function toggleFav() {
         aria-hidden="true"
         class="w-2"
         :class="{
-          'fill-current': note?.favorite,
+          'fill-current': isFavorite,
         }"
       />
     </IconButton>
