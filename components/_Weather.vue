@@ -9,8 +9,10 @@ const icon: Ref<string> = ref("");
 const active: Ref<boolean> = ref(false);
 
 onMounted(() => {
-  interval.value = setInterval(checkWeather, 300000);
-  checkWeather();
+  if (navigator.onLine) {
+    interval.value = setInterval(checkWeather, 300000);
+    checkWeather();
+  }
 });
 
 onUnmounted(() => {

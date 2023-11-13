@@ -3,7 +3,9 @@ const user = useSupabaseUser();
 const noteStore = useNoteStore();
 
 if (user.value) {
-  await noteStore.fetchAll();
+  if (navigator?.onLine) {
+    await noteStore.fetchAll();
+  }
 }
 </script>
 
