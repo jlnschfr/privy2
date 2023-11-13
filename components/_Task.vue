@@ -32,7 +32,6 @@ watch(
       :label="false"
       :border="false"
       :class="{ 'line-through': isValid }"
-      class="new-task-on-enter"
       type="text"
     />
   </div>

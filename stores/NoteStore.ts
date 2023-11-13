@@ -57,59 +57,57 @@ export const useNoteStore = defineStore("NoteStore", () => {
     sortNotes();
   };
 
-  const add = async (
-    details: Partial<Note>,
-    options: { redirect: boolean },
-  ) => {
-    setIsSyncing(true);
-    const { data } = await client
-      .from("notes")
-      .upsert({
-        user_id: user.value.id,
-        ...details,
-      })
-      .select(
-        "id, created_at, edited_at, title, items, favorite, tags, user_id",
-      )
-      .single();
+  const add = async (note: Note, options: { redirect: boolean }) => {
+    const noteWithUserId: Note = {
+      ...note,
+      user_id: user.value.id,
+    };
 
-    notes.value.push(data);
-    setIsSyncing(false, 500);
+    setIsSyncing(true);
+
+    notes.value.push(noteWithUserId);
+    await client.from("notes").upsert(noteWithUserId);
+
     sortNotes();
+    setIsSyncing(false, 500);
 
     if (options.redirect) {
       await navigateTo({
-        path: `/note/${data.id}`,
+        path: `/note/${note.id}`,
       });
     }
   };
 
   const update = async (id: string, details: Partial<Note>) => {
-    setIsSyncing(true);
-    const { data } = await client
-      .from("notes")
-      .update({ ...details, edited_at: new Date().toISOString() })
-      .match({ id, user_id: user.value.id })
-      .select(
-        "id, created_at, edited_at, title, items, favorite, tags, user_id",
-      )
-      .single();
+    const note: Note = {
+      ...get(id),
+      ...details,
+      edited_at: new Date().toISOString(),
+    };
 
-    notes.value = notes.value.map((note) =>
-      note.id === data.id ? data : note,
-    );
-    setIsSyncing(false, 500);
+    setIsSyncing(true);
+
+    notes.value = notes.value.map((n) => (n.id === note.id ? note : n));
+
+    await client
+      .from("notes")
+      .update(note)
+      .match({ id, user_id: user.value.id });
+
     sortNotes();
+    setIsSyncing(false, 500);
   };
 
   const remove = async (id: string) => {
     setIsSyncing(true);
-    await client.from("notes").delete().match({ id, user_id: user.value.id });
 
     const index = notes.value.findIndex((note) => note.id === id);
     notes.value.splice(index, 1);
-    setIsSyncing(false, 500);
+
+    await client.from("notes").delete().match({ id, user_id: user.value.id });
+
     sortNotes();
+    setIsSyncing(false, 500);
   };
 
   const sortNotes = () => {

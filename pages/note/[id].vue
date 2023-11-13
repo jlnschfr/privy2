@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { v4 as uuid } from "uuid";
+import { createEmptyNote } from "@/utils/note";
+
 const route = useRoute();
 const noteStore = useNoteStore();
 
@@ -7,7 +8,8 @@ const id: ComputedRef<string> = computed(() => route.params.id as string);
 const isNew: ComputedRef<boolean> = computed(() => id.value === "new");
 
 if (isNew.value) {
-  await noteStore.add({ id: uuid() }, { redirect: true });
+  const emptyNote = createEmptyNote();
+  await noteStore.add(emptyNote, { redirect: true });
 }
 </script>
 
