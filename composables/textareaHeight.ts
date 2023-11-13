@@ -5,8 +5,8 @@ export function useTextareaHeight(textArea: Ref<HTMLTextAreaElement>) {
 
   function updateTextareaHeight() {
     if (textArea.value) {
-      if (textArea.value.clientHeight < textArea.value.scrollHeight) {
-        textArea.value.style.height = textArea.value.scrollHeight + "px";
+      if (textArea.value?.clientHeight < textArea.value?.scrollHeight) {
+        textArea.value?.style.height = textArea.value?.scrollHeight + "px";
       }
     }
   }

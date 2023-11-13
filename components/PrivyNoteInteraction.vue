@@ -12,14 +12,14 @@ const isFavorite: Ref<boolean> = ref(noteStore.get(props.noteId).favorite);
 
 async function remove() {
   const alreadyTrashed = Boolean(
-    note.value.tags.find((el) => el.text.toLowerCase() === "trash"),
+    note.value?.tags.find((el) => el.text.toLowerCase() === "trash"),
   );
 
   if (alreadyTrashed) {
     noteStore.remove(props.noteId);
   } else {
     note.value.tags = [...note.value.tags, { text: "trash" }];
-    noteStore.update(props.noteId, { tags: note.value.tags });
+    noteStore.update(props.noteId, { tags: note.value?.tags });
   }
 
   await nextTick();

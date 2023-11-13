@@ -23,7 +23,7 @@ const onInput = debounce((e) => {
 onMounted(() => {
   if (props.modelValue === "") {
     setTimeout(() => {
-      textarea.value.focus();
+      textarea.value?.focus();
     }, 500);
   }
 });

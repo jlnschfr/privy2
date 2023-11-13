@@ -20,7 +20,7 @@ watch([() => route.params, () => route.name], () => {
 
 function animatePaths() {
   if (paths.value) {
-    paths.value.forEach((path, index) => {
+    paths.value?.forEach((path, index) => {
       setTimeout(() => {
         path.classList.add("has-fill-animation");
 

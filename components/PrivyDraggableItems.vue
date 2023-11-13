@@ -43,8 +43,8 @@ const snackbarStore = useSnackbarStore();
 
 function onItemDelete(id: string) {
   const itemsBackup = [...items.value];
-  const index = items.value.findIndex((item) => item.id === id);
-  items.value.splice(index, 1);
+  const index = items.value?.findIndex((item) => item.id === id);
+  items.value?.splice(index, 1);
 
   snackbarStore.show({
     text: "Item deleted",
@@ -71,7 +71,7 @@ function getComponent(name: string) {
 }
 
 function sortItems() {
-  items.value.sort((a, b) => {
+  items.value?.sort((a, b) => {
     const aValid = "isValid" in a.data ? a.data.isValid : false;
     const bValid = "isValid" in b.data ? b.data.isValid : false;
 

@@ -19,7 +19,7 @@ export const useTagStore = defineStore("TagStore", () => {
 
   const getTagAmount = (tag: string): number => {
     return tag
-      ? availableTags.value.filter((note) => note === tag).length
+      ? availableTags.value?.filter((note) => note === tag).length
       : noteStore.notesNotTrashed.length;
   };
 

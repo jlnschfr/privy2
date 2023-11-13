@@ -12,7 +12,7 @@ const tags: ComputedRef<Tag[]> = computed(
 const input: Ref<string> = ref("");
 
 function addTag() {
-  if (input.value && !tags.value.find((tag) => tag.text === input.value)) {
+  if (input.value && !tags.value?.find((tag) => tag.text === input.value)) {
     noteStore.update(props.noteId, {
       tags: [...tags.value, { text: input.value }],
     });
@@ -20,7 +20,7 @@ function addTag() {
   }
 }
 function removeTag(text: string) {
-  const index = tags.value.findIndex((tag) => tag.text === text);
+  const index = tags.value?.findIndex((tag) => tag.text === text);
 
   if (index >= 0) {
     const newTags = [...tags.value];

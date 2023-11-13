@@ -42,7 +42,7 @@ function onBlur() {
 async function onClickOrEnter() {
   isEditable.value = true;
   await nextTick();
-  textarea.value.focus();
+  textarea.value?.focus();
   updateTextareaHeight();
 }
 </script>

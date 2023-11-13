@@ -20,7 +20,7 @@ const tags: ComputedRef<Tag[]> = computed(() => note.value?.tags);
 const queryParams = useQueryParams();
 
 watch(tags, () => {
-  const queryTag: string = tags.value.length ? tags.value[0].text : "";
+  const queryTag: string = tags.value?.length ? tags.value[0].text : "";
   queryParams.setActiveTag(queryTag);
 });
 
@@ -48,7 +48,7 @@ function handleKeyUp(event: KeyboardEvent) {
     if (keyUpInTask) {
       const draggableItem: HTMLElement = focusEl.closest(".draggable-item");
       const itemId: string = draggableItem?.dataset.id;
-      const itemIndex: number = items.value.findIndex(
+      const itemIndex: number = items.value?.findIndex(
         (item) => item.id === itemId,
       );
 

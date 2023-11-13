@@ -11,31 +11,33 @@ export const useNoteStore = defineStore("NoteStore", () => {
   );
   const isSyncing: Ref<boolean> = ref(false);
 
-  const notesNotTrashed: ComputedRef<Note[]> = computed(() =>
-    notes.value.filter(
-      (note) => !note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
-    ),
+  const notesNotTrashed: ComputedRef<Note[]> = computed(
+    () =>
+      notes.value?.filter(
+        (note) => !note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
+      ),
   );
 
-  const notesTrashed: ComputedRef<Note[]> = computed(() =>
-    notes.value.filter((note) =>
-      note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
-    ),
+  const notesTrashed: ComputedRef<Note[]> = computed(
+    () =>
+      notes.value?.filter((note) =>
+        note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
+      ),
   );
 
   const get = (id: string): Note => {
-    if (!notes.value.length) return;
-    const data = notes.value.find((note) => note.id === id);
+    if (!notes.value?.length) return;
+    const data = notes.value?.find((note) => note.id === id);
     return data;
   };
 
   const getFiltered = (filter: string): Note[] => {
-    if (!notes.value.length) return;
+    if (!notes.value?.length) return;
 
     if (filter === "Trash") {
       return notesTrashed.value;
     } else if (filter) {
-      return notesNotTrashed.value.filter((note) =>
+      return notesNotTrashed.value?.filter((note) =>
         note.tags.some(
           (tag) => tag.text.toLowerCase() === filter.toLowerCase(),
         ),
@@ -68,7 +70,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
     setIsSyncing(true);
 
-    notes.value.push(noteWithUserId);
+    notes.value?.push(noteWithUserId);
     storeToLocalStorage();
     sortNotes();
 
@@ -92,7 +94,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
     setIsSyncing(true);
 
-    notes.value = notes.value.map((n) => (n.id === note.id ? note : n));
+    notes.value = notes.value?.map((n) => (n.id === note.id ? note : n));
     storeToLocalStorage();
     sortNotes();
 
@@ -107,8 +109,8 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const remove = async (id: string) => {
     setIsSyncing(true);
 
-    const index = notes.value.findIndex((note) => note.id === id);
-    notes.value.splice(index, 1);
+    const index = notes.value?.findIndex((note) => note.id === id);
+    notes.value?.splice(index, 1);
     storeToLocalStorage();
     sortNotes();
 
@@ -121,7 +123,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   };
 
   const sortNotes = () => {
-    notes.value.sort((a, b) => {
+    notes.value?.sort((a, b) => {
       if (a.favorite || b.favorite) {
         if (a.favorite && !b.favorite) {
           return -1;

@@ -10,10 +10,10 @@ const { activeTag } = queryParams;
 
 const note: ComputedRef<Note> = computed(() => noteStore.get(props.noteId));
 const tasks: ComputedRef<Task[]> = computed(
-  () => note.value.items.filter((item) => item.type === "Task") as Task[],
+  () => note.value?.items.filter((item) => item.type === "Task") as Task[],
 );
-const doneTasks: ComputedRef<Task[]> = computed(() =>
-  tasks.value.filter((item) => item.data?.isValid),
+const doneTasks: ComputedRef<Task[]> = computed(
+  () => tasks.value?.filter((item) => item.data?.isValid),
 );
 
 function open(id: string) {
@@ -21,8 +21,8 @@ function open(id: string) {
 
   if (activeTag.value) {
     tag = activeTag.value;
-  } else if (note.value.tags.length) {
-    tag = note.value.tags[0].text;
+  } else if (note.value?.tags.length) {
+    tag = note.value?.tags[0].text;
   }
 
   navigateTo(`/note/${id}/?tag=${tag}`);

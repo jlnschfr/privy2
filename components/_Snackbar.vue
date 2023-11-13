@@ -5,10 +5,12 @@ const button = ref(null);
 
 const snackbarStore = useSnackbarStore();
 const snackbar: ComputedRef<Snackbar> = computed(() => snackbarStore.snackbar);
-const callback: ComputedRef<Function> = computed(() => snackbar.value.callback);
-const text: ComputedRef<string> = computed(() => snackbar.value.text);
-const action: ComputedRef<string> = computed(() => snackbar.value.action);
-const isActive: ComputedRef<boolean> = computed(() => snackbarStore.isActive);
+const callback: ComputedRef<Function> = computed(
+  () => snackbar.value?.callback,
+);
+const text: ComputedRef<string> = computed(() => snackbar.value?.text);
+const action: ComputedRef<string> = computed(() => snackbar.value?.action);
+const isActive: ComputedRef<boolean> = computed(() => snackbarStore?.isActive);
 
 watch(isActive, async () => {
   if (isActive.value) {
@@ -18,7 +20,7 @@ watch(isActive, async () => {
 
     await nextTick();
     activeElement.value = document.activeElement as HTMLElement;
-    button.value.focus();
+    button.value?.focus();
 
     timeout.value = setTimeout(() => {
       snackbarStore.hide();
@@ -33,7 +35,7 @@ function undo() {
   snackbarStore.hide();
 
   if (activeElement.value) {
-    activeElement.value.focus();
+    activeElement.value?.focus();
     activeElement.value = null;
   }
 }
