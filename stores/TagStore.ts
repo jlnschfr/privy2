@@ -5,8 +5,8 @@ export const useTagStore = defineStore("TagStore", () => {
 
   const availableTags: ComputedRef<string[]> = computed(() =>
     noteStore.notesNotTrashed
-      .flatMap((note) => note.tags)
-      .map((note) => note.text),
+      .flatMap((note: Note) => note.tags)
+      .map((tag: Tag) => tag.text),
   );
 
   const uniqueTags: ComputedRef<string[]> = computed(() =>

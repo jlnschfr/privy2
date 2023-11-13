@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Database } from "@/types/database.types";
+import type { Database } from "@/types/database.types";
 
 export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
