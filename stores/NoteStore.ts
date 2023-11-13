@@ -6,7 +6,9 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
-  const notes: Ref<Note[]> = ref(useLocalStorage(`notes-${user.value.id}`, []));
+  const notes: Ref<Note[]> = ref(
+    useLocalStorage(`notes-${user?.value?.id}`, []),
+  );
   const isSyncing: Ref<boolean> = ref(false);
 
   const notesNotTrashed: ComputedRef<Note[]> = computed(() =>
@@ -50,7 +52,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .select(
         "id, created_at, edited_at, items, title, favorite, tags, user_id",
       )
-      .match({ user_id: user.value.id })
+      .match({ user_id: user?.value?.id })
       .order("created_at");
 
     notes.value = data;
@@ -61,7 +63,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const add = async (note: Note, options: { redirect: boolean }) => {
     const noteWithUserId: Note = {
       ...note,
-      user_id: user.value.id,
+      user_id: user?.value?.id,
     };
 
     setIsSyncing(true);
@@ -97,7 +99,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     await client
       .from("notes")
       .update(note)
-      .match({ id, user_id: user.value.id });
+      .match({ id, user_id: user?.value?.id });
 
     setIsSyncing(false, 500);
   };
@@ -110,7 +112,10 @@ export const useNoteStore = defineStore("NoteStore", () => {
     storeToLocalStorage();
     sortNotes();
 
-    await client.from("notes").delete().match({ id, user_id: user.value.id });
+    await client
+      .from("notes")
+      .delete()
+      .match({ id, user_id: user?.value?.id });
 
     setIsSyncing(false, 500);
   };
@@ -134,7 +139,10 @@ export const useNoteStore = defineStore("NoteStore", () => {
   };
 
   const storeToLocalStorage = () => {
-    localStorage.setItem(`notes-${user.value.id}`, JSON.stringify(notes.value));
+    localStorage.setItem(
+      `notes-${user?.value?.id}`,
+      JSON.stringify(notes.value),
+    );
   };
 
   const setIsSyncing = (value: boolean, delay: number = 0) => {
