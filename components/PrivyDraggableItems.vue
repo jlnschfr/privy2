@@ -22,7 +22,7 @@ watch(
   () => {
     if (!isEqual(storeItems.value, items.value)) {
       noteStore.update(props.noteId, {
-        items: items.value,
+        items: [...items.value],
       });
 
       sortItems();

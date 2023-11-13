@@ -44,7 +44,7 @@ function undoRemove(deletedNote: Note, alreadyTrashed: boolean) {
       (el) => el.text.toLowerCase() === "trash",
     );
     deletedNote.tags.splice(index, 1);
-    noteStore.update(deletedNote.id, deletedNote);
+    noteStore.update(deletedNote.id, deletedNote, { updateEditedAt: false });
   }
 }
 

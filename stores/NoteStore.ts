@@ -58,8 +58,10 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .order("created_at");
 
     notes.value = data;
-    setIsSyncing(false, 500);
+    storeToLocalStorage();
+
     sortNotes();
+    setIsSyncing(false, 500);
   };
 
   const add = async (note: Note, options: { redirect: boolean }) => {
@@ -72,10 +74,10 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
     notes.value?.push(noteWithUserId);
     storeToLocalStorage();
-    sortNotes();
 
     await client.from("notes").upsert(noteWithUserId);
 
+    sortNotes();
     setIsSyncing(false, 500);
 
     if (options.redirect) {
@@ -85,24 +87,28 @@ export const useNoteStore = defineStore("NoteStore", () => {
     }
   };
 
-  const update = async (id: string, details: Partial<Note>) => {
+  const update = async (
+    id: string,
+    details: Partial<Note>,
+    options?: { updateEditedAt: boolean },
+  ) => {
     const note: Note = {
       ...get(id),
       ...details,
-      edited_at: new Date().toISOString(),
+      ...(options?.updateEditedAt && { edited_at: new Date().toISOString() }),
     };
 
     setIsSyncing(true);
 
     notes.value = notes.value?.map((n) => (n.id === note.id ? note : n));
     storeToLocalStorage();
-    sortNotes();
 
     await client
       .from("notes")
       .update(note)
       .match({ id, user_id: user?.value?.id });
 
+    sortNotes();
     setIsSyncing(false, 500);
   };
 
@@ -112,13 +118,13 @@ export const useNoteStore = defineStore("NoteStore", () => {
     const index = notes.value?.findIndex((note) => note.id === id);
     notes.value?.splice(index, 1);
     storeToLocalStorage();
-    sortNotes();
 
     await client
       .from("notes")
       .delete()
       .match({ id, user_id: user?.value?.id });
 
+    sortNotes();
     setIsSyncing(false, 500);
   };
 
