@@ -16,7 +16,8 @@
     "type-check": "vue-tsc --noEmit -p tsconfig.json --composite false",
     "lint:js": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "lint:css": "stylelint '**/*.{css,vue}'",
-    "format": "prettier --write ./"
+    "format": "prettier --write ./",
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/logo.png"
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.2.0",
@@ -31,6 +32,7 @@
     "@types/uuid": "^9.0.6",
     "@types/vuedraggable": "^2.24.0",
     "@typescript-eslint/parser": "^6.9.0",
+    "@vite-pwa/assets-generator": "^0.0.10",
     "@vite-pwa/nuxt": "^0.1.2",
     "@vueuse/core": "^10.6.1",
     "@vueuse/nuxt": "^10.6.1",

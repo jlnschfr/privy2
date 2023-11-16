@@ -11,6 +11,7 @@ if (user.value) {
 
 <template>
   <NuxtLayout>
+    <VitePwaManifest />
     <NuxtPage />
   </NuxtLayout>
 </template>
