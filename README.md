@@ -1,66 +1,50 @@
-# Todo list example using Supabase and Nuxt 3
+# Privy Notes 2
 
-[![n3-supabase-demo](https://user-images.githubusercontent.com/904724/160422461-8f87500a-8dec-4413-86b2-ba04e1b2d17b.png)](https://n3-supabase.netlify.app)
+I love making notes. That's why I've build a PWA for structuring thoughts, daily tasks and everything that keeps you busy. Privy Notes is a feature-rich productivity web app build with Nuxt.js and Supabase.
 
-Live demo: https://n3-supabase.netlify.app
+## Features
+* notes (consists of note items that can be either markdown or tasks)
+* sorting of note items via drag and drop
+* organizing notes in categories
+* dark/light mode
+* weather based on user location
+* undo via snackbar
+* PWA offline features
 
-- Frontend:
-  - [Nuxt 3](https://nuxt.com/) - The Vue Framework for Web Architects
-  - [TailwindCSS](https://tailwindcss.com/) for styling and layout.
-  - [Supabase Module](https://github.com/nuxt-modules/supabase) for user management and supabase data client.
-- Backend:
-  - [app.supabase.io](https://app.supabase.com/): hosted Postgres database with restful API for usage with Supabase.js.
+## Tech Stack
+This is a rewrite of https://github.com/jlnschfr/privy where i used Nuxt (w/ options API in an untyped environment). I also switched from Firebase to the open source alternative Supabase.
 
-## Setup
+* Nuxt (w/ composition API) + Typescript 
+* Tailwind
+* Supabase
+* Pinia
+* Netlify
 
-Make sure to install the dependencies
+## Supabase Configuration
+* Create a project on [Supabase](https://supabase.com).
+* In your Supabase project, make sure to create the `notes` table with fields defined in `types/notes.d.ts`.
+* Enable RLS for this table with proper policies.
+* Create a GitHub Oauth Application on https://github.com/settings/applications/new with homepage url being http://localhost:3000 (needs to be replaced with the site url)
+* For the callback url, please refer to https://supabase.com/docs/guides/auth/auth-github#find-your-callback-url
+* Enable the GitHub Oauth Provider in your Supabase project (Authentication -> Providers):
+* Add the needed site url (and redirect urls) in your Supabase project (Authentication -> URL Configuration):
 
-```bash
-pnpm i
+## Build Setup
+```
+# install dependencies
+$ npm install
+
+# clone `.env.example` to `.env` and add your supabase credentials
+
+# start the development server on http://localhost:3000
+$ npm run dev
+
+# generate static project
+$ npm run generate
 ```
 
-Create a project on [Supabase](https://supabase.com).
+See `package.json` for more scripts (e.g. linting, formatting)
 
-In your Supabase project, make sure to create the `tasks` table with the following fields:
+## Deployment
 
-![tasks_table](https://user-images.githubusercontent.com/7290030/159882068-c88b96da-6e2f-4d9b-8523-4a4270b1b05e.png)
-
-Create a GitHub Oauth Application on https://github.com/settings/applications/new
-
-With homepage url being http://localhost:3000
-
-For the callback url, please refer to https://supabase.com/docs/guides/auth/auth-github#find-your-callback-url
-
-Then, enable the GitHub Oauth Provider in your Supabase project (Authentication -> Settings):
-
-![oauth_github](https://user-images.githubusercontent.com/904724/160397056-53099b19-1673-402d-86a2-4c18618a6ab3.png)
-
-Go to your supabase project settings, API section and get the project API key and url and fill the `.env` with them:
-
-```
-SUPABASE_URL="https://example.supabase.com"
-SUPABASE_KEY="<your_key>"
-```
-
-## Development
-
-Start the development server on http://localhost:3000
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment).
-
-## Convention
-
-- Privy components mostly get an note-id and will idependently set or get data to the pinia store
-- Generic components (prefixed by \_) expect data passed down as props. When they process data, a v-model two way data binding is used
+Find here a deployed version: [Privy2 on Netlify](https://privy-notes2.netlify.app/notes)
