@@ -18,7 +18,7 @@ const id: Ref<string> = ref(uuid());
     <input
       :id="id"
       :value="modelValue"
-      class="visuallyhidden"
+      class="visually-hidden"
       type="checkbox"
       @input="emit('update:modelValue', !modelValue)"
     />
