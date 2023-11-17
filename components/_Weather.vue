@@ -94,7 +94,7 @@ function getCity(lat: number, long: number): Promise<string> {
 function getWeather(lat: number, long: number): Promise<PrivyWeatherData> {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
-    const url: URL = new URL("http://api.weatherapi.com/v1/current.json");
+    const url: URL = new URL("https://api.weatherapi.com/v1/current.json");
     url.searchParams.set("aqi", "no");
     url.searchParams.set("key", "8e53893c18944438bdf142917230811");
     url.searchParams.set("q", `${lat},${long}`);
