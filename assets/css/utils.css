@@ -10,11 +10,11 @@
 }
 
 .privy-focus {
-  @apply transition duration-300 focus:outline-none focus:ring-2 focus:ring-primary-500;
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500;
 }
 
 .privy-focus-white {
-  @apply transition duration-300 focus:outline-none focus:ring-1 focus:ring-neutral-500;
+  @apply focus:outline-none focus:ring-1 focus:ring-neutral-500;
 }
 
 .privy-focus-offset {

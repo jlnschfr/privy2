@@ -108,11 +108,11 @@ function focusItem(type: "task" | "markdown", item: Item) {
 
 <template>
   <section
-    class="mx-auto flex min-h-detail max-w-3xl flex-col justify-between bg-neutral-600 shadow-xl transition duration-300 dark:bg-neutral-100"
+    class="transition-bgColor mx-auto flex min-h-detail max-w-3xl flex-col justify-between bg-neutral-600 shadow-xl duration-300 dark:bg-neutral-100"
   >
     <article>
       <header
-        class="flex items-center border-b border-neutral-400 p-3 transition duration-300 dark:border-neutral-200 md:p-4"
+        class="transition-borderColor flex items-center border-b border-neutral-400 p-3 duration-300 dark:border-neutral-200 md:p-4"
       >
         <Date :date="note.edited_at" />
         <ResponsiveTextarea v-model="title" class="mr-2 flex-auto" />
@@ -125,7 +125,7 @@ function focusItem(type: "task" | "markdown", item: Item) {
     </article>
 
     <footer
-      class="flex flex-col justify-between border-t border-neutral-400 p-3 transition duration-300 dark:border-neutral-200 md:flex-row md:items-end md:p-4"
+      class="transition-borderColor flex flex-col justify-between border-t border-neutral-400 p-3 duration-300 dark:border-neutral-200 md:flex-row md:items-end md:p-4"
     >
       <aside class="w-full flex-shrink md:mr-4 md:max-w-tags">
         <PrivyTags :note-id="id" />

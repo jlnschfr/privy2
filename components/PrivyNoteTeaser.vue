@@ -31,7 +31,7 @@ function open(id: string) {
 
 <template>
   <article
-    class="privy-focus cursor-pointer bg-neutral-600 shadow-lg duration-300 dark:bg-neutral-100"
+    class="privy-focus transition-bgColor cursor-pointer bg-neutral-600 shadow-lg duration-300 dark:bg-neutral-100"
     tabindex="0"
     @keyup.enter="open(note.id)"
     @click="open(note.id)"

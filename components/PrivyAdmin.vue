@@ -23,7 +23,7 @@ const deleteAccount = async () => {
 
 <template>
   <div
-    class="mx-auto max-w-lg bg-neutral-600 px-3 py-8 shadow-xl transition duration-300 dark:bg-neutral-100 md:px-6"
+    class="transition-bgColor mx-auto max-w-lg bg-neutral-600 px-3 py-8 shadow-xl duration-300 dark:bg-neutral-100 md:px-6"
   >
     <header>
       <h2 class="hyphens-auto text-center text-2xl font-bold leading-none">
