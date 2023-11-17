@@ -33,7 +33,7 @@ onMounted(() => {
   <textarea
     ref="textarea"
     :value="modelValue"
-    class="privy-focus h-5 resize-none overflow-hidden bg-transparent text-2xl font-bold"
+    class="privy-focus h-5 resize-none overflow-hidden bg-transparent text-2xl font-bold leading-10"
     placeholder="Title"
     autocomplete="false"
     @input="onInput"
