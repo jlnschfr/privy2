@@ -20,7 +20,7 @@ const isSyncing: ComputedRef<boolean> = computed(() => noteStore.isSyncing);
       </h1>
       <Spinner :is-active="isSyncing || !user" />
     </div>
-    <nav class="flex items-center">
+    <nav class="flex items-center" aria-label="Update your profile">
       <nuxt-link
         to="/admin/"
         class="privy-focus flex items-center justify-center"

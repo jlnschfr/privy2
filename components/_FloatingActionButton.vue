@@ -12,7 +12,11 @@ withDefaults(defineProps<Props>(), {
 
 <template>
   <transition name="fade">
-    <div v-if="isActive" class="fixed bottom-2vw right-4vw">
+    <nav
+      v-if="isActive"
+      class="fixed bottom-2vw right-4vw"
+      aria-label="Add a new note"
+    >
       <nuxt-link
         :aria-label="label"
         :tabindex="tabindex"
@@ -21,6 +25,6 @@ withDefaults(defineProps<Props>(), {
       >
         <SvgoPlus class="w-3 fill-current" />
       </nuxt-link>
-    </div>
+    </nav>
   </transition>
 </template>

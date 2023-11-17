@@ -130,7 +130,10 @@ function focusItem(type: "task" | "markdown", item: Item) {
       <aside class="w-full flex-shrink md:mr-4 md:max-w-tags">
         <PrivyTags :note-id="id" />
       </aside>
-      <nav class="mt-6 flex flex-none md:mt-0 md:justify-between">
+      <nav
+        aria-label="Add note items as markdown or task"
+        class="mt-6 flex flex-none md:mt-0 md:justify-between"
+      >
         <Button class="mr-4" @click="createItem('markdown')"
           >Add Markdown</Button
         >
