@@ -1,0 +1,30 @@
+import hljs from "highlight.js/lib/core";
+import bash from "highlight.js/lib/languages/bash";
+import css from "highlight.js/lib/languages/css";
+import graphql from "highlight.js/lib/languages/graphql";
+import javascript from "highlight.js/lib/languages/javascript";
+import json from "highlight.js/lib/languages/json";
+import php from "highlight.js/lib/languages/php";
+import plaintext from "highlight.js/lib/languages/plaintext";
+import scss from "highlight.js/lib/languages/scss";
+import shell from "highlight.js/lib/languages/shell";
+import sql from "highlight.js/lib/languages/sql";
+import yaml from "highlight.js/lib/languages/yaml";
+import typescript from "highlight.js/lib/languages/typescript";
+import "highlight.js/styles/a11y-dark.min.css";
+
+hljs.registerLanguage("bash", bash);
+hljs.registerLanguage("css", css);
+hljs.registerLanguage("graphql", graphql);
+hljs.registerLanguage("javascript", javascript);
+hljs.registerLanguage("json", json);
+hljs.registerLanguage("php", php);
+hljs.registerLanguage("plaintext", plaintext);
+hljs.registerLanguage("scss", scss);
+hljs.registerLanguage("shell", shell);
+hljs.registerLanguage("sql", sql);
+hljs.registerLanguage("shell", shell);
+hljs.registerLanguage("yaml", yaml);
+hljs.registerLanguage("typescript", typescript);
+
+export default hljs;
