@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import DOMPurify from "isomorphic-dompurify";
 import debounce from "lodash.debounce";
-import { marked } from "marked";
+import { Marked } from "marked";
+import { markedHighlight } from "marked-highlight";
 import { useTextareaHeight } from "@/composables/textareaHeight";
+import hljs from "@/utils/syntax-highlight";
 
 interface Props {
   modelValue: Markdown;
@@ -19,7 +21,17 @@ const textarea: Ref<HTMLTextAreaElement> = ref();
 const { updateTextareaHeight } = useTextareaHeight(textarea);
 
 const compiledMarkdown: ComputedRef<string> = computed(() => {
-  const convertedHTML = marked(text.value);
+  const marked = new Marked(
+    markedHighlight({
+      langPrefix: "hljs language-",
+      highlight(code, lang) {
+        const language = hljs.getLanguage(lang) ? lang : "plaintext";
+        return hljs.highlight(code, { language }).value;
+      },
+    }),
+  );
+
+  const convertedHTML: string = marked.parse(text.value) as string;
   const purifiedHTML = DOMPurify.sanitize(convertedHTML);
   return purifiedHTML;
 });
@@ -148,5 +160,9 @@ async function onClickOrEnter() {
 
 .Markdown > h1:not(:first-child) {
   margin-top: 3rem;
+}
+
+.Markdown code {
+  font-size: 0.75rem;
 }
 </style>

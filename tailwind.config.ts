@@ -74,7 +74,9 @@ export default <Partial<Config>>{
         tags: "14rem;",
       },
       transitionProperty: {
-        border: "border",
+        bgColor: "background-color",
+        borderColor: "border-color",
+        borderAndBgColor: "border-color, background-color",
       },
     },
   },

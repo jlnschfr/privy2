@@ -16,7 +16,7 @@ function authenticate() {
 
 <template>
   <form
-    class="absolute left-4vw right-4vw top-50 mx-auto max-w-md -translate-y-1/2 transform bg-neutral-600 px-3 py-8 shadow-xl transition duration-300 dark:bg-neutral-100 md:px-6"
+    class="transition-bgColor absolute left-4vw right-4vw top-50 mx-auto max-w-md -translate-y-1/2 transform bg-neutral-600 px-3 py-8 shadow-xl duration-300 dark:bg-neutral-100 md:px-6"
     @submit.prevent="authenticate"
   >
     <header class="flex justify-center">
