@@ -12,8 +12,15 @@ export default defineNuxtConfig({
           name: "description",
           content: "Great notes for great people",
         },
+        { name: "theme-color", content: "#285799" },
       ],
-      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+      link: [
+        { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+        {
+          rel: "apple-touch-icon",
+          href: "/icons/apple-touch-icon-180x180.png",
+        },
+      ],
       bodyAttrs: { class: "bg-neutral-500 dark:bg-neutral-50" },
     },
     pageTransition: { name: "slide", mode: "out-in" },
@@ -50,4 +57,50 @@ export default defineNuxtConfig({
     "~/assets/css/utils.css",
     "~/assets/css/transitions.css",
   ],
+  pwa: {
+    registerType: "autoUpdate",
+    manifest: {
+      name: "Privy Notes",
+      short_name: "Privy Notes",
+      description: "Great notes for great people",
+      theme_color: "#285799",
+      icons: [
+        {
+          src: "icons/pwa-64x64.png",
+          sizes: "64x64",
+          type: "image/png",
+        },
+        {
+          src: "icons/pwa-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+        },
+        {
+          src: "icons/pwa-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "any",
+        },
+        {
+          src: "icons/maskable-icon-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "maskable",
+        },
+      ],
+    },
+    workbox: {
+      globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+    },
+    client: {
+      installPrompt: true,
+      periodicSyncForUpdates: 20,
+    },
+    devOptions: {
+      enabled: true,
+      suppressWarnings: true,
+      navigateFallbackAllowlist: [/^\/$/],
+      type: "module",
+    },
+  },
 });
