@@ -42,6 +42,8 @@ export default <Partial<Config>>{
         6: "3rem",
         7: "3.5rem",
         8: "4rem",
+        9: "4.5rem",
+        10: "5rem",
         "1vw": "1vw",
         "2vw": "2vw",
         "3vw": "3vw",
