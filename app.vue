@@ -1,10 +1,12 @@
 <script setup lang="ts">
 const user = useSupabaseUser();
 const noteStore = useNoteStore();
+const rssStore = useRssStore();
 
 if (user.value) {
   if (navigator?.onLine) {
     await noteStore.fetchAll();
+    await rssStore.fetchAll();
   }
 }
 </script>
