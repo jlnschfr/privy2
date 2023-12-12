@@ -5,7 +5,7 @@ export const useRssStore = defineStore("RssStore", () => {
 
   const fetchAll = async () => {
     try {
-      const functionUrl: string = `/.netlify/functions/rss}`;
+      const functionUrl: string = `/.netlify/functions/rss`;
       const functionResponse: Response = await fetch(functionUrl);
       const result = await functionResponse.json();
 
