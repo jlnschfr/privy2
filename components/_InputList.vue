@@ -25,6 +25,7 @@ watch(
 );
 
 function onClick() {
+  // TODO: Error handling, wrong input
   if (
     input.value === "" ||
     items.value.includes(input.value) ||

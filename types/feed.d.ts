@@ -3,5 +3,5 @@ declare interface Feed {
   created_at?: string;
   user_id?: string;
   url: string;
-  feed?: any;
+  data?: any;
 }
