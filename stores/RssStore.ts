@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import type { Database } from "@/types/database.types";
 
 export const useRssStore = defineStore("RssStore", () => {
+  const syncStore = useSyncStore();
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
   const feeds: Ref<Feed[]> = ref([]);
@@ -12,7 +13,7 @@ export const useRssStore = defineStore("RssStore", () => {
       user_id: user?.value?.id,
     };
 
-    // setIsSyncing(true);
+    syncStore.setIsSyncing(true);
 
     const { data } = await useFetch("/api/rss", { query: { url } });
     if (data) {
@@ -24,11 +25,11 @@ export const useRssStore = defineStore("RssStore", () => {
 
     await client.from("rss").upsert(feed);
 
-    // setIsSyncing(false, 500);
+    syncStore.setIsSyncing(false, 500);
   };
 
   const fetchAll = async () => {
-    // setIsSyncing(true);
+    syncStore.setIsSyncing(true);
     const { data } = await client
       .from("rss")
       .select("id, created_at, url, feed, user_id")
@@ -45,7 +46,7 @@ export const useRssStore = defineStore("RssStore", () => {
       }
     });
 
-    // setIsSyncing(false, 500);
+    syncStore.setIsSyncing(false, 500);
   };
 
   return {
