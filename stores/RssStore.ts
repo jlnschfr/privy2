@@ -8,8 +8,10 @@ export const useRssStore = defineStore("RssStore", () => {
       const functionUrl: string = `/.netlify/functions/rss`;
       const functionResponse: Response = await fetch(functionUrl);
       const result = await functionResponse.json();
-
       console.log(result);
+
+      const data = await useFetch("/api/rss");
+      console.log(data);
     } catch (e) {
       console.log(e);
     }
