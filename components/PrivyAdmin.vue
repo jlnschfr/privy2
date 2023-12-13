@@ -23,13 +23,15 @@ const deleteAccount = async () => {
 };
 
 const rssStore = useRssStore();
-const rssItems: Ref<string[]> = ref(rssStore.feeds.map((feed) => feed.url));
+const rssUrls: Ref<string[]> = ref(
+  rssStore.feeds ? rssStore.feeds?.map((feed) => feed.url) : [],
+);
 
 watch(
-  () => rssItems.value.length,
+  () => rssUrls.value.length,
   async () => {
-    const lastItem = rssItems.value[rssItems.value.length - 1];
-    await rssStore.add(lastItem);
+    const lastUrl = rssUrls.value[rssUrls.value.length - 1];
+    await rssStore.add(lastUrl);
   },
 );
 </script>
@@ -55,7 +57,7 @@ watch(
         Deleting your account cannot be undone. Once your account has been
         deleted, it can't be recovered anymore. All notes are permanently lost.
       </p>
-      <InputList v-model="rssItems" :validator="isValidUrl" class="mt-3" />
+      <InputList v-model="rssUrls" :validator="isValidUrl" class="mt-3" />
     </form>
 
     <form class="mt-10" @submit.prevent="deleteAccount">

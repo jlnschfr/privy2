@@ -18,7 +18,7 @@ export const useRssStore = defineStore("RssStore", () => {
 
     const { data } = await useFetch("/api/rss", { query: { url } });
     if (data) {
-      feed.feed = data.value;
+      feed.data = data.value;
     }
 
     feeds.value?.push(feed);
@@ -33,17 +33,17 @@ export const useRssStore = defineStore("RssStore", () => {
     syncStore.setIsSyncing(true);
     const { data } = await client
       .from("rss")
-      .select("id, created_at, url, feed, user_id")
+      .select("id, created_at, url, data, user_id")
       .match({ user_id: user?.value?.id })
       .order("created_at");
 
     feeds.value = data;
     storeToLocalStorage();
 
-    feeds.value.forEach(async (feed) => {
+    feeds.value?.forEach(async (feed) => {
       const { data } = await useFetch("/api/rss", { query: { url: feed.url } });
       if (data) {
-        feed.feed = data.value;
+        feed.data = data.value;
       }
     });
 
