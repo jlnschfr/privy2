@@ -1,11 +1,12 @@
 import { defineStore } from "pinia";
+import { useLocalStorage } from "@vueuse/core";
 import type { Database } from "@/types/database.types";
 
 export const useRssStore = defineStore("RssStore", () => {
   const syncStore = useSyncStore();
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
-  const feeds: Ref<Feed[]> = ref([]);
+  const feeds: Ref<Feed[]> = ref(useLocalStorage(`rss-${user?.value?.id}`, []));
 
   const add = async (url: string) => {
     const feed: Feed = {
@@ -21,7 +22,7 @@ export const useRssStore = defineStore("RssStore", () => {
     }
 
     feeds.value?.push(feed);
-    // storeToLocalStorage();
+    storeToLocalStorage();
 
     await client.from("rss").upsert(feed);
 
@@ -37,7 +38,7 @@ export const useRssStore = defineStore("RssStore", () => {
       .order("created_at");
 
     feeds.value = data;
-    // storeToLocalStorage();
+    storeToLocalStorage();
 
     feeds.value.forEach(async (feed) => {
       const { data } = await useFetch("/api/rss", { query: { url: feed.url } });
@@ -47,6 +48,10 @@ export const useRssStore = defineStore("RssStore", () => {
     });
 
     syncStore.setIsSyncing(false, 500);
+  };
+
+  const storeToLocalStorage = () => {
+    localStorage.setItem(`rss-${user?.value?.id}`, JSON.stringify(feeds.value));
   };
 
   return {
