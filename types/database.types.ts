@@ -33,6 +33,29 @@ export interface Database {
           user_id?: string;
         };
       };
+      rss: {
+        Row: {
+          id?: string;
+          created_at?: string;
+          user_id?: string;
+          url: string;
+          feed?: any;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          user_id?: string;
+          url: string;
+          feed?: any;
+        };
+        Update: {
+          id?: string;
+          created_at?: string;
+          user_id?: string;
+          url: string;
+          feed?: any;
+        };
+      };
     };
     Views: {
       [_ in never]: never;
