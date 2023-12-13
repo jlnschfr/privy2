@@ -1,11 +1,12 @@
 import Parser from "rss-parser";
+import type { Output } from "rss-parser";
 
-export default defineEventHandler(async () => {
-  const parser = new Parser();
-  const feed = await parser.parseURL(
-    "https://www.tagesschau.de/inland/gesellschaft/index~rss2.xml",
-  );
-  console.log(feed.title);
+export default defineEventHandler(async (event): Promise<Output<any>> => {
+  const query = getQuery(event);
+  if (!query.url || typeof query.url !== "string") return;
 
-  return { feed };
+  const parser: Parser = new Parser();
+  const feed: Output<any> = await parser.parseURL(query.url);
+
+  return feed;
 });
