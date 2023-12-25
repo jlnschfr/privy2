@@ -7,7 +7,11 @@ export const useRssStore = defineStore("RssStore", () => {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
-  const feeds: Ref<Feed[]> = ref(useLocalStorage(`rss-${user?.value?.id}`, []));
+  const feeds: Ref<Feed[]> = useLocalStorage(`rss-${user?.value?.id}`, []);
+  const feedLastUpdated: Ref<number> = useLocalStorage(
+    `rss-last-updated-${user?.value?.id}`,
+    0,
+  );
 
   const add = async (url: string) => {
     syncStore.setIsSyncing(true);
@@ -51,13 +55,9 @@ export const useRssStore = defineStore("RssStore", () => {
   };
 
   const fetchAll = async () => {
-    console.log("fetchAll");
     syncStore.setIsSyncing(true);
 
-    // check if there is new data in localstorage
-    const localStorageUptoDate = true;
-
-    if (!localStorageUptoDate) {
+    if (!checkIfLocalFeedIsUpToDate()) {
       const { data } = await client
         .from("rss")
         .select("id, created_at, url, data, user_id")
@@ -80,8 +80,17 @@ export const useRssStore = defineStore("RssStore", () => {
     syncStore.setIsSyncing(false, 500);
   };
 
+  const checkIfLocalFeedIsUpToDate = (): Boolean => {
+    const THIRTY_MINUTES = 60 * 60 * 1000; // 60 minutes in milliseconds
+    return new Date().getTime() - feedLastUpdated.value <= THIRTY_MINUTES;
+  };
+
   const storeToLocalStorage = () => {
     localStorage.setItem(`rss-${user?.value?.id}`, JSON.stringify(feeds.value));
+    localStorage.setItem(
+      `rss-last-updated-${user?.value?.id}`,
+      JSON.stringify(new Date().getTime()),
+    );
   };
 
   return {
