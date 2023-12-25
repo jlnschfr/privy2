@@ -8,5 +8,5 @@ export default defineEventHandler(async (event): Promise<Output<any>> => {
   const parser: Parser = new Parser();
   const feed: Output<any> = await parser.parseURL(query.url);
 
-  return feed;
+  return feed as FeedData;
 });
