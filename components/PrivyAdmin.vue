@@ -28,12 +28,23 @@ const rssUrls: Ref<string[]> = ref(
 );
 
 watch(
-  () => rssUrls.value.length,
-  async () => {
-    const lastUrl = rssUrls.value[rssUrls.value.length - 1];
-    await rssStore.add(lastUrl);
+  rssUrls,
+  async (newValue: string[], oldValue: string[]) => {
+    if (newValue.length < oldValue.length) {
+      const removedUrls = oldValue.filter((el) => !newValue.includes(el));
+      await rssStore.remove(removedUrls[0]);
+    } else {
+      const lastUrl = rssUrls.value[rssUrls.value.length - 1];
+      await rssStore.add(lastUrl);
+    }
   },
+  { deep: true },
 );
+
+function onInvalidListInput(msg: string) {
+  // TODO: show snackbar with invalid input
+  console.log(msg);
+}
 </script>
 
 <template>
@@ -57,7 +68,12 @@ watch(
         Deleting your account cannot be undone. Once your account has been
         deleted, it can't be recovered anymore. All notes are permanently lost.
       </p>
-      <InputList v-model="rssUrls" :validator="isValidUrl" class="mt-3" />
+      <InputList
+        v-model="rssUrls"
+        :validator="isValidUrl"
+        class="mt-3"
+        @invalid-input="onInvalidListInput"
+      />
     </form>
 
     <form class="mt-10" @submit.prevent="deleteAccount">

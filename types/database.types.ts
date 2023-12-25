@@ -39,21 +39,21 @@ export interface Database {
           created_at?: string;
           user_id?: string;
           url: string;
-          data?: any;
+          data?: FeedData;
         };
         Insert: {
           id?: string;
           created_at?: string;
           user_id?: string;
           url: string;
-          data?: any;
+          data?: FeedData;
         };
         Update: {
           id?: string;
           created_at?: string;
           user_id?: string;
           url: string;
-          data?: any;
+          data?: FeedData;
         };
       };
     };
