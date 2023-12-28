@@ -123,11 +123,14 @@ export const useRssStore = defineStore("RssStore", () => {
       for (let i = 0; i < 2; i++) {
         const id = feed.data?.items[i].guid;
         const title = feed.data?.items[i].title;
+        const author = feed.data?.title;
 
         if (!id || !title || feed.created_items.includes(id)) return;
 
         const note: Note = createEmptyNote();
         note.title = title;
+        note.tags.push({ text: "rss" });
+        note.tags.push({ text: author });
         noteStore.add(note, { redirect: false });
 
         feed.created_items.push(id);

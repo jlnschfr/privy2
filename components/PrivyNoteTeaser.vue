@@ -31,7 +31,12 @@ function open(id: string) {
 
 <template>
   <article
-    class="privy-focus transition-bgColor cursor-pointer bg-neutral-600 shadow-lg duration-300 dark:bg-neutral-100"
+    class="privy-focus cursor-pointer bg-neutral-600 shadow-lg transition-bgColor duration-300 dark:bg-neutral-100"
+    :class="{
+      'bg-neutral-400 dark:bg-neutral-200': note.tags.find(
+        (tag) => tag.text === 'rss',
+      ),
+    }"
     tabindex="0"
     @keyup.enter="open(note.id)"
     @click="open(note.id)"
@@ -46,7 +51,9 @@ function open(id: string) {
       <Date :date="note.edited_at" />
 
       <div>
-        <h2 class="w-full hyphens-auto text-2xl font-bold leading-none">
+        <h2
+          class="line-clamp-3 w-full hyphens-auto text-2xl font-bold leading-none"
+        >
           {{ note.title }}
         </h2>
         <p v-if="tasks.length" class="mt-0_5 flex gap-1">
