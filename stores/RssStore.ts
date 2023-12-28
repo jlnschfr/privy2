@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
+import { v4 as uuid } from "uuid";
 import { createEmptyNote } from "@/utils/note";
 import type { Database } from "@/types/database.types";
 
@@ -22,7 +23,12 @@ export const useRssStore = defineStore("RssStore", () => {
 
   const add = async (url: string) => {
     syncStore.setIsSyncing(true);
-    const feed: Feed = { url, user_id: user?.value?.id };
+    const feed: Feed = {
+      id: uuid(),
+      url,
+      user_id: user?.value?.id,
+      created_items: [],
+    };
     const { data } = await useFetch("/api/rss", { query: { url } });
 
     if (data?.value) {
@@ -32,6 +38,7 @@ export const useRssStore = defineStore("RssStore", () => {
       storeToLocalStorage();
 
       await client.from("rss").upsert(feed);
+      addRecentFeedsToNotes();
     } else {
       // show snackbar with error
     }
