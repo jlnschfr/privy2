@@ -40,6 +40,7 @@ export interface Database {
           user_id?: string;
           url: string;
           data?: FeedData;
+          created_items?: string[];
         };
         Insert: {
           id?: string;
@@ -47,6 +48,7 @@ export interface Database {
           user_id?: string;
           url: string;
           data?: FeedData;
+          created_items?: string[];
         };
         Update: {
           id?: string;
@@ -54,6 +56,7 @@ export interface Database {
           user_id?: string;
           url: string;
           data?: FeedData;
+          created_items?: string[];
         };
       };
     };

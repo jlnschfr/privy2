@@ -4,6 +4,7 @@ declare interface Feed {
   user_id?: string;
   url: string;
   data?: FeedData;
+  created_items?: string[];
 }
 
 declare interface FeedData {
