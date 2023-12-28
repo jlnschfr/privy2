@@ -1,9 +1,11 @@
 import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
+import { createEmptyNote } from "@/utils/note";
 import type { Database } from "@/types/database.types";
 
 export const useRssStore = defineStore("RssStore", () => {
   const syncStore = useSyncStore();
+  const noteStore = useNoteStore();
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
@@ -12,6 +14,11 @@ export const useRssStore = defineStore("RssStore", () => {
     `rss-last-updated-${user?.value?.id}`,
     0,
   );
+
+  const get = (id: string): Feed => {
+    if (!feeds.value?.length) return;
+    return feeds.value?.find((feed) => feed.id === id);
+  };
 
   const add = async (url: string) => {
     syncStore.setIsSyncing(true);
@@ -54,13 +61,35 @@ export const useRssStore = defineStore("RssStore", () => {
     syncStore.setIsSyncing(false, 500);
   };
 
+  const update = async (id: string, details: Partial<Feed>) => {
+    syncStore.setIsSyncing(true);
+
+    const updatedFeed: Feed = {
+      ...get(id),
+      ...details,
+    };
+
+    feeds.value = feeds.value?.map((feed) =>
+      feed.id === updatedFeed.id ? updatedFeed : feed,
+    );
+
+    storeToLocalStorage();
+
+    await client
+      .from("rss")
+      .update(updatedFeed)
+      .match({ id, user_id: user?.value?.id });
+
+    syncStore.setIsSyncing(false, 500);
+  };
+
   const fetchAll = async () => {
     syncStore.setIsSyncing(true);
 
     if (!checkIfLocalFeedIsUpToDate()) {
       const { data } = await client
         .from("rss")
-        .select("id, created_at, url, data, user_id")
+        .select("id, created_at, url, data, user_id, created_items")
         .match({ user_id: user?.value?.id })
         .order("created_at");
 
@@ -75,14 +104,34 @@ export const useRssStore = defineStore("RssStore", () => {
           feed.data = data.value as FeedData;
         }
       });
+
+      addRecentFeedsToNotes();
     }
 
     syncStore.setIsSyncing(false, 500);
   };
 
+  const addRecentFeedsToNotes = () => {
+    feeds.value.forEach((feed) => {
+      for (let i = 0; i < 2; i++) {
+        const id = feed.data?.items[i].guid;
+        const title = feed.data?.items[i].title;
+
+        if (!id || !title || feed.created_items.includes(id)) return;
+
+        const note: Note = createEmptyNote();
+        note.title = title;
+        noteStore.add(note, { redirect: false });
+
+        feed.created_items.push(id);
+        update(feed.id, { created_items: feed.created_items });
+      }
+    });
+  };
+
   const checkIfLocalFeedIsUpToDate = (): Boolean => {
-    const THIRTY_MINUTES = 60 * 60 * 1000; // 60 minutes in milliseconds
-    return new Date().getTime() - feedLastUpdated.value <= THIRTY_MINUTES;
+    const offset = 60 * 60 * 1000; // 60 minutes in ms
+    return new Date().getTime() - feedLastUpdated.value <= offset;
   };
 
   const storeToLocalStorage = () => {
@@ -95,6 +144,8 @@ export const useRssStore = defineStore("RssStore", () => {
 
   return {
     feeds,
+    get,
+    update,
     add,
     remove,
     fetchAll,
