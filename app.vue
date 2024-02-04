@@ -1,8 +1,11 @@
 <script setup lang="ts">
 const user = useSupabaseUser();
 const noteStore = useNoteStore();
+const locationStore = useLocationStore();
 
 if (user.value) {
+  await locationStore.init();
+
   if (navigator?.onLine) {
     await noteStore.fetchAll();
   }
