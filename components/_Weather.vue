@@ -1,125 +1,19 @@
 <script setup lang="ts">
-const locationStore = useLocationStore();
+const weatherStore = useWeatherStore();
 
-const interval: Ref<any> = ref();
-const temperature: Ref<string> = ref("");
-const city: Ref<string> = ref("");
-const description: Ref<string> = ref("");
-const icon: Ref<string> = ref("");
-const active: Ref<boolean> = ref(false);
-
-onMounted(() => {
-  if (navigator.onLine) {
-    interval.value = setInterval(checkWeather, 300000);
-    checkWeather();
-  }
-});
-
-onUnmounted(() => {
-  clearInterval(interval.value);
-});
-
-async function checkWeather() {
-  const location: PrivyLocation = locationStore.location;
-  const weather: PrivyWeather = locationStore.weather;
-
-  const offset: number = 1800000;
-  const cachedTimestamp: number = weather?.date?.getTime() + offset;
-  const nowTimestamp: number = new Date().getTime();
-
-  // check if stored weather is not older then 0.5 hours
-  if (location && weather && cachedTimestamp > nowTimestamp) {
-    applyLocationAndWeather(location, weather);
-  } else {
-    try {
-      const newLocation: PrivyLocation = await getLocation();
-      const newWeatherData: PrivyWeatherData = await getWeather(
-        newLocation.lat,
-        newLocation.long,
-      );
-
-      const newWeather: PrivyWeather = {
-        date: new Date(),
-        data: newWeatherData,
-      };
-
-      locationStore.location = newLocation;
-      locationStore.weather = newWeather;
-
-      applyLocationAndWeather(newLocation, newWeather);
-    } catch (err) {
-      // console.log(err)
-    }
-  }
-}
-
-function getLocation(): Promise<PrivyLocation> {
-  return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) {
-      reject(new Error("Browser doesn't support Geolocation API"));
-    } else {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const lat: number = position.coords.latitude;
-          const long: number = position.coords.longitude;
-          const city: string = await getCity(lat, long);
-          resolve({ lat, long, city });
-        },
-        () => {
-          reject(new Error("Browser doesn't support Geolocation API"));
-        },
-      );
-    }
-  });
-}
-
-function getCity(lat: number, long: number): Promise<string> {
-  // eslint-disable-next-line no-async-promise-executor
-  return new Promise(async (resolve, reject) => {
-    const url: URL = new URL("https://nominatim.openstreetmap.org/reverse");
-    url.searchParams.set("format", "json");
-    url.searchParams.set("lat", String(lat));
-    url.searchParams.set("lon", String(long));
-
-    const response: Response = await fetch(url);
-    if (response.ok) {
-      const json = await response.json();
-      resolve(`${json.address?.suburb}, ${json.address?.country}`);
-    } else {
-      reject(new Error("Can't fetch Location Data"));
-    }
-  });
-}
-
-function getWeather(lat: number, long: number): Promise<PrivyWeatherData> {
-  // eslint-disable-next-line no-async-promise-executor
-  return new Promise(async (resolve, reject) => {
-    const url: URL = new URL("https://api.weatherapi.com/v1/current.json");
-    url.searchParams.set("aqi", "no");
-    url.searchParams.set("key", "8e53893c18944438bdf142917230811");
-    url.searchParams.set("q", `${lat},${long}`);
-    const response: Response = await fetch(url);
-    if (response.ok) {
-      const json: PrivyWeatherData = await response.json();
-      resolve(json);
-    } else {
-      reject(new Error("Can't fetch Weather Data"));
-    }
-  });
-}
-
-function applyLocationAndWeather(
-  location: PrivyLocation,
-  weather: PrivyWeather,
-) {
-  const { current } = weather.data;
-
-  temperature.value = current.temp_c;
-  description.value = current.condition.text;
-  icon.value = getIcon(current.condition.text);
-  city.value = location.city;
-  active.value = true;
-}
+const temperature: ComputedRef<string> = computed(
+  () => weatherStore.weather?.data?.current?.temp_c,
+);
+const description: ComputedRef<string> = computed(
+  () => weatherStore.weather.data.current.condition.text,
+);
+const city: ComputedRef<string> = computed(
+  () => weatherStore.weather.location?.city,
+);
+const icon: ComputedRef<string> = computed(() =>
+  getIcon(weatherStore.weather.data.current.condition.text),
+);
+const isValid: ComputedRef<boolean> = computed(() => weatherStore.isValid);
 
 function getIcon(icon: string): string {
   const iconMap = {
@@ -179,7 +73,7 @@ function getIcon(icon: string): string {
 </script>
 
 <template>
-  <div v-if="active">
+  <div v-if="isValid">
     <div class="w-full">{{ city }}</div>
     <div v-if="temperature !== ''" class="mt-2 flex items-center">
       <component :is="icon" class="w-6 fill-current" />

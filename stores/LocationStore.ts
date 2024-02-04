@@ -23,6 +23,8 @@ export const useLocationStore = defineStore("LocationStore", () => {
     } else if (isOlderThanHalfAnHour.value) {
       fetchLocation();
     }
+
+    // Todo: Interval 30min
   };
 
   async function fetchLocation() {
@@ -44,6 +46,7 @@ export const useLocationStore = defineStore("LocationStore", () => {
 
   return {
     location,
+    isEmpty,
     init,
   };
 });
