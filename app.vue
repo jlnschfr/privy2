@@ -2,9 +2,11 @@
 const user = useSupabaseUser();
 const noteStore = useNoteStore();
 const locationStore = useLocationStore();
+const weatherStore = useWeatherStore();
 
 if (user.value) {
   await locationStore.init();
+  await weatherStore.init();
 
   if (navigator?.onLine) {
     await noteStore.fetchAll();

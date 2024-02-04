@@ -1,6 +1,7 @@
 declare interface PrivyWeather {
-  date: Date;
-  data: PrivyWeatherData;
+  timestamp?: number;
+  location?: PrivyLocation;
+  data?: PrivyWeatherData;
 }
 
 declare interface PrivyWeatherData {
