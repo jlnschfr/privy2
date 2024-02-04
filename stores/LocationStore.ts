@@ -1,13 +1,49 @@
 import { defineStore } from "pinia";
+import { useLocalStorage } from "@vueuse/core";
 
 export const useLocationStore = defineStore("LocationStore", () => {
-  const location: Ref<PrivyLocation> = ref();
-  const weather: Ref<PrivyWeather> = ref();
+  const user = useSupabaseUser();
 
-  // add functionality to store to local storage
+  const location: Ref<PrivyLocation> = useLocalStorage(
+    `location-${user?.value?.id}`,
+    {},
+  );
+
+  const isEmpty: ComputedRef<boolean> = computed(
+    () => Object.keys(location.value).length === 0,
+  );
+
+  const isOlderThanHalfAnHour: ComputedRef<boolean> = computed(
+    () => Date.now() - location.value?.timestamp > 1800000,
+  );
+
+  const init = () => {
+    if (isEmpty.value) {
+      fetchLocation();
+    } else if (isOlderThanHalfAnHour.value) {
+      fetchLocation();
+    }
+  };
+
+  async function fetchLocation() {
+    const url: URL = new URL(
+      "https://api.bigdatacloud.net/data/reverse-geocode-client",
+    );
+
+    const response: Response = await fetch(url);
+    if (response.ok) {
+      const json = await response.json();
+      location.value = {
+        lat: json.latitude,
+        long: json.longitude,
+        city: json.locality,
+        timestamp: Date.now(),
+      };
+    }
+  }
 
   return {
     location,
-    weather,
+    init,
   };
 });
