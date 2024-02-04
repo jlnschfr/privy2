@@ -6,23 +6,19 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
 
-  const notes: Ref<Note[]> = ref(
-    useLocalStorage(`notes-${user?.value?.id}`, []),
-  );
+  const notes: Ref<Note[]> = useLocalStorage(`notes-${user?.value?.id}`, []);
   const isSyncing: Ref<boolean> = ref(false);
 
-  const notesNotTrashed: ComputedRef<Note[]> = computed(
-    () =>
-      notes.value?.filter(
-        (note) => !note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
-      ),
+  const notesNotTrashed: ComputedRef<Note[]> = computed(() =>
+    notes.value?.filter(
+      (note) => !note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
+    ),
   );
 
-  const notesTrashed: ComputedRef<Note[]> = computed(
-    () =>
-      notes.value?.filter((note) =>
-        note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
-      ),
+  const notesTrashed: ComputedRef<Note[]> = computed(() =>
+    notes.value?.filter((note) =>
+      note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
+    ),
   );
 
   const get = (id: string): Note => {
@@ -58,7 +54,6 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .order("created_at");
 
     notes.value = data;
-    storeToLocalStorage();
 
     sortNotes();
     setIsSyncing(false, 500);
@@ -73,7 +68,6 @@ export const useNoteStore = defineStore("NoteStore", () => {
     setIsSyncing(true);
 
     notes.value?.push(noteWithUserId);
-    storeToLocalStorage();
 
     await client.from("notes").upsert(noteWithUserId);
 
@@ -101,7 +95,6 @@ export const useNoteStore = defineStore("NoteStore", () => {
     setIsSyncing(true);
 
     notes.value = notes.value?.map((n) => (n.id === note.id ? note : n));
-    storeToLocalStorage();
 
     await client
       .from("notes")
@@ -117,12 +110,8 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
     const index = notes.value?.findIndex((note) => note.id === id);
     notes.value?.splice(index, 1);
-    storeToLocalStorage();
 
-    await client
-      .from("notes")
-      .delete()
-      .match({ id, user_id: user?.value?.id });
+    await client.from("notes").delete().match({ id, user_id: user?.value?.id });
 
     sortNotes();
     setIsSyncing(false, 500);
@@ -144,13 +133,6 @@ export const useNoteStore = defineStore("NoteStore", () => {
         return 1;
       }
     });
-  };
-
-  const storeToLocalStorage = () => {
-    localStorage.setItem(
-      `notes-${user?.value?.id}`,
-      JSON.stringify(notes.value),
-    );
   };
 
   const setIsSyncing = (value: boolean, delay: number = 0) => {
