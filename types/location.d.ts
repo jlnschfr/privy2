@@ -1,5 +1,6 @@
 declare interface PrivyLocation {
-  lat: number;
-  long: number;
-  city: string;
+  lat?: number;
+  long?: number;
+  city?: string;
+  timestamp?: number;
 }
