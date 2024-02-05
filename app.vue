@@ -1,9 +1,14 @@
 <script setup lang="ts">
 const user = useSupabaseUser();
 const noteStore = useNoteStore();
+const locationStore = useLocationStore();
+const weatherStore = useWeatherStore();
 const rssStore = useRssStore();
 
 if (user.value) {
+  await locationStore.init();
+  await weatherStore.init();
+
   if (navigator?.onLine) {
     await noteStore.fetchAll();
     await rssStore.fetchAll();
