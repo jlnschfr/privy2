@@ -59,6 +59,7 @@
     "lodash.isequal": "^4.5.0",
     "marked": "^11.2.0",
     "marked-highlight": "^2.1.0",
+    "rss-parser": "^3.13.0",
     "uuid": "^9.0.1",
     "vuedraggable": "^4.1.0"
   }

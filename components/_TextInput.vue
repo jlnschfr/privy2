@@ -37,7 +37,7 @@ const id: Ref<string> = ref(uuid());
     <input
       :id="id"
       :disabled="disabled"
-      class="privy-focus transition-borderColor block w-full appearance-none bg-transparent py-1 leading-normal placeholder-neutral-200 duration-300 dark:placeholder-neutral-400"
+      class="privy-focus block w-full appearance-none bg-transparent py-1 leading-normal placeholder-neutral-200 transition-borderColor duration-300 dark:placeholder-neutral-400"
       :class="{
         'border-b border-neutral-200 dark:border-neutral-400': border,
         'cursor-not-allowed': disabled,

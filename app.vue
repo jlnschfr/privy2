@@ -3,6 +3,7 @@ const user = useSupabaseUser();
 const noteStore = useNoteStore();
 const locationStore = useLocationStore();
 const weatherStore = useWeatherStore();
+const rssStore = useRssStore();
 
 if (user.value) {
   await locationStore.init();
@@ -10,6 +11,7 @@ if (user.value) {
 
   if (navigator?.onLine) {
     await noteStore.fetchAll();
+    await rssStore.fetchAll();
   }
 }
 </script>
