@@ -12,8 +12,8 @@ const note: ComputedRef<Note> = computed(() => noteStore.get(props.noteId));
 const tasks: ComputedRef<Task[]> = computed(
   () => note.value?.items.filter((item) => item.type === "Task") as Task[],
 );
-const doneTasks: ComputedRef<Task[]> = computed(
-  () => tasks.value?.filter((item) => item.data?.isValid),
+const doneTasks: ComputedRef<Task[]> = computed(() =>
+  tasks.value?.filter((item) => item.data?.isValid),
 );
 
 function open(id: string) {
@@ -32,11 +32,6 @@ function open(id: string) {
 <template>
   <article
     class="privy-focus cursor-pointer bg-neutral-600 shadow-lg transition-bgColor duration-300 dark:bg-neutral-100"
-    :class="{
-      'bg-neutral-400 dark:bg-neutral-200': note.tags.find(
-        (tag) => tag.text === 'rss',
-      ),
-    }"
     tabindex="0"
     @keyup.enter="open(note.id)"
     @click="open(note.id)"

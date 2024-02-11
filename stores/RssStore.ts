@@ -11,10 +11,17 @@ export const useRssStore = defineStore("RssStore", () => {
   const user = useSupabaseUser();
 
   const feeds: Ref<Feed[]> = useLocalStorage(`rss-${user?.value?.id}`, []);
-  const feedLastUpdated: Ref<number> = useLocalStorage(
-    `rss-last-updated-${user?.value?.id}`,
-    0,
-  );
+  // const feedLastUpdated: Ref<number> = useLocalStorage(
+  //   `rss-last-updated-${user?.value?.id}`,
+  //   0,
+  // );
+
+  // const isLocalFeedUpToDate: ComputedRef<boolean> = computed(() => {
+  //   if (!feedLastUpdated.value) return false;
+
+  //   const offset = 60 * 60 * 1000; // 60 minutes in ms
+  //   return new Date().getTime() - feedLastUpdated.value <= offset;
+  // });
 
   const get = (id: string): Feed => {
     if (!feeds.value?.length) return;
@@ -33,12 +40,10 @@ export const useRssStore = defineStore("RssStore", () => {
 
     if (data?.value) {
       feed.data = data.value as FeedData;
-
       feeds.value?.push(feed);
-      storeToLocalStorage();
 
       await client.from("rss").upsert(feed);
-      addRecentFeedsToNotes();
+      addFeedsToNotes();
     } else {
       // show snackbar with error
     }
@@ -53,12 +58,7 @@ export const useRssStore = defineStore("RssStore", () => {
     if (index >= 0) {
       const { id } = feeds.value[index];
       feeds.value?.splice(index, 1);
-      storeToLocalStorage();
-
-      await client
-        .from("rss")
-        .delete()
-        .match({ id, user_id: user?.value?.id });
+      await client.from("rss").delete().match({ id, user_id: user?.value?.id });
 
       // show snackbar with undo action
     } else {
@@ -74,13 +74,12 @@ export const useRssStore = defineStore("RssStore", () => {
     const updatedFeed: Feed = {
       ...get(id),
       ...details,
+      updated_at: new Date().toISOString(),
     };
 
     feeds.value = feeds.value?.map((feed) =>
       feed.id === updatedFeed.id ? updatedFeed : feed,
     );
-
-    storeToLocalStorage();
 
     await client
       .from("rss")
@@ -93,63 +92,56 @@ export const useRssStore = defineStore("RssStore", () => {
   const fetchAll = async () => {
     syncStore.setIsSyncing(true);
 
-    if (!checkIfLocalFeedIsUpToDate()) {
-      const { data } = await client
-        .from("rss")
-        .select("id, created_at, url, data, user_id, created_items")
-        .match({ user_id: user?.value?.id })
-        .order("created_at");
+    const { data } = await client
+      .from("rss")
+      .select("id, created_at, updated_at, url, data, user_id, created_items")
+      .match({ user_id: user?.value?.id })
+      .order("created_at");
 
-      feeds.value = data;
-      storeToLocalStorage();
+    feeds.value = data;
 
-      feeds.value?.forEach(async (feed) => {
-        const { data } = await useFetch("/api/rss", {
-          query: { url: feed.url },
-        });
-        if (data) {
-          feed.data = data.value as FeedData;
-        }
+    feeds.value?.forEach(async (feed) => {
+      // TODO: check if feed is up to date and only update when older than 60min
+      const { data } = await useFetch("/api/rss", {
+        query: { url: feed.url },
       });
-
-      addRecentFeedsToNotes();
-    }
+      if (data) {
+        feed.data = data.value as FeedData;
+        addFeedsToNotes();
+      }
+    });
 
     syncStore.setIsSyncing(false, 500);
   };
 
-  const addRecentFeedsToNotes = () => {
+  const addFeedsToNotes = () => {
     feeds.value.forEach((feed) => {
       for (let i = 0; i < 2; i++) {
         const id = feed.data?.items[i].guid;
         const title = feed.data?.items[i].title;
         const author = feed.data?.title;
+        const contentEncoded = feed.data?.items[i]["content:encoded"];
+        const content = contentEncoded || feed.data?.items[i].content;
+        const link = `<p><a href="${feed.data?.items[i].link}">${author}: ${title}</a><p>`;
 
         if (!id || !title || feed.created_items.includes(id)) return;
 
         const note: Note = createEmptyNote();
         note.title = title;
         note.tags.push({ text: "rss" });
-        note.tags.push({ text: author });
+        note.items.push({
+          id: uuid(),
+          type: "Markdown",
+          data: {
+            text: link + content,
+          },
+        });
         noteStore.add(note, { redirect: false });
 
         feed.created_items.push(id);
         update(feed.id, { created_items: feed.created_items });
       }
     });
-  };
-
-  const checkIfLocalFeedIsUpToDate = (): Boolean => {
-    const offset = 60 * 60 * 1000; // 60 minutes in ms
-    return new Date().getTime() - feedLastUpdated.value <= offset;
-  };
-
-  const storeToLocalStorage = () => {
-    localStorage.setItem(`rss-${user?.value?.id}`, JSON.stringify(feeds.value));
-    localStorage.setItem(
-      `rss-last-updated-${user?.value?.id}`,
-      JSON.stringify(new Date().getTime()),
-    );
   };
 
   return {

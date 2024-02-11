@@ -15,6 +15,12 @@ export const useNoteStore = defineStore("NoteStore", () => {
     ),
   );
 
+  const internalNotesNotTrashed: ComputedRef<Note[]> = computed(() =>
+    notesNotTrashed.value?.filter(
+      (note) => !note.tags.some((tag) => tag.text.toLowerCase() === "rss"),
+    ),
+  );
+
   const notesTrashed: ComputedRef<Note[]> = computed(() =>
     notes.value?.filter((note) =>
       note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
@@ -39,7 +45,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
         ),
       );
     } else {
-      return notesNotTrashed.value;
+      return internalNotesNotTrashed.value;
     }
   };
 
