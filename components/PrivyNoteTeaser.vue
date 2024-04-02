@@ -12,8 +12,11 @@ const note: ComputedRef<Note> = computed(() => noteStore.get(props.noteId));
 const tasks: ComputedRef<Task[]> = computed(
   () => note.value?.items.filter((item) => item.type === "Task") as Task[],
 );
-const doneTasks: ComputedRef<Task[]> = computed(
-  () => tasks.value?.filter((item) => item.data?.isValid),
+const doneTasks: ComputedRef<Task[]> = computed(() =>
+  tasks.value?.filter((item) => item.data?.isValid),
+);
+const isRss: ComputedRef<boolean> = computed(() =>
+  Boolean(note.value?.tags.find((tag) => tag.text === "rss")),
 );
 
 function open(id: string) {
@@ -31,7 +34,7 @@ function open(id: string) {
 
 <template>
   <article
-    class="privy-focus transition-bgColor cursor-pointer bg-neutral-600 shadow-lg duration-300 dark:bg-neutral-100"
+    class="privy-focus cursor-pointer bg-neutral-600 shadow-lg transition-bgColor duration-300 dark:bg-neutral-100"
     tabindex="0"
     @keyup.enter="open(note.id)"
     @click="open(note.id)"
@@ -46,7 +49,10 @@ function open(id: string) {
       <Date :date="note.edited_at" />
 
       <div>
-        <h2 class="w-full hyphens-auto text-2xl font-bold leading-none">
+        <h2
+          :class="{ 'text-xl': isRss }"
+          class="line-clamp-3 w-full hyphens-auto text-2xl font-bold leading-none"
+        >
           {{ note.title }}
         </h2>
         <p v-if="tasks.length" class="mt-0_5 flex gap-1">

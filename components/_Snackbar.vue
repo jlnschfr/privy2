@@ -49,6 +49,7 @@ function undo() {
     >
       <p class="flex-auto text-neutral-600">{{ text }}</p>
       <button
+        v-if="action && undo"
         ref="button"
         class="privy-focus ml-5 font-bold text-secondary-500"
         @click="undo"

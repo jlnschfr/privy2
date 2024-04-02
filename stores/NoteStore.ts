@@ -5,13 +5,20 @@ import type { Database } from "@/types/database.types";
 export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
+  const syncStore = useSyncStore();
 
   const notes: Ref<Note[]> = useLocalStorage(`notes-${user?.value?.id}`, []);
-  const isSyncing: Ref<boolean> = ref(false);
 
   const notesNotTrashed: ComputedRef<Note[]> = computed(() =>
     notes.value?.filter(
       (note) => !note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
+    ),
+  );
+
+  // all notes that are not trashed and do not have the tag "rss"
+  const internalNotesNotTrashed: ComputedRef<Note[]> = computed(() =>
+    notesNotTrashed.value?.filter(
+      (note) => !note.tags.some((tag) => tag.text.toLowerCase() === "rss"),
     ),
   );
 
@@ -39,12 +46,12 @@ export const useNoteStore = defineStore("NoteStore", () => {
         ),
       );
     } else {
-      return notesNotTrashed.value;
+      return internalNotesNotTrashed.value;
     }
   };
 
   const fetchAll = async () => {
-    setIsSyncing(true);
+    syncStore.setIsSyncing(true);
     const { data } = await client
       .from("notes")
       .select(
@@ -56,7 +63,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     notes.value = data;
 
     sortNotes();
-    setIsSyncing(false, 500);
+    syncStore.setIsSyncing(false, 500);
   };
 
   const add = async (note: Note, options: { redirect: boolean }) => {
@@ -65,14 +72,14 @@ export const useNoteStore = defineStore("NoteStore", () => {
       user_id: user?.value?.id,
     };
 
-    setIsSyncing(true);
+    syncStore.setIsSyncing(true);
 
     notes.value?.push(noteWithUserId);
 
     await client.from("notes").upsert(noteWithUserId);
 
     sortNotes();
-    setIsSyncing(false, 500);
+    syncStore.setIsSyncing(false, 500);
 
     if (options.redirect) {
       await navigateTo({
@@ -92,7 +99,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
       ...(options?.updateEditedAt && { edited_at: new Date().toISOString() }),
     };
 
-    setIsSyncing(true);
+    syncStore.setIsSyncing(true);
 
     notes.value = notes.value?.map((n) => (n.id === note.id ? note : n));
 
@@ -102,11 +109,11 @@ export const useNoteStore = defineStore("NoteStore", () => {
       .match({ id, user_id: user?.value?.id });
 
     sortNotes();
-    setIsSyncing(false, 500);
+    syncStore.setIsSyncing(false, 500);
   };
 
   const remove = async (id: string) => {
-    setIsSyncing(true);
+    syncStore.setIsSyncing(true);
 
     const index = notes.value?.findIndex((note) => note.id === id);
     notes.value?.splice(index, 1);
@@ -114,7 +121,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     await client.from("notes").delete().match({ id, user_id: user?.value?.id });
 
     sortNotes();
-    setIsSyncing(false, 500);
+    syncStore.setIsSyncing(false, 500);
   };
 
   const sortNotes = () => {
@@ -135,15 +142,8 @@ export const useNoteStore = defineStore("NoteStore", () => {
     });
   };
 
-  const setIsSyncing = (value: boolean, delay: number = 0) => {
-    setTimeout(() => {
-      isSyncing.value = value;
-    }, delay);
-  };
-
   return {
     notes,
-    isSyncing,
     notesTrashed,
     notesNotTrashed,
     fetchAll,
