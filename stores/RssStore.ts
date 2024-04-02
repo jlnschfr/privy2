@@ -9,19 +9,12 @@ export const useRssStore = defineStore("RssStore", () => {
   const noteStore = useNoteStore();
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
+  const snackbarStore = useSnackbarStore();
 
   const feeds: Ref<Feed[]> = useLocalStorage(`rss-${user?.value?.id}`, []);
-  // const feedLastUpdated: Ref<number> = useLocalStorage(
-  //   `rss-last-updated-${user?.value?.id}`,
-  //   0,
-  // );
-
-  // const isLocalFeedUpToDate: ComputedRef<boolean> = computed(() => {
-  //   if (!feedLastUpdated.value) return false;
-
-  //   const offset = 60 * 60 * 1000; // 60 minutes in ms
-  //   return new Date().getTime() - feedLastUpdated.value <= offset;
-  // });
+  const feedUrls: ComputedRef<string[]> = computed(() =>
+    feeds.value?.map((feed) => feed.url),
+  );
 
   const get = (id: string): Feed => {
     if (!feeds.value?.length) return;
@@ -45,7 +38,9 @@ export const useRssStore = defineStore("RssStore", () => {
       await client.from("rss").upsert(feed);
       addFeedsToNotes();
     } else {
-      // show snackbar with error
+      snackbarStore.show({
+        text: "Could not add feed. Please try again.",
+      });
     }
 
     syncStore.setIsSyncing(false, 500);
@@ -57,12 +52,23 @@ export const useRssStore = defineStore("RssStore", () => {
 
     if (index >= 0) {
       const { id } = feeds.value[index];
-      feeds.value?.splice(index, 1);
+      const deletedFeeds = feeds.value?.splice(index, 1);
       await client.from("rss").delete().match({ id, user_id: user?.value?.id });
 
-      // show snackbar with undo action
+      const undoCallback = async () => {
+        feeds.value?.splice(index, 0, deletedFeeds[0]);
+        await client.from("rss").upsert(deletedFeeds[0]);
+      };
+
+      snackbarStore.show({
+        text: "Feed removed.",
+        action: "Undo",
+        callback: undoCallback,
+      });
     } else {
-      // show snackbar with error
+      snackbarStore.show({
+        text: "Feed couldn't get removed. Please try again",
+      });
     }
 
     syncStore.setIsSyncing(false, 500);
@@ -118,34 +124,36 @@ export const useRssStore = defineStore("RssStore", () => {
     feeds.value.forEach((feed) => {
       for (let i = 0; i < 2; i++) {
         const id = feed.data?.items[i].guid;
-        const title = feed.data?.items[i].title;
-        const author = feed.data?.title;
-        const contentEncoded = feed.data?.items[i]["content:encoded"];
-        const link = `<p><a href="${feed.data?.items[i].link}">${author}: ${title}</a><p>`;
-        const content = contentEncoded || feed.data?.items[i].content + link;
 
-        if (!id || !title || feed.created_items.includes(id)) return;
+        if (id && !feed.created_items.includes(id)) {
+          const title = feed.data?.items[i].title;
+          const author = feed.data?.title;
+          const contentEncoded = feed.data?.items[i]["content:encoded"];
+          const link = `<p><a href="${feed.data?.items[i].link}">${author}: ${title}</a><p>`;
+          const content = contentEncoded || feed.data?.items[i].content + link;
 
-        const note: Note = createEmptyNote();
-        note.title = title;
-        note.tags.push({ text: "rss" });
-        note.items.push({
-          id: uuid(),
-          type: "Markdown",
-          data: {
-            text: content,
-          },
-        });
-        noteStore.add(note, { redirect: false });
+          const note: Note = createEmptyNote();
+          note.title = title;
+          note.tags.push({ text: "rss" });
+          note.items.push({
+            id: uuid(),
+            type: "Markdown",
+            data: {
+              text: content,
+            },
+          });
+          noteStore.add(note, { redirect: false });
 
-        feed.created_items.push(id);
-        update(feed.id, { created_items: feed.created_items });
+          feed.created_items.push(id);
+          update(feed.id, { created_items: feed.created_items });
+        }
       }
     });
   };
 
   return {
     feeds,
+    feedUrls,
     get,
     update,
     add,
