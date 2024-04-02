@@ -19,7 +19,7 @@ withDefaults(defineProps<Props>(), {
     :disabled="disabled"
     :aria-label="label"
     :class="{
-      'transition-borderAndBgColor border-neutral-200 bg-transparent duration-300 hover:bg-neutral-500 dark:border-neutral-400 dark:hover:bg-neutral-200':
+      'border-neutral-200 bg-transparent transition-borderAndBgColor duration-300 hover:bg-neutral-500 dark:border-neutral-400 dark:hover:bg-neutral-200':
         styling === 'primary',
       'bg-primary-500 text-neutral-600 hover:bg-primary-600':
         styling === 'secondary',

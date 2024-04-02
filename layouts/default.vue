@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const route = useRoute();
 const user = useSupabaseUser();
-const noteStore = useNoteStore();
+const syncStore = useSyncStore();
 
-const isSyncing: ComputedRef<boolean> = computed(() => noteStore.isSyncing);
+const isSyncing: ComputedRef<boolean> = computed(() => syncStore.isSyncing);
 const showButton: ComputedRef<boolean> = computed(() => route.name === "notes");
 const showDrawer: Ref<boolean> = ref(false);
 </script>

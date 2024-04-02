@@ -6,11 +6,9 @@ const props = withDefaults(defineProps<Props>(), {
   width: "4",
 });
 
-const queryParams = useQueryParams();
 const route = useRoute();
 const svg: Ref = ref();
 
-const { activeTag } = queryParams;
 const widthClass: ComputedRef<string> = computed(() => `w-${props.width}`);
 const paths: ComputedRef<SVGElement[]> = computed(() => [
   ...svg.value.$el.querySelectorAll("path"),
@@ -36,11 +34,7 @@ function animatePaths() {
 </script>
 
 <template>
-  <nuxt-link
-    :to="activeTag ? `/notes/?tag=${activeTag}` : '/notes/'"
-    aria-label="Privy Notes"
-    class="privy-focus"
-  >
+  <nuxt-link :to="'/notes/'" aria-label="Privy Notes" class="privy-focus">
     <SvgoPrivy ref="svg" :class="widthClass"
   /></nuxt-link>
 </template>
