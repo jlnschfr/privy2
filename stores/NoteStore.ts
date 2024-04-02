@@ -15,6 +15,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     ),
   );
 
+  // all notes that are not trashed and do not have the tag "rss"
   const internalNotesNotTrashed: ComputedRef<Note[]> = computed(() =>
     notesNotTrashed.value?.filter(
       (note) => !note.tags.some((tag) => tag.text.toLowerCase() === "rss"),
