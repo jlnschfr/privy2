@@ -55,7 +55,7 @@ function onRemoveClick(index: number) {
       <li
         v-for="(item, index) in items"
         :key="index"
-        class="mt-1 flex items-center justify-between text-neutral-600"
+        class="mt-1 flex items-center justify-between"
       >
         <p class="w-3/4 truncate italic">{{ item }}</p>
         <button

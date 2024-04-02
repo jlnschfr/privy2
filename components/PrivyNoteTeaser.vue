@@ -15,6 +15,9 @@ const tasks: ComputedRef<Task[]> = computed(
 const doneTasks: ComputedRef<Task[]> = computed(() =>
   tasks.value?.filter((item) => item.data?.isValid),
 );
+const isRss: ComputedRef<boolean> = computed(() =>
+  Boolean(note.value?.tags.find((tag) => tag.text === "rss")),
+);
 
 function open(id: string) {
   let tag: string = "";
@@ -47,6 +50,7 @@ function open(id: string) {
 
       <div>
         <h2
+          :class="{ 'text-xl': isRss }"
           class="line-clamp-3 w-full hyphens-auto text-2xl font-bold leading-none"
         >
           {{ note.title }}

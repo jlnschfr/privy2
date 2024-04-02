@@ -121,8 +121,8 @@ export const useRssStore = defineStore("RssStore", () => {
         const title = feed.data?.items[i].title;
         const author = feed.data?.title;
         const contentEncoded = feed.data?.items[i]["content:encoded"];
-        const content = contentEncoded || feed.data?.items[i].content;
         const link = `<p><a href="${feed.data?.items[i].link}">${author}: ${title}</a><p>`;
+        const content = contentEncoded || feed.data?.items[i].content + link;
 
         if (!id || !title || feed.created_items.includes(id)) return;
 
@@ -133,7 +133,7 @@ export const useRssStore = defineStore("RssStore", () => {
           id: uuid(),
           type: "Markdown",
           data: {
-            text: link + content,
+            text: content,
           },
         });
         noteStore.add(note, { redirect: false });
