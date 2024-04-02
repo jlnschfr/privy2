@@ -24,7 +24,7 @@ const id: Ref<string> = ref(uuid());
     />
     <label aria-label="checkbox" :for="id" class="flex items-center pr-2">
       <span
-        class="transition-borderColor inline-flex h-3 w-3 items-center justify-center border border-neutral-200 duration-300 dark:border-neutral-400"
+        class="inline-flex h-3 w-3 items-center justify-center border border-neutral-200 transition-borderColor duration-300 dark:border-neutral-400"
         ><SvgoCheck v-if="modelValue" class="w-2" />
       </span>
     </label>
