@@ -21,7 +21,7 @@ const year: ComputedRef<string> = computed(() =>
 
 <template>
   <div
-    class="transition-borderColor mr-2 border-r border-neutral-400 pr-2 text-center duration-300 dark:border-neutral-200"
+    class="mr-2 border-r border-neutral-400 pr-2 text-center transition-borderColor duration-300 dark:border-neutral-200"
   >
     <span class="block">{{ month }}</span>
     <span class="block text-xl font-bold">{{ day }}</span>
