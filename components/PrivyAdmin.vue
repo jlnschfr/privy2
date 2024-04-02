@@ -24,28 +24,22 @@ const deleteAccount = async () => {
 };
 
 const rssStore = useRssStore();
-const rssUrls: Ref<string[]> = ref(
-  rssStore.feeds ? rssStore.feeds?.map((feed) => feed.url) : [],
-);
-
-watch(
-  rssUrls,
-  async (newValue: string[], oldValue: string[]) => {
-    if (newValue.length < oldValue.length) {
-      const removedUrls = oldValue.filter((el) => !newValue.includes(el));
-      await rssStore.remove(removedUrls[0]);
-    } else {
-      const lastAddedUrl = rssUrls.value[rssUrls.value.length - 1];
-      await rssStore.add(lastAddedUrl);
-    }
-  },
-  { deep: true },
-);
+const feedUrls: ComputedRef<string[]> = computed(() => rssStore.feedUrls);
 
 function onInvalidListInput() {
   snackbarStore.show({
     text: "Please enter a valid URL.",
   });
+}
+
+async function onListChange(value: string[]) {
+  if (value.length < feedUrls.value.length) {
+    const removedUrls = feedUrls.value.filter((el) => !value.includes(el));
+    await rssStore.remove(removedUrls[0]);
+  } else {
+    const lastAddedUrl = feedUrls.value[feedUrls.value.length - 1];
+    await rssStore.add(lastAddedUrl);
+  }
 }
 </script>
 
@@ -71,10 +65,11 @@ function onInvalidListInput() {
         deleted, it can't be recovered anymore. All notes are permanently lost.
       </p>
       <InputList
-        v-model="rssUrls"
+        :model-value="feedUrls"
         :validator="isValidUrl"
         class="mt-3"
         @invalid-input="onInvalidListInput"
+        @update:model-value="onListChange($event)"
       />
     </form>
 
