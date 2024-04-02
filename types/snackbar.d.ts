@@ -1,5 +1,5 @@
 declare interface Snackbar {
   text: string;
-  action: string;
-  callback: Function;
+  action?: string;
+  callback?: Function;
 }

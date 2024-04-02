@@ -4,6 +4,7 @@ import { isValidUrl } from "@/utils/url";
 const user = useSupabaseUser();
 const client = useSupabaseClient();
 const noteStore = useNoteStore();
+const snackbarStore = useSnackbarStore();
 
 const confirmDeleteWithMail: Ref<string> = ref("");
 const errorMessage: Ref<string> = ref("");
@@ -34,16 +35,17 @@ watch(
       const removedUrls = oldValue.filter((el) => !newValue.includes(el));
       await rssStore.remove(removedUrls[0]);
     } else {
-      const lastUrl = rssUrls.value[rssUrls.value.length - 1];
-      await rssStore.add(lastUrl);
+      const lastAddedUrl = rssUrls.value[rssUrls.value.length - 1];
+      await rssStore.add(lastAddedUrl);
     }
   },
   { deep: true },
 );
 
-function onInvalidListInput(msg: string) {
-  // TODO: show snackbar with invalid input
-  console.log(msg);
+function onInvalidListInput() {
+  snackbarStore.show({
+    text: "Please enter a valid URL.",
+  });
 }
 </script>
 
