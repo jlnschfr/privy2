@@ -4,7 +4,7 @@ import debounce from "lodash.debounce";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import { useTextareaHeight } from "@/composables/textareaHeight";
-import hljs from "@/utils/syntax-highlight";
+import hljs from "@/utils/syntaxHighlight";
 
 interface Props {
   modelValue: Markdown;

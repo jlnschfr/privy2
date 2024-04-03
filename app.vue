@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { initIdleFetch } from "~/utils/idleFetch";
+
 const user = useSupabaseUser();
 const noteStore = useNoteStore();
 const locationStore = useLocationStore();
@@ -12,6 +14,11 @@ if (user.value) {
   if (navigator?.onLine) {
     await noteStore.fetchAll();
     await rssStore.fetchAll();
+
+    initIdleFetch(async () => {
+      await noteStore.fetchAll();
+      await rssStore.fetchAll();
+    });
   }
 }
 </script>
