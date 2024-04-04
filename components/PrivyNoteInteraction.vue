@@ -24,7 +24,7 @@ async function remove() {
 
   await nextTick();
   if (route.name === "note-id") {
-    navigateTo("/notes");
+    navigateTo("/notes?filter=Favorites");
   }
 
   snackbarStore.show({

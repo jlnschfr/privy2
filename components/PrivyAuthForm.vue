@@ -1,11 +1,11 @@
 <script setup lang="ts">
 const user = useSupabaseUser();
 const { auth } = useSupabaseClient();
-const redirectTo: string = `${useRuntimeConfig().public.baseUrl}/notes`;
+const redirectTo: string = `${useRuntimeConfig().public.baseUrl}/notes?filter=Favorites`;
 
 watchEffect(() => {
   if (user.value) {
-    navigateTo("/notes");
+    navigateTo("/notes?filter=Favorites");
   }
 });
 
