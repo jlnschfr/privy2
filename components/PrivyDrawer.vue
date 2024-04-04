@@ -19,11 +19,9 @@ const { isMobile } = viewport;
 const { activeTag } = queryParams;
 
 const tags: ComputedRef<string[]> = computed(() => tagStore.uniqueTags);
-let isDarkMode: ComputedRef<boolean> = computed(() => false);
-
-onMounted(() => {
-  isDarkMode = computed(() => colorMode.value === "dark");
-});
+const isDarkMode: ComputedRef<boolean> = computed(
+  () => colorMode.value === "dark",
+);
 
 function getTagAmount(tag: string) {
   return tagStore.getTagAmount(tag);

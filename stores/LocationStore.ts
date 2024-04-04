@@ -29,7 +29,6 @@ export const useLocationStore = defineStore("LocationStore", () => {
   };
 
   async function fetchLocation() {
-    console.log("fetching location");
     const url: URL = new URL(
       "https://api.bigdatacloud.net/data/reverse-geocode-client",
     );
