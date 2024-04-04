@@ -16,7 +16,7 @@ const viewport = useViewport();
 const queryParams = useQueryParams();
 
 const { isMobile } = viewport;
-const { activeTag } = queryParams;
+const { activeTag, activeFilter } = queryParams;
 
 const tags: ComputedRef<string[]> = computed(() => tagStore.uniqueTags);
 const isDarkMode: ComputedRef<boolean> = computed(
@@ -67,13 +67,14 @@ watch(
             <ul class="w-full py-1">
               <li>
                 <nuxt-link
-                  to="/notes/"
+                  to="/notes/?filter=Favorites"
                   class="privy-focus flex items-center transition-colors duration-300 hover:text-neutral-400"
                   :class="{
-                    'text-neutral-600 hover:text-neutral-600': activeTag === '',
+                    'text-neutral-600 hover:text-neutral-600':
+                      activeFilter === 'Favorites',
                   }"
                 >
-                  <SvgoGrid class="mr-1 w-2" /> Notes
+                  <SvgoHeart class="mr-1 w-2" /> Favorites
                 </nuxt-link>
               </li>
               <li class="mt-2">
@@ -103,6 +104,18 @@ watch(
                   </nuxt-link>
                   {{ getTagAmount(tag) }}
                 </div>
+              </li>
+              <li class="mt-2">
+                <nuxt-link
+                  to="/notes/?filter=All"
+                  class="privy-focus flex items-center transition-colors duration-300 hover:text-neutral-400"
+                  :class="{
+                    'text-neutral-600 hover:text-neutral-600':
+                      activeFilter === 'All',
+                  }"
+                >
+                  <SvgoGrid class="mr-1 w-2" /> All Notes
+                </nuxt-link>
               </li>
             </ul>
           </nav>

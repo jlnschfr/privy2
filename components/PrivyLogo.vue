@@ -34,7 +34,11 @@ function animatePaths() {
 </script>
 
 <template>
-  <nuxt-link :to="'/notes/'" aria-label="Privy Notes" class="privy-focus">
+  <nuxt-link
+    :to="'/notes/?filter=Favorites'"
+    aria-label="Privy Notes"
+    class="privy-focus"
+  >
     <SvgoPrivy ref="svg" :class="widthClass"
   /></nuxt-link>
 </template>

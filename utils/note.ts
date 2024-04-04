@@ -7,6 +7,6 @@ export const createEmptyNote = (): Note => ({
   edited_at: new Date().toISOString(),
   title: "",
   items: [],
-  favorite: false,
+  favorite: true,
   tags: [],
 });

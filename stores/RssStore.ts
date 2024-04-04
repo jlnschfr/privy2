@@ -134,7 +134,7 @@ export const useRssStore = defineStore("RssStore", () => {
 
           const note: Note = createEmptyNote();
           note.title = title;
-          note.tags.push({ text: "rss" });
+          note.tags.push({ text: "Rss" });
           note.items.push({
             id: uuid(),
             type: "Markdown",
