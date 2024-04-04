@@ -61,8 +61,8 @@ async function onListChange(value: string[]) {
     <form class="mt-10">
       <h3 class="hyphens-auto text-xl font-bold leading-none">RSS Feeds</h3>
       <p class="mt-3">
-        Deleting your account cannot be undone. Once your account has been
-        deleted, it can't be recovered anymore. All notes are permanently lost.
+        Manage your current RSS feeds. Remove current subscriptions or add more
+        by entering new Urls.
       </p>
       <InputList
         :model-value="feedUrls"
