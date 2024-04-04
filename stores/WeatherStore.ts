@@ -36,7 +36,6 @@ export const useWeatherStore = defineStore("WeatherStore", () => {
   };
 
   const fetchWeather = async (location: PrivyLocation) => {
-    console.log("fetching weather");
     const url: URL = new URL("https://api.weatherapi.com/v1/current.json");
     url.searchParams.set("aqi", "no");
     url.searchParams.set("key", "8e53893c18944438bdf142917230811");
