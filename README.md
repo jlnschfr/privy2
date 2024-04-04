@@ -3,33 +3,37 @@
 I love making notes. That's why I've build a PWA for structuring thoughts, daily tasks and everything that keeps you busy. Privy Notes is a feature-rich productivity web app build with Nuxt.js and Supabase.
 
 ## Features
-* notes (consists of note items that can be either markdown or tasks)
-* sorting of note items via drag and drop
-* organizing notes in categories
-* dark/light mode
-* weather based on user location
-* undo via snackbar
-* PWA offline features
+
+- notes (consists of note items that can be either markdown or tasks)
+- sorting of note items via drag and drop
+- organizing notes in categories
+- dark/light mode
+- weather based on user location
+- undo via snackbar
+- PWA offline features
 
 ## Tech Stack
+
 This is a rewrite of https://github.com/jlnschfr/privy where i used Nuxt (w/ options API in an untyped environment). I also switched from Firebase to the open source alternative Supabase.
 
-* Nuxt (w/ composition API) + Typescript 
-* Tailwind
-* Supabase
-* Pinia
-* Netlify
+- Nuxt (w/ composition API) + Typescript
+- Tailwind
+- Supabase
+- Pinia
+- Netlify
 
 ## Supabase Configuration
-* Create a project on [Supabase](https://supabase.com).
-* In your Supabase project, make sure to create the `notes` table with fields defined in `types/notes.d.ts`.
-* Enable RLS for this table with proper policies.
-* Create a GitHub Oauth Application on https://github.com/settings/applications/new with homepage url being http://localhost:3000 (needs to be replaced with the site url)
-* For the callback url, please refer to https://supabase.com/docs/guides/auth/auth-github#find-your-callback-url
-* Enable the GitHub Oauth Provider in your Supabase project (Authentication -> Providers):
-* Add the needed site url (and redirect urls) in your Supabase project (Authentication -> URL Configuration):
+
+- Create a project on [Supabase](https://supabase.com).
+- In your Supabase project, make sure to create the `notes` table with fields defined in `types/notes.d.ts`.
+- Enable RLS for this table with proper policies.
+- Create a GitHub Oauth Application on https://github.com/settings/applications/new with homepage url being http://localhost:3000 (needs to be replaced with the site url)
+- For the callback url, please refer to https://supabase.com/docs/guides/auth/auth-github#find-your-callback-url
+- Enable the GitHub Oauth Provider in your Supabase project (Authentication -> Providers):
+- Add the needed site url (and redirect urls) in your Supabase project (Authentication -> URL Configuration):
 
 ## Build Setup
+
 ```
 # install dependencies
 $ npm install
@@ -47,4 +51,4 @@ See `package.json` for more scripts (e.g. linting, formatting)
 
 ## Deployment
 
-Find here a deployed version: [Privy2 on Netlify](https://privy-notes2.netlify.app/notes)
+Find here a deployed version: [Privy2 on Netlify](https://privy-notes2.netlify.app)

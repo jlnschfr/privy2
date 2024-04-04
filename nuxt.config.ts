@@ -48,7 +48,7 @@ export default defineNuxtConfig({
   supabase: {
     redirectOptions: {
       login: "/",
-      callback: "/notes",
+      callback: "/notes?filter=Favorites",
     },
   },
   svgo: { defaultImport: "component" },
