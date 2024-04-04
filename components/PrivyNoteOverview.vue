@@ -2,11 +2,17 @@
 const noteStore = useNoteStore();
 const queryParams = useQueryParams();
 
-const { activeTag } = queryParams;
+const { activeTag, activeFilter } = queryParams;
 
-const notes: ComputedRef<Note[]> = computed(() =>
-  noteStore.getFiltered(activeTag.value),
-);
+const notes: ComputedRef<Note[]> = computed(() => {
+  if (activeFilter.value) {
+    return noteStore.getNotesByFilter(activeFilter.value);
+  } else if (activeTag.value) {
+    return noteStore.getNotesByTag(activeTag.value);
+  } else {
+    return noteStore.notes;
+  }
+});
 </script>
 
 <template>

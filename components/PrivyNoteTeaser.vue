@@ -16,7 +16,9 @@ const doneTasks: ComputedRef<Task[]> = computed(() =>
   tasks.value?.filter((item) => item.data?.isValid),
 );
 const isRss: ComputedRef<boolean> = computed(() =>
-  Boolean(note.value?.tags.find((tag) => tag.text === "rss")),
+  Boolean(
+    note.value?.tags.find((tag) => tag.text.toLocaleLowerCase() === "rss"),
+  ),
 );
 
 function open(id: string) {

@@ -15,13 +15,6 @@ export const useNoteStore = defineStore("NoteStore", () => {
     ),
   );
 
-  // all notes that are not trashed and do not have the tag "rss"
-  const internalNotesNotTrashed: ComputedRef<Note[]> = computed(() =>
-    notesNotTrashed.value?.filter(
-      (note) => !note.tags.some((tag) => tag.text.toLowerCase() === "rss"),
-    ),
-  );
-
   const notesTrashed: ComputedRef<Note[]> = computed(() =>
     notes.value?.filter((note) =>
       note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
@@ -34,19 +27,29 @@ export const useNoteStore = defineStore("NoteStore", () => {
     return data;
   };
 
-  const getFiltered = (filter: string): Note[] => {
+  const getNotesByTag = (tag: string): Note[] => {
     if (!notes.value?.length) return;
 
-    if (filter === "Trash") {
+    if (tag === "Trash") {
       return notesTrashed.value;
-    } else if (filter) {
+    } else if (tag) {
       return notesNotTrashed.value?.filter((note) =>
         note.tags.some(
-          (tag) => tag.text.toLowerCase() === filter.toLowerCase(),
+          (noteTag) => noteTag.text.toLowerCase() === tag.toLowerCase(),
         ),
       );
     } else {
-      return internalNotesNotTrashed.value;
+      return notesNotTrashed.value;
+    }
+  };
+
+  const getNotesByFilter = (filter: string): Note[] => {
+    if (!notes.value?.length) return;
+
+    if (filter === "Favorites") {
+      return notesNotTrashed.value?.filter((note) => note.favorite);
+    } else {
+      return notesNotTrashed.value;
     }
   };
 
@@ -148,7 +151,8 @@ export const useNoteStore = defineStore("NoteStore", () => {
     notesNotTrashed,
     fetchAll,
     get,
-    getFiltered,
+    getNotesByTag,
+    getNotesByFilter,
     add,
     update,
     remove,
