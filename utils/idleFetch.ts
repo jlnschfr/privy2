@@ -1,6 +1,8 @@
 import { ifvisible } from "@rosskevin/ifvisible";
 
 let idleInterval: NodeJS.Timeout;
+const initialTimeout = 10; // in seconds
+const repeatingTimeout = 40000; // in milliseconds
 
 const isElementActive = (): Boolean => {
   return (
@@ -10,7 +12,7 @@ const isElementActive = (): Boolean => {
 };
 
 export const initIdleFetch = (callback: Function) => {
-  ifvisible.setIdleDuration(5);
+  ifvisible.setIdleDuration(initialTimeout);
   ifvisible.on("idle", async () => {
     if (isElementActive()) return;
 
@@ -18,7 +20,7 @@ export const initIdleFetch = (callback: Function) => {
 
     idleInterval = setInterval(async () => {
       await callback();
-    }, 15000);
+    }, repeatingTimeout);
   });
 
   ifvisible.on("wakeup", () => {
