@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Filter, Tag } from "@/types/enums";
+
 interface Props {
   noteId: string;
 }
@@ -12,19 +14,19 @@ const isFavorite: Ref<boolean> = ref(noteStore.get(props.noteId).favorite);
 
 async function remove() {
   const alreadyTrashed = Boolean(
-    note.value?.tags.find((el) => el.text.toLowerCase() === "trash"),
+    note.value?.tags.find((el) => el.text === Tag.Trash),
   );
 
   if (alreadyTrashed) {
     noteStore.remove(props.noteId);
   } else {
-    note.value.tags = [...note.value.tags, { text: "trash" }];
+    note.value.tags = [...note.value.tags, { text: Tag.Trash }];
     noteStore.update(props.noteId, { tags: note.value?.tags });
   }
 
   await nextTick();
   if (route.name === "note-id") {
-    navigateTo("/notes?filter=Favorites");
+    navigateTo(`/notes/?filter=${Filter.Favorites}`);
   }
 
   snackbarStore.show({
@@ -40,9 +42,7 @@ function undoRemove(deletedNote: Note, alreadyTrashed: boolean) {
   if (alreadyTrashed) {
     noteStore.add(deletedNote, { redirect: false });
   } else {
-    const index = deletedNote.tags.findIndex(
-      (el) => el.text.toLowerCase() === "trash",
-    );
+    const index = deletedNote.tags.findIndex((el) => el.text === Tag.Trash);
     deletedNote.tags.splice(index, 1);
     noteStore.update(deletedNote.id, deletedNote, { updateEditedAt: false });
   }

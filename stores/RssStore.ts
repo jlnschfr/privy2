@@ -3,6 +3,7 @@ import { useLocalStorage } from "@vueuse/core";
 import { v4 as uuid } from "uuid";
 import { createEmptyNote } from "@/utils/note";
 import type { Database } from "@/types/database.types";
+import { Tag } from "@/types/enums";
 
 export const useRssStore = defineStore("RssStore", () => {
   const syncStore = useSyncStore();
@@ -134,7 +135,7 @@ export const useRssStore = defineStore("RssStore", () => {
 
           const note: Note = createEmptyNote();
           note.title = title;
-          note.tags.push({ text: "Rss" });
+          note.tags.push({ text: Tag.Rss });
           note.items.push({
             id: uuid(),
             type: "Markdown",

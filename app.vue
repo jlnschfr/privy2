@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { initIdleFetch } from "~/utils/idleFetch";
+import { initIdleFetch } from "@/utils/idleFetch";
 
 const user = useSupabaseUser();
 const noteStore = useNoteStore();

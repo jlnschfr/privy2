@@ -1,3 +1,5 @@
+import { Filter } from "./types/enums";
+
 export default defineNuxtConfig({
   ssr: false,
   app: {
@@ -48,7 +50,7 @@ export default defineNuxtConfig({
   supabase: {
     redirectOptions: {
       login: "/",
-      callback: "/notes?filter=Favorites",
+      callback: `/notes?filter=${Filter.Favorites}`,
     },
   },
   svgo: { defaultImport: "component" },

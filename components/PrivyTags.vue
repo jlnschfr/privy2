@@ -12,9 +12,11 @@ const tags: ComputedRef<Tag[]> = computed(
 const input: Ref<string> = ref("");
 
 function addTag() {
-  if (input.value && !tags.value?.find((tag) => tag.text === input.value)) {
+  const newTag = input.value.trim();
+
+  if (input.value && !tags.value?.find((tag) => tag.text === newTag)) {
     noteStore.update(props.noteId, {
-      tags: [...tags.value, { text: input.value }],
+      tags: [...tags.value, { text: newTag }],
     });
     input.value = "";
   }

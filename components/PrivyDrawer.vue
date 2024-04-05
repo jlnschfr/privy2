@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Filter, Tag } from "@/types/enums";
+
 interface Props {
   isActive: boolean;
 }
@@ -67,11 +69,11 @@ watch(
             <ul class="w-full py-1">
               <li>
                 <nuxt-link
-                  to="/notes/?filter=Favorites"
+                  :to="`/notes/?filter=${Filter.Favorites}`"
                   class="privy-focus flex items-center transition-colors duration-300 hover:text-neutral-400"
                   :class="{
                     'text-neutral-600 hover:text-neutral-600':
-                      activeFilter === 'Favorites',
+                      activeFilter === Filter.Favorites,
                   }"
                 >
                   <SvgoHeart class="mr-1 w-2" /> Favorites
@@ -79,11 +81,11 @@ watch(
               </li>
               <li class="mt-2">
                 <nuxt-link
-                  to="/notes/?tag=Trash"
+                  :to="`/notes/?tag=${Tag.Trash}`"
                   class="privy-focus flex items-center transition-colors duration-300 hover:text-neutral-400"
                   :class="{
                     'text-neutral-600 hover:text-neutral-600':
-                      activeTag === 'Trash',
+                      activeTag === Tag.Trash,
                   }"
                 >
                   <SvgoTrash class="mr-1 w-2" /> Trash

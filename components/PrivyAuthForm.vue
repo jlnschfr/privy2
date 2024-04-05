@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { Filter } from "@/types/enums";
+
 const user = useSupabaseUser();
 const { auth } = useSupabaseClient();
-const redirectTo: string = `${useRuntimeConfig().public.baseUrl}/notes?filter=Favorites`;
+const path = `/notes?filter=${Filter.Favorites}`;
+const redirectTo: string = `${useRuntimeConfig().public.baseUrl}${path}`;
 
 watchEffect(() => {
   if (user.value) {
-    navigateTo("/notes?filter=Favorites");
+    navigateTo(path);
   }
 });
 
