@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Filter } from "@/types/enums";
+
 interface Props {
   width?: string;
 }
@@ -35,7 +37,7 @@ function animatePaths() {
 
 <template>
   <nuxt-link
-    :to="'/notes/?filter=Favorites'"
+    :to="`/notes/?filter=${Filter.Favorites}`"
     aria-label="Privy Notes"
     class="privy-focus"
   >

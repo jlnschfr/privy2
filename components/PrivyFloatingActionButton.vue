@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Tag } from "@/types/enums";
+
 interface Props {
   isActive: boolean;
 }
@@ -11,7 +13,7 @@ const noteStore = useNoteStore();
 
 const isTrashRoute = computed(() => {
   const { activeTag } = queryParams;
-  return activeTag.value.toLocaleLowerCase() === "trash";
+  return activeTag.value === Tag.Trash;
 });
 
 function clearTrash() {

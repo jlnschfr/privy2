@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
 import type { Database } from "@/types/database.types";
+import { Filter, Tag } from "@/types/enums";
 
 export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
@@ -11,13 +12,13 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
   const notesNotTrashed: ComputedRef<Note[]> = computed(() =>
     notes.value?.filter(
-      (note) => !note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
+      (note) => !note.tags.some((tag) => tag.text === Tag.Trash),
     ),
   );
 
   const notesTrashed: ComputedRef<Note[]> = computed(() =>
     notes.value?.filter((note) =>
-      note.tags.some((tag) => tag.text.toLowerCase() === "trash"),
+      note.tags.some((tag) => tag.text === Tag.Trash),
     ),
   );
 
@@ -30,13 +31,11 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const getNotesByTag = (tag: string): Note[] => {
     if (!notes.value?.length) return;
 
-    if (tag === "Trash") {
+    if (tag === Tag.Trash) {
       return notesTrashed.value;
     } else if (tag) {
       return notesNotTrashed.value?.filter((note) =>
-        note.tags.some(
-          (noteTag) => noteTag.text.toLowerCase() === tag.toLowerCase(),
-        ),
+        note.tags.some((noteTag) => noteTag.text === tag),
       );
     } else {
       return notesNotTrashed.value;
@@ -46,7 +45,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const getNotesByFilter = (filter: string): Note[] => {
     if (!notes.value?.length) return;
 
-    if (filter === "Favorites") {
+    if (filter === Filter.Favorites) {
       return notesNotTrashed.value?.filter((note) => note.favorite);
     } else {
       return notesNotTrashed.value;
