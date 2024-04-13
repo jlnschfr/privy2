@@ -12,7 +12,6 @@ if (user.value) {
   await weatherStore.init();
 
   if (navigator?.onLine) {
-    console.log("fetch all");
     await noteStore.fetchAll();
     await rssStore.fetchAll();
 

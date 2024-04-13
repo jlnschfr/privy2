@@ -7,10 +7,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
   const syncStore = useSyncStore();
-
-  console.log(user?.value?.id);
   const notes: Ref<Note[]> = useLocalStorage(`notes-${user?.value?.id}`, []);
-  console.log(notes.value);
 
   const notesNotTrashed: ComputedRef<Note[]> = computed(() =>
     notes.value?.filter(
