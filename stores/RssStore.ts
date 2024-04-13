@@ -117,7 +117,7 @@ export const useRssStore = defineStore("RssStore", () => {
       });
       console.log(data.value);
       if (data.value) {
-        feed.data = data.value as FeedData;
+        feed.data = JSON.parse(data.value as string) as FeedData;
         addFeedsToNotes();
       }
     });
