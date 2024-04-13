@@ -31,12 +31,10 @@ export const useRssStore = defineStore("RssStore", () => {
       created_items: [],
     };
 
-    const { data } = await useFetch("/.netlify/functions/rss", {
-      query: { url },
-    });
+    const data = await fetchRssFromNetlifyFunction(feed.url);
 
-    if (data?.value) {
-      feed.data = data.value as FeedData;
+    if (data) {
+      feed.data = data;
       feeds.value?.push(feed);
 
       await client.from("rss").upsert(feed);
@@ -111,18 +109,24 @@ export const useRssStore = defineStore("RssStore", () => {
     feeds.value = data;
 
     feeds.value?.forEach(async (feed) => {
-      // TODO: check if feed is up to date and only update when older than 60min
-      const { data } = await useFetch("/.netlify/functions/rss", {
-        query: { url: feed.url },
-      });
-      console.log(data.value);
-      if (data.value) {
-        feed.data = JSON.parse(data.value as string) as FeedData;
+      const data = await fetchRssFromNetlifyFunction(feed.url);
+      if (data) {
+        feed.data = data;
         addFeedsToNotes();
       }
     });
 
     syncStore.setIsSyncing(false, 500);
+  };
+
+  const fetchRssFromNetlifyFunction = async (
+    url: string,
+  ): Promise<FeedData> => {
+    // TODO: check if feed is up to date and only update when older than 60min
+    const { data } = await useFetch("/.netlify/functions/rss", {
+      query: { url },
+    });
+    return typeof data.value === "string" ? JSON.parse(data.value) : data.value;
   };
 
   const addFeedsToNotes = () => {
