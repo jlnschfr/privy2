@@ -10,17 +10,19 @@ I love making notes. That's why I've build a PWA for structuring thoughts, daily
 - dark/light mode
 - weather based on user location
 - undo via snackbar
-- PWA offline features
+- RSS Feed integration
+- PWA offline features (unfortunately supbase doesn't offer an offline sync out of the box)
 
 ## Tech Stack
 
-This is a rewrite of https://github.com/jlnschfr/privy where i used Nuxt (w/ options API in an untyped environment). I also switched from Firebase to the open source alternative Supabase.
+This is a rewrite of https://github.com/jlnschfr/privy where I used Nuxt (w/ options API in an untyped environment). I also switched from Firebase to the open source alternative Supabase.
 
 - Nuxt (w/ composition API) + Typescript
 - Tailwind
 - Supabase
 - Pinia
 - Netlify
+- Netlify Functions
 
 ## Supabase Configuration
 
@@ -42,6 +44,10 @@ $ npm install
 
 # start the development server on http://localhost:3000
 $ npm run dev
+
+# in case you need netlify functions running locally (e.g. for fetching Rss feeds)
+# instead tart the development server on http://localhost:8888
+$ npm run ntl
 
 # generate static project
 $ npm run generate

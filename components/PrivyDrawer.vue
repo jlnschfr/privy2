@@ -39,7 +39,7 @@ async function logout() {
 }
 
 watch(
-  () => route.name,
+  () => [route.name, route.query.filter, route.query.tag],
   () => {
     if (props.isActive && isMobile.value) {
       emit("toggle-drawer");
