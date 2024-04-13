@@ -1,7 +1,6 @@
 {
   "name": "privy-2",
   "private": true,
-  "type": "module",
   "engines": {
     "node": ">=v20.12.0"
   },
