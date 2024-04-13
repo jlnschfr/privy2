@@ -8,12 +8,11 @@ export default defineEventHandler(async (event) => {
   const client = await serverSupabaseServiceRole(event);
   const user = await serverSupabaseUser(event);
 
-  // const { data, error } = await client.auth.admin.deleteUser(user.id);
+  const skip = true;
+  if (skip) return;
 
-  const data = "test";
-  const error: any = null;
+  const { data, error } = await client.auth.admin.deleteUser(user.id);
 
-  console.log("TEST");
   if (error) {
     throw createError({ statusMessage: error.message });
   }
