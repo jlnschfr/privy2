@@ -30,7 +30,10 @@ export const useRssStore = defineStore("RssStore", () => {
       user_id: user?.value?.id,
       created_items: [],
     };
-    const { data } = await useFetch("/api/rss", { query: { url } });
+
+    const { data } = await useFetch("/.netlify/functions/rss", {
+      query: { url },
+    });
 
     if (data?.value) {
       feed.data = data.value as FeedData;
