@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   // const { data, error } = await client.auth.admin.deleteUser(user.id);
 
   const data = "test";
-  const error;
+  const error: any = null;
 
   console.log("TEST");
   if (error) {
