@@ -17,6 +17,8 @@ I love making notes. That's why I've build a PWA for structuring thoughts, daily
 
 This is a rewrite of https://github.com/jlnschfr/privy where I used Nuxt (w/ options API in an untyped environment). I also switched from Firebase to the open source alternative Supabase.
 
+This project uses Nuxt for static asset generation and Netlify for deployment, bypassing Nuxt's server features. For server-side tasks, it utilize Netlify Functions.
+
 - Nuxt (w/ composition API) + Typescript
 - Tailwind
 - Supabase
