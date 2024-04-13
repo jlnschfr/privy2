@@ -115,7 +115,8 @@ export const useRssStore = defineStore("RssStore", () => {
       const { data } = await useFetch("/.netlify/functions/rss", {
         query: { url: feed.url },
       });
-      if (data) {
+      console.log(data.value);
+      if (data.value) {
         feed.data = data.value as FeedData;
         addFeedsToNotes();
       }
