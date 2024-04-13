@@ -112,7 +112,7 @@ export const useRssStore = defineStore("RssStore", () => {
 
     feeds.value?.forEach(async (feed) => {
       // TODO: check if feed is up to date and only update when older than 60min
-      const { data } = await useFetch("/api/rss", {
+      const { data } = await useFetch("/.netlify/functions/rss", {
         query: { url: feed.url },
       });
       if (data) {
