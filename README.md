@@ -48,7 +48,8 @@ $ npm install
 $ npm run dev
 
 # in case you need netlify functions running locally (e.g. for fetching Rss feeds)
-# instead tart the development server on http://localhost:8888
+# instead start the development server on http://localhost:8888
+$ npm install netlify-cli -g
 $ npm run ntl
 
 # generate static project
