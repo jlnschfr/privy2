@@ -34,5 +34,6 @@ declare interface FeedDataItem {
   content: string;
   contentSnippet: string;
   guid: string;
+  id: string;
   isoDate: string;
 }

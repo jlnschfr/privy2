@@ -35,7 +35,7 @@ async function deleteAccount() {
   await client.auth.signOut();
   navigateTo("/");
 
-  await useFetch("/.netlify/functions/delete", {
+  await $fetch("/.netlify/functions/delete", {
     query: { id: userIdToBeDeleted },
   });
 
@@ -53,7 +53,7 @@ async function onListChange(value: string[]) {
     const removedUrls = feedUrls.value.filter((el) => !value.includes(el));
     await rssStore.remove(removedUrls[0]);
   } else {
-    const lastAddedUrl = feedUrls.value[feedUrls.value.length - 1];
+    const lastAddedUrl = value[value.length - 1];
     await rssStore.add(lastAddedUrl);
   }
 }
