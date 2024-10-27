@@ -123,10 +123,10 @@ export const useRssStore = defineStore("RssStore", () => {
     url: string,
   ): Promise<FeedData> => {
     // TODO: check if feed is up to date and only update when older than 60min
-    const { data } = await useFetch("/.netlify/functions/rss", {
+    const data = await $fetch("/.netlify/functions/rss", {
       query: { url },
     });
-    return typeof data.value === "string" ? JSON.parse(data.value) : data.value;
+    return typeof data === "string" ? JSON.parse(data) : data;
   };
 
   const addFeedsToNotes = () => {
@@ -138,7 +138,7 @@ export const useRssStore = defineStore("RssStore", () => {
 
     feeds.value.forEach((feed) => {
       for (let i = 0; i < 2; i++) {
-        const id = feed.data?.items[i].guid;
+        const id = feed.data?.items[i].guid || feed.data?.items[i].id;
 
         if (id && !feed.created_items.includes(id)) {
           const title = decodeHtmlEntities(feed.data?.items[i].title);

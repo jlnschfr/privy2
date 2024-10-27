@@ -4,27 +4,43 @@ import { isValidUrl } from "@/utils/url";
 const user = useSupabaseUser();
 const client = useSupabaseClient();
 const noteStore = useNoteStore();
+const rssStore = useRssStore();
 const snackbarStore = useSnackbarStore();
+const syncStore = useSyncStore();
 
 const confirmDeleteWithMail: Ref<string> = ref("");
 const errorMessage: Ref<string> = ref("");
 
-const deleteAccount = async () => {
-  noteStore.notes.forEach(async ({ id }) => {
-    await noteStore.remove(id);
-  });
+const feedUrls: ComputedRef<string[]> = computed(() => rssStore.feedUrls);
 
-  await useFetch("/api/delete", {
-    headers: useRequestHeaders(["cookie"]),
-    key: "delete",
-  });
+async function deleteAccount() {
+  syncStore.setIsSyncing(true);
+
+  const noteIdsToRemove = noteStore.notes.map(({ id }) => id);
+  const rssUrlsToRemove = rssStore.feeds.map(({ url }) => url);
+  const userIdToBeDeleted = user.value.id;
+
+  await Promise.all(
+    noteIdsToRemove.map(async (id) => {
+      await noteStore.remove(id);
+    }),
+  );
+
+  await Promise.all(
+    rssUrlsToRemove.map(async (url) => {
+      await rssStore.remove(url);
+    }),
+  );
 
   await client.auth.signOut();
   navigateTo("/");
-};
 
-const rssStore = useRssStore();
-const feedUrls: ComputedRef<string[]> = computed(() => rssStore.feedUrls);
+  await $fetch("/.netlify/functions/delete", {
+    query: { id: userIdToBeDeleted },
+  });
+
+  syncStore.setIsSyncing(false);
+}
 
 function onInvalidListInput() {
   snackbarStore.show({
@@ -37,7 +53,7 @@ async function onListChange(value: string[]) {
     const removedUrls = feedUrls.value.filter((el) => !value.includes(el));
     await rssStore.remove(removedUrls[0]);
   } else {
-    const lastAddedUrl = feedUrls.value[feedUrls.value.length - 1];
+    const lastAddedUrl = value[value.length - 1];
     await rssStore.add(lastAddedUrl);
   }
 }
