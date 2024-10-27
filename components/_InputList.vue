@@ -3,7 +3,7 @@ import debounce from "lodash.debounce";
 
 interface Props {
   modelValue: string[];
-  validator?: Function;
+  validator?: (value: string) => boolean;
 }
 interface Emits {
   (e: "update:modelValue", items: string[]): void;

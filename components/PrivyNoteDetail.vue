@@ -82,7 +82,11 @@ function createItem(type: "task" | "markdown", index?: number) {
   const template: Item =
     type === "task" ? getTaskTemplate() : getMarkdownTemplate();
   const itms: Item[] = [...items.value];
-  index >= 0 ? itms.splice(index + 1, 0, template) : itms.push(template);
+  if (index >= 0) {
+    itms.splice(index + 1, 0, template);
+  } else {
+    itms.push(template);
+  }
 
   noteStore.update(id.value, {
     items: [...itms],
@@ -102,7 +106,11 @@ function focusItem(type: "task" | "markdown", item: Item) {
     document.querySelector(itemSelector);
 
   if (!itemEl) return;
-  type === "task" ? itemEl.focus() : itemEl.click();
+  if (type === "task") {
+    itemEl.focus();
+  } else {
+    itemEl.click();
+  }
 }
 </script>
 
