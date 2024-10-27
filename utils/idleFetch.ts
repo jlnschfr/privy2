@@ -4,14 +4,14 @@ let idleInterval: NodeJS.Timeout;
 const initialTimeout = 10; // in seconds
 const repeatingTimeout = 40000; // in milliseconds
 
-const isElementActive = (): Boolean => {
+const isElementActive = (): boolean => {
   return (
     document.activeElement.tagName.toUpperCase() === "INPUT" ||
     document.activeElement.tagName.toUpperCase() === "TEXTAREA"
   );
 };
 
-export const initIdleFetch = (callback: Function) => {
+export const initIdleFetch = (callback: () => Promise<void>) => {
   ifvisible.setIdleDuration(initialTimeout);
   ifvisible.on("idle", async () => {
     if (isElementActive()) return;

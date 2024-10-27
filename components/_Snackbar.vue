@@ -5,8 +5,8 @@ const button = ref(null);
 
 const snackbarStore = useSnackbarStore();
 const snackbar: ComputedRef<Snackbar> = computed(() => snackbarStore.snackbar);
-const callback: ComputedRef<Function> = computed(
-  () => snackbar.value?.callback,
+const callback: ComputedRef<() => void> = computed(
+  () => snackbar.value?.callback as () => void,
 );
 const text: ComputedRef<string> = computed(() => snackbar.value?.text);
 const action: ComputedRef<string> = computed(() => snackbar.value?.action);
