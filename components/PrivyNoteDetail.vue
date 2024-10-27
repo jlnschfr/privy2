@@ -90,7 +90,7 @@ function createItem(type: "task" | "markdown", index?: number) {
 
   setTimeout(() => {
     focusItem(type, template);
-  }, 300);
+  }, 100);
 }
 
 function focusItem(type: "task" | "markdown", item: Item) {

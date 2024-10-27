@@ -130,16 +130,24 @@ export const useRssStore = defineStore("RssStore", () => {
   };
 
   const addFeedsToNotes = () => {
+    const decodeHtmlEntities = (str: string): string => {
+      const txt = document.createElement("textarea");
+      txt.innerHTML = str;
+      return txt.value;
+    };
+
     feeds.value.forEach((feed) => {
       for (let i = 0; i < 2; i++) {
         const id = feed.data?.items[i].guid;
 
         if (id && !feed.created_items.includes(id)) {
-          const title = feed.data?.items[i].title;
-          const author = feed.data?.title;
+          const title = decodeHtmlEntities(feed.data?.items[i].title);
+          const author = decodeHtmlEntities(feed.data?.title);
           const contentEncoded = feed.data?.items[i]["content:encoded"];
           const link = `<p><a href="${feed.data?.items[i].link}">${author}: ${title}</a><p>`;
-          const content = contentEncoded || feed.data?.items[i].content + link;
+          const content =
+            contentEncoded ||
+            decodeHtmlEntities(feed.data?.items[i].content) + link;
 
           const note: Note = createEmptyNote();
           note.title = title;
