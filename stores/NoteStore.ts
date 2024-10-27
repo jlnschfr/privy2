@@ -92,12 +92,12 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const update = async (
     id: string,
     details: Partial<Note>,
-    options?: { updateEditedAt: boolean },
+    options: { updateEditedAt: boolean } = { updateEditedAt: true },
   ) => {
     const note: Note = {
       ...get(id),
       ...details,
-      ...(options?.updateEditedAt && { edited_at: new Date().toISOString() }),
+      ...(options.updateEditedAt && { edited_at: new Date().toISOString() }),
     };
 
     syncStore.setIsSyncing(true);
