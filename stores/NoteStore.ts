@@ -77,7 +77,9 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
     notes.value?.push(noteWithUserId);
 
-    await client.from("notes").upsert(noteWithUserId);
+    if (navigator?.onLine) {
+      await client.from("notes").upsert(noteWithUserId);
+    }
 
     sortNotes();
     syncStore.setIsSyncing(false, 500);
@@ -104,10 +106,12 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
     notes.value = notes.value?.map((n) => (n.id === note.id ? note : n));
 
-    await client
-      .from("notes")
-      .update(note)
-      .match({ id, user_id: user?.value?.id });
+    if (navigator?.onLine) {
+      await client
+        .from("notes")
+        .update(note)
+        .match({ id, user_id: user?.value?.id });
+    }
 
     sortNotes();
     syncStore.setIsSyncing(false, 500);
@@ -119,7 +123,12 @@ export const useNoteStore = defineStore("NoteStore", () => {
     const index = notes.value?.findIndex((note) => note.id === id);
     notes.value?.splice(index, 1);
 
-    await client.from("notes").delete().match({ id, user_id: user?.value?.id });
+    if (navigator?.onLine) {
+      await client
+        .from("notes")
+        .delete()
+        .match({ id, user_id: user?.value?.id });
+    }
 
     sortNotes();
     syncStore.setIsSyncing(false, 500);
