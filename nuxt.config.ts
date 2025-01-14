@@ -2,6 +2,7 @@ import { Filter } from "./types/enums";
 
 export default defineNuxtConfig({
   ssr: false,
+
   app: {
     head: {
       title: "Privy Notes",
@@ -28,6 +29,7 @@ export default defineNuxtConfig({
     pageTransition: { name: "slide", mode: "out-in" },
     layoutTransition: { name: "fade", mode: "out-in" },
   },
+
   modules: [
     "@nuxtjs/supabase",
     "@nuxtjs/color-mode",
@@ -36,29 +38,36 @@ export default defineNuxtConfig({
     "@vite-pwa/nuxt",
     "nuxt-svgo",
   ],
+
   typescript: {
     typeCheck: true,
   },
+
   colorMode: {
     classSuffix: "",
   },
+
   runtimeConfig: {
     public: {
       baseUrl: process.env.BASE_URL || "http://localhost:3000",
     },
   },
+
   supabase: {
     redirectOptions: {
       login: "/",
       callback: `/notes?filter=${Filter.Favorites}`,
     },
   },
+
   svgo: { defaultImport: "component" },
+
   css: [
     "~/assets/css/fonts.css",
     "~/assets/css/utils.css",
     "~/assets/css/transitions.css",
   ],
+
   pwa: {
     registerType: "autoUpdate",
     manifest: {
@@ -105,4 +114,6 @@ export default defineNuxtConfig({
       type: "module",
     },
   },
+
+  compatibilityDate: "2025-01-14",
 });
