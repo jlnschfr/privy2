@@ -88,7 +88,9 @@ function sortItems() {
 }
 
 function onStart() {
-  window.navigator.vibrate(10);
+  if (window.navigator.vibrate) {
+    window.navigator.vibrate(10);
+  }
 }
 </script>
 
