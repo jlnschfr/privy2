@@ -126,7 +126,7 @@ export const useRssStore = defineStore("RssStore", () => {
     const data = await $fetch("/.netlify/functions/rss", {
       query: { url },
     });
-    return typeof data === "string" ? JSON.parse(data) : data;
+    return (typeof data === "string" ? JSON.parse(data) : data) as FeedData;
   };
 
   const addFeedsToNotes = () => {
