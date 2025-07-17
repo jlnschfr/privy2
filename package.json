@@ -2,14 +2,14 @@
   "name": "privy-2",
   "private": true,
   "engines": {
-    "node": ">=v20.12.0"
+    "node": ">=v22.16.0"
   },
   "overrides": {
     "@parcel/watcher": "~2.1.0",
     "vue": "latest"
   },
   "scripts": {
-    "ntl": "ntl dev",
+    "ntl": "netlify dev",
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
@@ -42,7 +42,6 @@
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
-    "netlify-cli": "^22.3.0",
     "nuxt": "^3.17.7",
     "nuxt-svgo": "^4.2.4",
     "pinia": "^2.3.1",
