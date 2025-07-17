@@ -42,7 +42,7 @@
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
-    "nuxt": "^3.17.7",
+    "nuxt": "^4.0.0",
     "nuxt-svgo": "^4.2.4",
     "pinia": "^3.0.3",
     "postcss-html": "^1.8.0",
