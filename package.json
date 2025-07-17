@@ -44,7 +44,7 @@
     "eslint-plugin-prettier": "^5.5.1",
     "nuxt": "^3.17.7",
     "nuxt-svgo": "^4.2.4",
-    "pinia": "^2.1.7",
+    "pinia": "^2.3.1",
     "postcss-html": "^1.8.0",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
