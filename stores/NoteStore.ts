@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useLocalStorage } from "@vueuse/core";
+// import { useLocalStorage } from "@vueuse/core"; // COMMENTED OUT FOR DEBUGGING
 import type { Database } from "@/types/database.types";
 import { Filter, Tag } from "@/types/enums";
 
@@ -7,7 +7,8 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
   const syncStore = useSyncStore();
-  const notes: Ref<Note[]> = useLocalStorage(`notes-${user?.value?.id}`, []);
+  // const notes: Ref<Note[]> = useLocalStorage(`notes-${user?.value?.id}`, []); // COMMENTED OUT FOR DEBUGGING
+  const notes: Ref<Note[]> = ref([]); // TEMPORARY DEBUG: using regular ref instead of localStorage
 
   const notesNotTrashed: ComputedRef<Note[]> = computed(() =>
     notes.value?.filter(
