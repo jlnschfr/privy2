@@ -11,7 +11,7 @@ interface Emits {
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const textarea: Ref<HTMLTextAreaElement> = ref(null);
+const textarea: Ref<HTMLTextAreaElement | null> = ref(null);
 const { updateTextareaHeight } = useTextareaHeight(textarea);
 
 const onInput = debounce((e) => {
@@ -35,7 +35,7 @@ onMounted(() => {
     :value="modelValue"
     class="privy-focus h-5 resize-none overflow-hidden bg-transparent text-2xl font-bold leading-10"
     placeholder="Title"
-    autocomplete="false"
+    autocomplete="off"
     @input="onInput"
   />
 </template>

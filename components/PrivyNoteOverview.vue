@@ -22,7 +22,7 @@ const notes: ComputedRef<Note[]> = computed(() => {
     >
       <PrivyNoteTeaser
         v-for="note in notes"
-        :key="note.id + Math.random()"
+        :key="note.id"
         :note-id="note.id"
       />
     </div>
