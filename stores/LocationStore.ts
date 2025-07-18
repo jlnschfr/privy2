@@ -1,15 +1,14 @@
 import { defineStore } from "pinia";
-// import { useLocalStorage } from "@vueuse/core"; // COMMENTED OUT FOR DEBUGGING
+import { useLocalStorage } from "@vueuse/core";
 
 export const useLocationStore = defineStore("LocationStore", () => {
   const DURATION = 1800000;
   const user = useSupabaseUser();
 
-  // const location: Ref<PrivyLocation> = useLocalStorage(
-  //   `location-${user?.value?.id}`,
-  //   {},
-  // ); // COMMENTED OUT FOR DEBUGGING
-  const location: Ref<PrivyLocation> = ref({}); // TEMPORARY DEBUG: using regular ref instead of localStorage
+  const location: Ref<PrivyLocation> = useLocalStorage(
+    `location-${user?.value?.id}`,
+    {},
+  );
 
   const isEmpty: ComputedRef<boolean> = computed(
     () => Object.keys(location.value).length === 0,
