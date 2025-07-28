@@ -4,7 +4,7 @@ export const useWeatherStore = defineStore("WeatherStore", () => {
   const DURATION = 1800000;
 
   const locationStore = useLocationStore();
-  const weather: Ref<PrivyWeather> = ref({}); // No persistence: Weather is time-sensitive
+  const weather: Ref<PrivyWeather> = ref({});
 
   locationStore.$subscribe(async (_, state) => {
     await fetchWeather(state.location);

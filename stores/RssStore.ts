@@ -11,7 +11,7 @@ export const useRssStore = defineStore("RssStore", () => {
   const user = useSupabaseUser();
   const snackbarStore = useSnackbarStore();
 
-  const feeds: Ref<Feed[]> = ref([]); // No persistence: RSS feeds should be fresh
+  const feeds: Ref<Feed[]> = ref([]);
   const feedUrls: ComputedRef<string[]> = computed(() =>
     feeds.value?.map((feed) => feed.url),
   );
