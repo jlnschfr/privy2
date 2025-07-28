@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 
 export const useWeatherStore = defineStore("WeatherStore", () => {
   const DURATION = 1800000;
-  const user = useSupabaseUser();
 
   const locationStore = useLocationStore();
   const weather: Ref<PrivyWeather> = ref({}); // No persistence: Weather is time-sensitive

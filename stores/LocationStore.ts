@@ -49,7 +49,7 @@ export const useLocationStore = defineStore("LocationStore", () => {
         };
       }
     } catch (error) {
-      console.warn('Failed to fetch location:', error);
+      console.warn("Failed to fetch location:", error);
       // Don't update location on error, keep existing data
     }
   }
