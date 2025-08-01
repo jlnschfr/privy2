@@ -11,7 +11,7 @@ export default defineNuxtConfig({
         { charset: "utf-8" },
         { name: "viewport", content: "width=device-width, initial-scale=1" },
         {
-          hid: "description",
+          key: "description",
           name: "description",
           content: "Great notes for great people",
         },
@@ -102,6 +102,7 @@ export default defineNuxtConfig({
     },
     workbox: {
       globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+      maximumFileSizeToCacheInBytes: 3000000, // 3MB limit
     },
     client: {
       installPrompt: true,

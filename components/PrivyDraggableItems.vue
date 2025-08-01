@@ -17,25 +17,32 @@ const storeItems: ComputedRef<Item[]> = computed(
   () => noteStore.get(props.noteId)?.items,
 );
 
+// Prevent infinite loops between watchers
+let isUpdating = false;
+
 watch(
   items,
   () => {
-    if (!isEqual(storeItems.value, items.value)) {
+    if (!isUpdating && !isEqual(storeItems.value, items.value)) {
+      isUpdating = true;
       noteStore.update(props.noteId, {
         items: [...items.value],
       });
 
       sortItems();
+      isUpdating = false;
     }
   },
   { deep: true },
 );
 
 watch(storeItems, () => {
-  if (!isEqual(storeItems.value, items.value)) {
+  if (!isUpdating && !isEqual(storeItems.value, items.value)) {
+    isUpdating = true;
     items.value = [...storeItems.value];
 
     sortItems();
+    isUpdating = false;
   }
 });
 
