@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { useLocalStorage } from "@vueuse/core";
 import { v4 as uuid } from "uuid";
 import { createEmptyNote } from "@/utils/note";
 import type { Database } from "@/types/database.types";
@@ -12,7 +11,7 @@ export const useRssStore = defineStore("RssStore", () => {
   const user = useSupabaseUser();
   const snackbarStore = useSnackbarStore();
 
-  const feeds: Ref<Feed[]> = useLocalStorage(`rss-${user?.value?.id}`, []);
+  const feeds: Ref<Feed[]> = ref([]);
   const feedUrls: ComputedRef<string[]> = computed(() =>
     feeds.value?.map((feed) => feed.url),
   );
@@ -126,7 +125,7 @@ export const useRssStore = defineStore("RssStore", () => {
     const data = await $fetch("/.netlify/functions/rss", {
       query: { url },
     });
-    return typeof data === "string" ? JSON.parse(data) : data;
+    return (typeof data === "string" ? JSON.parse(data) : data) as FeedData;
   };
 
   const addFeedsToNotes = () => {

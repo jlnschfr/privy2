@@ -23,25 +23,34 @@ export const useLocationStore = defineStore("LocationStore", () => {
       fetchLocation();
     }
 
-    setInterval(async () => {
+    // Store interval ID for cleanup
+    const intervalId = setInterval(async () => {
       await fetchLocation();
     }, DURATION);
+
+    // Return cleanup function
+    return () => clearInterval(intervalId);
   };
 
   async function fetchLocation() {
-    const url: URL = new URL(
-      "https://api.bigdatacloud.net/data/reverse-geocode-client",
-    );
+    try {
+      const url: URL = new URL(
+        "https://api.bigdatacloud.net/data/reverse-geocode-client",
+      );
 
-    const response: Response = await fetch(url);
-    if (response.ok) {
-      const json = await response.json();
-      location.value = {
-        lat: json.latitude,
-        long: json.longitude,
-        city: json.locality,
-        timestamp: Date.now(),
-      };
+      const response: Response = await fetch(url);
+      if (response.ok) {
+        const json = await response.json();
+        location.value = {
+          lat: json.latitude,
+          long: json.longitude,
+          city: json.locality,
+          timestamp: Date.now(),
+        };
+      }
+    } catch (error) {
+      console.warn("Failed to fetch location:", error);
+      // Don't update location on error, keep existing data
     }
   }
 

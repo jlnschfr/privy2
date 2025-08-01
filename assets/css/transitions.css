@@ -2,7 +2,9 @@
 .slide-leave-active,
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s, transform 0.3s;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
 }
 
 .slide-enter-from {
@@ -50,6 +52,8 @@
 
   .mobile-slide-right-enter-active,
   .mobile-slide-right-leave-active {
-    transition: opacity 0.3s, transform 0.3s;
+    transition:
+      opacity 0.3s,
+      transform 0.3s;
   }
 }

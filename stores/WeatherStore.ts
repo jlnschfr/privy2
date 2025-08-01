@@ -1,15 +1,10 @@
 import { defineStore } from "pinia";
-import { useLocalStorage } from "@vueuse/core";
 
 export const useWeatherStore = defineStore("WeatherStore", () => {
   const DURATION = 1800000;
-  const user = useSupabaseUser();
 
   const locationStore = useLocationStore();
-  const weather: Ref<PrivyWeather> = useLocalStorage(
-    `weather-${user?.value?.id}`,
-    {},
-  );
+  const weather: Ref<PrivyWeather> = ref({});
 
   locationStore.$subscribe(async (_, state) => {
     await fetchWeather(state.location);
