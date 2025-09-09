@@ -6,9 +6,10 @@ const { auth } = useSupabaseClient();
 const path = `/notes?filter=${Filter.Favorites}`;
 const redirectTo: string = `${useRuntimeConfig().public.baseUrl}${path}`;
 
-watchEffect(() => {
+watchEffect(async () => {
   if (user.value) {
-    navigateTo(path);
+    await nextTick();
+    await navigateTo(path);
   }
 });
 

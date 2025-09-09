@@ -5,17 +5,20 @@ const temperature: ComputedRef<string> = computed(
   () => weatherStore.weather?.data?.current?.temp_c,
 );
 const description: ComputedRef<string> = computed(
-  () => weatherStore.weather.data.current.condition.text,
+  () => weatherStore.weather?.data?.current?.condition?.text,
 );
 const city: ComputedRef<string> = computed(
   () => weatherStore.weather.location?.city,
 );
 const icon: ComputedRef<string> = computed(() =>
-  getIcon(weatherStore.weather.data.current.condition.text),
+  getIcon(weatherStore.weather?.data?.current?.condition?.text),
 );
 const isValid: ComputedRef<boolean> = computed(() => weatherStore.isValid);
 
 function getIcon(icon: string): string {
+  const fallbackIcon = "SvgoWeatherClear";
+
+  if (!icon) return fallbackIcon;
   const iconMap = {
     Clear: "SvgoWeatherClear",
     Sunny: "SvgoWeatherSunny",
@@ -68,7 +71,7 @@ function getIcon(icon: string): string {
     "Moderate or heavy snow with thunder": "SvgoWeatherThunder",
   } as any;
 
-  return iconMap[icon];
+  return iconMap[icon] || fallbackIcon;
 }
 </script>
 

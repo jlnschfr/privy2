@@ -28,43 +28,55 @@ export const useNoteStore = defineStore("NoteStore", () => {
   };
 
   const getNotesByTag = (tag: string): Note[] => {
-    if (!notes.value?.length) return;
+    if (!notes.value?.length) return [];
 
     if (tag === Tag.Trash) {
-      return notesTrashed.value;
+      return notesTrashed.value || [];
     } else if (tag) {
-      return notesNotTrashed.value?.filter((note) =>
-        note.tags.some((noteTag) => noteTag.text === tag),
+      return (
+        notesNotTrashed.value?.filter((note) =>
+          note.tags.some((noteTag) => noteTag.text === tag),
+        ) || []
       );
     } else {
-      return notesNotTrashed.value;
+      return notesNotTrashed.value || [];
     }
   };
 
   const getNotesByFilter = (filter: string): Note[] => {
-    if (!notes.value?.length) return;
+    if (!notes.value?.length) return [];
 
     if (filter === Filter.Favorites) {
-      return notesNotTrashed.value?.filter((note) => note.favorite);
+      return notesNotTrashed.value?.filter((note) => note.favorite) || [];
     } else {
-      return notesNotTrashed.value;
+      return notesNotTrashed.value || [];
     }
   };
 
   const fetchAll = async () => {
+    if (!user?.value?.id) {
+      return;
+    }
+
     syncStore.setIsSyncing(true);
-    const { data } = await client
-      .from("notes")
-      .select(
-        "id, created_at, edited_at, items, title, favorite, tags, user_id",
-      )
-      .match({ user_id: user?.value?.id })
-      .order("created_at");
 
-    notes.value = data;
+    try {
+      const { data } = await client
+        .from("notes")
+        .select(
+          "id, created_at, edited_at, items, title, favorite, tags, user_id",
+        )
+        .match({ user_id: user.value.id })
+        .order("created_at");
 
-    sortNotes();
-    syncStore.setIsSyncing(false, 500);
+      notes.value = data || [];
+      sortNotes();
+    } catch (error) {
+      console.error("Failed to fetch notes:", error);
+      notes.value = [];
+    } finally {
+      syncStore.setIsSyncing(false, 500);
+    }
   };
 
   const add = async (note: Note, options: { redirect: boolean }) => {

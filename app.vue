@@ -7,19 +7,25 @@ const locationStore = useLocationStore();
 const weatherStore = useWeatherStore();
 const rssStore = useRssStore();
 
-if (user.value) {
-  await locationStore.init();
-  await weatherStore.init();
+await nextTick();
 
-  if (navigator?.onLine) {
-    await noteStore.fetchAll();
-    await rssStore.fetchAll();
+watchEffect(async () => {
+  if (user.value) {
+    await locationStore.init();
+    await weatherStore.init();
 
-    initIdleFetch(async () => {
+    if (navigator?.onLine) {
       await noteStore.fetchAll();
       await rssStore.fetchAll();
-    });
+    }
   }
+});
+
+if (navigator?.onLine) {
+  initIdleFetch(async () => {
+    await noteStore.fetchAll();
+    await rssStore.fetchAll();
+  });
 }
 </script>
 
