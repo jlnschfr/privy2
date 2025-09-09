@@ -37,8 +37,8 @@
     "@typescript-eslint/parser": "^8.37.0",
     "@vite-pwa/assets-generator": "^1.0.0",
     "@vite-pwa/nuxt": "^1.0.4",
-    "@vueuse/core": "^13.6.0",
-    "@vueuse/nuxt": "^13.6.0",
+    "@vueuse/core": "^13.9.0",
+    "@vueuse/nuxt": "^13.9.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
@@ -53,7 +53,7 @@
     "stylelint-config-recommended-vue": "^1.6.1",
     "stylelint-order": "^7.0.0",
     "typescript": "^5.9.2",
-    "vue-tsc": "^3.0.5"
+    "vue-tsc": "^3.0.6"
   },
   "dependencies": {
     "@rosskevin/ifvisible": "^3.3.6",
