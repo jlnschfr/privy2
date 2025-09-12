@@ -19,13 +19,30 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Lint
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - run: npm ci
-      - run: npm run type-check
-      - run: npm run lint:js
-      - run: npm run lint:css
+      
+      # Alternative approach: Force clean install with retry
+      - name: Clean install dependencies
+        run: |
+          # Clear npm cache
+          npm cache clean --force
+          
+          # Remove existing node_modules if present
+          rm -rf node_modules
+          
+          # Install with npm ci (retry once if it fails)
+          npm ci || (echo "First attempt failed, retrying..." && rm -rf node_modules && npm ci)
+      
+      - name: Type check
+        run: npm run type-check
+      
+      - name: Lint JavaScript
+        run: npm run lint:js
+      
+      - name: Lint CSS
+        run: npm run lint:css
