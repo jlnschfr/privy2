@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { v4 as uuid } from "uuid";
 import { createEmptyNote } from "@/utils/note";
-import type { Database } from "@/types/database.types";
+import type { Database, Json } from "@/types/database.types";
 import { Tag } from "@/types/enums";
 
 export const useRssStore = defineStore("RssStore", () => {
@@ -36,7 +36,14 @@ export const useRssStore = defineStore("RssStore", () => {
       feed.data = data;
       feeds.value?.push(feed);
 
-      await client.from("rss").upsert(feed);
+      const feedForDb: Database["public"]["Tables"]["rss"]["Insert"] = {
+        id: feed.id!,
+        url: feed.url,
+        user_id: feed.user_id,
+        data: feed.data as unknown as Json,
+        created_items: feed.created_items as unknown as Json,
+      };
+      await client.from("rss").upsert(feedForDb);
       addFeedsToNotes();
     } else {
       snackbarStore.show({
@@ -58,7 +65,14 @@ export const useRssStore = defineStore("RssStore", () => {
 
       const undoCallback = async () => {
         feeds.value?.splice(index, 0, deletedFeeds[0]);
-        await client.from("rss").upsert(deletedFeeds[0]);
+        const feedForDb: Database["public"]["Tables"]["rss"]["Insert"] = {
+          id: deletedFeeds[0].id!,
+          url: deletedFeeds[0].url,
+          user_id: deletedFeeds[0].user_id,
+          data: deletedFeeds[0].data as unknown as Json,
+          created_items: deletedFeeds[0].created_items as unknown as Json,
+        };
+        await client.from("rss").upsert(feedForDb);
       };
 
       snackbarStore.show({
@@ -90,7 +104,10 @@ export const useRssStore = defineStore("RssStore", () => {
 
     await client
       .from("rss")
-      .update(updatedFeed)
+      .update({
+        data: updatedFeed.data as unknown as Json,
+        created_items: updatedFeed.created_items as unknown as Json,
+      })
       .match({ id, user_id: user?.value?.id });
 
     syncStore.setIsSyncing(false, 500);
@@ -105,7 +122,7 @@ export const useRssStore = defineStore("RssStore", () => {
       .match({ user_id: user?.value?.id })
       .order("created_at");
 
-    feeds.value = data;
+    feeds.value = data as unknown as Feed[];
 
     feeds.value?.forEach(async (feed) => {
       const data = await fetchRssFromNetlifyFunction(feed.url);

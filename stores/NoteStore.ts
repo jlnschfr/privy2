@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
-import type { Database } from "@/types/database.types";
+import type { Database, Json } from "@/types/database.types";
 import { Filter, Tag } from "@/types/enums";
 
 export const useNoteStore = defineStore("NoteStore", () => {
@@ -69,7 +69,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
         .match({ user_id: user.value.id })
         .order("created_at");
 
-      notes.value = data || [];
+      notes.value = (data as unknown as Note[]) || [];
       sortNotes();
     } catch (error) {
       console.error("Failed to fetch notes:", error);
@@ -90,7 +90,17 @@ export const useNoteStore = defineStore("NoteStore", () => {
     notes.value?.push(noteWithUserId);
 
     if (navigator?.onLine) {
-      await client.from("notes").upsert(noteWithUserId);
+      const noteForDb: Database["public"]["Tables"]["notes"]["Insert"] = {
+        id: noteWithUserId.id,
+        created_at: noteWithUserId.created_at,
+        edited_at: noteWithUserId.edited_at,
+        title: noteWithUserId.title,
+        items: noteWithUserId.items as unknown as Json,
+        favorite: noteWithUserId.favorite,
+        tags: noteWithUserId.tags as unknown as Json,
+        user_id: noteWithUserId.user_id,
+      };
+      await client.from("notes").upsert(noteForDb);
     }
 
     sortNotes();
@@ -119,9 +129,19 @@ export const useNoteStore = defineStore("NoteStore", () => {
     notes.value = notes.value?.map((n) => (n.id === note.id ? note : n));
 
     if (navigator?.onLine) {
+      const noteForDb: Database["public"]["Tables"]["notes"]["Update"] = {
+        id: note.id,
+        created_at: note.created_at,
+        edited_at: note.edited_at,
+        title: note.title,
+        items: note.items as unknown as Json,
+        favorite: note.favorite,
+        tags: note.tags as unknown as Json,
+        user_id: note.user_id,
+      };
       await client
         .from("notes")
-        .update(note)
+        .update(noteForDb)
         .match({ id, user_id: user?.value?.id });
     }
 
