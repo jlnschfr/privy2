@@ -9,11 +9,11 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const route = useRoute();
-const svg: Ref = ref();
+const svg: Ref<{ $el: SVGElement } | undefined> = ref();
 
 const widthClass: ComputedRef<string> = computed(() => `w-${props.width}`);
 const paths: ComputedRef<SVGElement[]> = computed(() => [
-  ...svg.value.$el.querySelectorAll("path"),
+  ...(svg.value?.$el.querySelectorAll("path") || []),
 ]);
 
 watch([() => route.params, () => route.name], () => {

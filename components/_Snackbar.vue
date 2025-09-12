@@ -1,7 +1,7 @@
 <script setup lang="ts">
-const timeout: Ref<any> = ref();
+const timeout: Ref<ReturnType<typeof setTimeout> | undefined> = ref();
 const activeElement: Ref<HTMLElement> = ref();
-const button = ref(null);
+const button = ref<HTMLElement | null>(null);
 
 const snackbarStore = useSnackbarStore();
 const snackbar: ComputedRef<Snackbar> = computed(() => snackbarStore.snackbar);

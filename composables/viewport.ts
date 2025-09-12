@@ -1,7 +1,7 @@
 import debounce from "lodash.debounce";
 
 export function useViewport() {
-  const resizeHandler: Ref<any> = ref();
+  const resizeHandler: Ref<ReturnType<typeof debounce> | undefined> = ref();
   const isMobile: Ref<boolean> = ref();
 
   function handleResize() {

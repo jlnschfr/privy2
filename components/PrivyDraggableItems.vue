@@ -62,11 +62,13 @@ function onItemDelete(id: string) {
   });
 }
 
-function undoRemove(oldItems: Item[]) {
+function undoRemove(oldItems: Item[]): void {
   items.value = oldItems;
 }
 
-function getComponent(name: string) {
+function getComponent(
+  name: string,
+): ReturnType<typeof resolveComponent> | undefined {
   const MarkdownComponent = resolveComponent("Markdown");
   const TaskComponent = resolveComponent("Task");
 
@@ -77,7 +79,7 @@ function getComponent(name: string) {
   }
 }
 
-function sortItems() {
+function sortItems(): void {
   items.value?.sort((a, b) => {
     const aValid = "isValid" in a.data ? a.data.isValid : false;
     const bValid = "isValid" in b.data ? b.data.isValid : false;

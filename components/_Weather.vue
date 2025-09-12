@@ -69,9 +69,9 @@ function getIcon(icon: string): string {
     "Moderate or heavy rain with thunder": "SvgoWeatherThunder",
     "Patchy light snow with thunder": "SvgoWeatherThunder",
     "Moderate or heavy snow with thunder": "SvgoWeatherThunder",
-  } as any;
+  } as const;
 
-  return iconMap[icon] || fallbackIcon;
+  return iconMap[icon as keyof typeof iconMap] || fallbackIcon;
 }
 </script>
 

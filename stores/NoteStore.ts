@@ -21,7 +21,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     ),
   );
 
-  const get = (id: string): Note => {
+  const get = (id: string): Note | undefined => {
     if (!notes.value?.length) return;
     const data = notes.value?.find((note) => note.id === id);
     return data;

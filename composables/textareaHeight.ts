@@ -1,7 +1,7 @@
 import debounce from "lodash.debounce";
 
 export function useTextareaHeight(textArea: Ref<HTMLTextAreaElement>) {
-  const resizeHandler: Ref<any> = ref();
+  const resizeHandler: Ref<ReturnType<typeof debounce> | undefined> = ref();
 
   function updateTextareaHeight() {
     if (textArea.value) {
