@@ -11,7 +11,7 @@ const tags: ComputedRef<Tag[]> = computed(
 );
 const input: Ref<string> = ref("");
 
-function addTag() {
+function addTag(): void {
   const newTag = input.value.trim();
 
   if (input.value && !tags.value?.find((tag) => tag.text === newTag)) {
@@ -21,7 +21,7 @@ function addTag() {
     input.value = "";
   }
 }
-function removeTag(text: string) {
+function removeTag(text: string): void {
   const index = tags.value?.findIndex((tag) => tag.text === text);
 
   if (index >= 0) {

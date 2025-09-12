@@ -30,7 +30,7 @@ watch(isActive, async () => {
   }
 });
 
-function undo() {
+function undo(): void {
   callback.value();
   snackbarStore.hide();
 

@@ -13,7 +13,7 @@ const errorMessage: Ref<string> = ref("");
 
 const feedUrls: ComputedRef<string[]> = computed(() => rssStore.feedUrls);
 
-async function deleteAccount() {
+async function deleteAccount(): Promise<void> {
   syncStore.setIsSyncing(true);
 
   const noteIdsToRemove = noteStore.notes.map(({ id }) => id);
@@ -48,7 +48,7 @@ function onInvalidListInput() {
   });
 }
 
-async function onListChange(value: string[]) {
+async function onListChange(value: string[]): Promise<void> {
   if (value.length < feedUrls.value.length) {
     const removedUrls = feedUrls.value.filter((el) => !value.includes(el));
     await rssStore.remove(removedUrls[0]);

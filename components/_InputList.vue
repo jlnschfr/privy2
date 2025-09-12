@@ -25,7 +25,7 @@ watch(
   }, 250),
 );
 
-function onSubmit() {
+function onSubmit(): void {
   if (items.value.includes(input.value)) {
     emit("invalid-input", "List item already exist");
   }
@@ -44,7 +44,7 @@ function onSubmit() {
   input.value = "";
 }
 
-function onRemoveClick(index: number) {
+function onRemoveClick(index: number): void {
   items.value = items.value.toSpliced(index, 1);
 }
 </script>

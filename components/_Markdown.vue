@@ -47,11 +47,11 @@ watch(
   }, 250),
 );
 
-function onBlur() {
+function onBlur(): void {
   isEditable.value = false;
 }
 
-async function onClickOrEnter() {
+async function onClickOrEnter(): Promise<void> {
   isEditable.value = true;
   await nextTick();
   textarea.value?.focus();

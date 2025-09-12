@@ -12,7 +12,7 @@ const snackbarStore = useSnackbarStore();
 const note: Ref<Note> = ref(noteStore.get(props.noteId));
 const isFavorite: Ref<boolean> = ref(noteStore.get(props.noteId).favorite);
 
-async function remove() {
+async function remove(): Promise<void> {
   const alreadyTrashed = Boolean(
     note.value?.tags.find((el) => el.text === Tag.Trash),
   );
@@ -38,7 +38,7 @@ async function remove() {
   });
 }
 
-function undoRemove(deletedNote: Note, alreadyTrashed: boolean) {
+function undoRemove(deletedNote: Note, alreadyTrashed: boolean): void {
   if (alreadyTrashed) {
     noteStore.add(deletedNote, { redirect: false });
   } else {
@@ -48,7 +48,7 @@ function undoRemove(deletedNote: Note, alreadyTrashed: boolean) {
   }
 }
 
-function toggleFav() {
+function toggleFav(): void {
   isFavorite.value = !isFavorite.value;
 
   noteStore.update(props.noteId, {

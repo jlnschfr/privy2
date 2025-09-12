@@ -4,7 +4,7 @@ export const useSnackbarStore = defineStore("SnackbarStore", () => {
   const snackbar: Ref<Snackbar> = ref();
   const isActive: Ref<boolean> = ref(false);
 
-  const show = (payload: Snackbar) => {
+  const show = (payload: Snackbar): void => {
     isActive.value = false;
 
     setTimeout(() => {
@@ -13,7 +13,7 @@ export const useSnackbarStore = defineStore("SnackbarStore", () => {
     }, 100);
   };
 
-  const hide = () => {
+  const hide = (): void => {
     isActive.value = false;
   };
 

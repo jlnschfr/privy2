@@ -25,15 +25,15 @@ const isDarkMode: ComputedRef<boolean> = computed(
   () => colorMode.value === "dark",
 );
 
-function getTagAmount(tag: string) {
+function getTagAmount(tag: string): number {
   return tagStore.getTagAmount(tag);
 }
 
-function toggleDarkMode() {
+function toggleDarkMode(): void {
   colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
 }
 
-async function logout() {
+async function logout(): Promise<void> {
   await client.auth.signOut();
   navigateTo("/");
 }

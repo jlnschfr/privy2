@@ -1,10 +1,10 @@
 import debounce from "lodash.debounce";
 
-export function useViewport() {
+export function useViewport(): { isMobile: Ref<boolean> } {
   const resizeHandler: Ref<ReturnType<typeof debounce> | undefined> = ref();
   const isMobile: Ref<boolean> = ref();
 
-  function handleResize() {
+  function handleResize(): void {
     isMobile.value = !window.matchMedia("(min-width: 1024px)").matches;
   }
 
