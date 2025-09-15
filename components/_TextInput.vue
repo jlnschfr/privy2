@@ -41,6 +41,7 @@ const id: Ref<string> = ref(uuid());
       :class="{
         'border-b border-neutral-200 dark:border-neutral-400': border,
         'cursor-not-allowed': disabled,
+        '-mt-2': !modelValue,
       }"
       :value="modelValue"
       :placeholder="placeholder"

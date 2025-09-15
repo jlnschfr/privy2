@@ -12,6 +12,15 @@ const note: ComputedRef<Note> = computed(() => noteStore.get(id.value));
 const items: ComputedRef<Item[]> = computed(() => note.value?.items);
 const title: Ref<string> = ref(note.value?.title);
 
+watch(
+  () => note.value?.title,
+  (newTitle) => {
+    if (newTitle !== undefined && newTitle !== title.value) {
+      title.value = newTitle;
+    }
+  },
+);
+
 watch(title, () => {
   noteStore.update(id.value, { title: title.value });
 });
@@ -133,8 +142,9 @@ function focusItem(type: "task" | "markdown", item: Item) {
     </article>
 
     <footer
-      class="flex flex-col justify-between border-t border-neutral-400 p-3 transition-borderColor duration-300 dark:border-neutral-200 md:flex-row md:items-end md:p-4"
+      class="flex flex-col flex-wrap justify-between border-t border-neutral-400 p-3 transition-borderColor duration-300 dark:border-neutral-200 md:flex-row md:items-end md:p-4"
     >
+      <PrivyNoteFeatureBar class="w-full" :note-id="id" />
       <aside class="w-full flex-shrink md:mr-4 md:max-w-tags">
         <PrivyTags :note-id="id" />
       </aside>

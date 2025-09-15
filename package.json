@@ -53,14 +53,18 @@
     "vue-tsc": "^3.0.6"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^2.0.30",
     "@rosskevin/ifvisible": "^3.3.6",
+    "ai": "^5.0.44",
     "highlight.js": "^11.11.1",
     "isomorphic-dompurify": "^2.26.0",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
     "marked": "^16.2.1",
     "marked-highlight": "^2.2.2",
+    "reka-ui": "^2.5.0",
     "uuid": "^13.0.0",
-    "vuedraggable": "^4.1.0"
+    "vuedraggable": "^4.1.0",
+    "zod": "^4.1.8"
   }
 }

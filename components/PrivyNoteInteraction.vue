@@ -83,7 +83,7 @@ function toggleFav(): void {
       :disabled="!note"
       @click.stop="remove()"
     >
-      <SvgoTrash aria-hidden="true" class="fill w-2"
+      <SvgoTrash aria-hidden="true" class="w-2"
     /></IconButton>
   </div>
 </template>

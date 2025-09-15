@@ -37,6 +37,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@vite-pwa/nuxt",
     "nuxt-svgo",
+    "reka-ui/nuxt",
   ],
 
   typescript: {

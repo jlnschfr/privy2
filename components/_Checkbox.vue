@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 
 interface Props {
   modelValue: boolean;
+  label?: string;
 }
 interface Emits {
   (e: "update:modelValue", isChecked: boolean): void;
@@ -27,6 +28,7 @@ const id: Ref<string> = ref(uuid());
         class="inline-flex h-3 w-3 items-center justify-center border border-neutral-200 transition-borderColor duration-300 dark:border-neutral-400"
         ><SvgoCheck v-if="modelValue" class="w-2" />
       </span>
+      <span v-if="label" class="ml-2">{{ label }}</span>
     </label>
   </div>
 </template>
