@@ -12,6 +12,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    
+    # Set environment variables to help with native binding issues
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
+      NPM_CONFIG_FUND: false
+      NPM_CONFIG_AUDIT: false
+      FORCE_COLOR: 0
 
     strategy:
       matrix:
@@ -19,13 +26,55 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Lint
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: npm ci
-      - run: npm run type-check
-      - run: npm run lint:js
-      - run: npm run lint:css
+          # Disable cache to avoid issues with native bindings
+          # cache: "npm"
+      
+      # Aggressive approach for oxc-parser native binding issues
+      - name: Pre-install problematic native dependencies
+        run: |
+          # Try to install oxc-parser separately first
+          echo "Attempting to pre-install oxc-parser..."
+          npm install oxc-parser@0.86.0 --no-save || echo "Direct oxc-parser install failed, continuing..."
+      
+      - name: Install dependencies with multiple strategies
+        run: |
+          # Clear everything
+          npm cache clean --force
+          rm -rf node_modules package-lock.json
+          
+          # Try npm install first (more flexible with optional deps)
+          if npm install; then
+            echo "npm install succeeded"
+          else
+            echo "npm install failed, trying alternative approach..."
+            
+            # Clear again and try with specific flags
+            rm -rf node_modules
+            npm cache clean --force
+            
+            # Try with --no-optional to skip problematic optional deps
+            if npm install --no-optional; then
+              echo "npm install --no-optional succeeded"
+            else
+              echo "All npm install attempts failed, trying npm ci..."
+              # Last resort: generate new lock file and try npm ci
+              npm cache clean --force
+              rm -rf node_modules
+              npm install --package-lock-only
+              npm ci
+            fi
+          fi
+      
+      - name: Type check
+        run: npm run type-check
+      
+      - name: Lint JavaScript
+        run: npm run lint:js
+      
+      - name: Lint CSS
+        run: npm run lint:css
