@@ -1,5 +1,5 @@
 import { generateObject } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod";
 
 const RecipeRequestSchema = z.object({
@@ -63,13 +63,12 @@ export async function generateRecipes(
     );
   }
 
-  // Set the OpenAI API key in the process environment for the AI SDK to use
-  // This is a client-side workaround - normally the API key would be available server-side
-  if (typeof process !== "undefined" && process.env) {
-    process.env.OPENAI_API_KEY = config.public.openaiApiKey;
-  }
-
   try {
+    // Create OpenAI client with API key for static builds
+    const openai = createOpenAI({
+      apiKey: config.public.openaiApiKey,
+    });
+
     // Validate request parameters
     const validatedParams = RecipeRequestSchema.parse(params);
 
@@ -149,6 +148,11 @@ ${validatedParams.vegan ? "Alle Rezepte müssen vegan sein." : ""}
 ${validatedParams.vegetarian ? "Alle Rezepte müssen vegetarisch sein." : ""}
 
 FORMAT:
+- Die Antwort muss EXAKT folgende JSON-Struktur haben (ohne zusätzliche "properties" oder "type" Felder):
+{
+  "recipes": [Array von Rezept-Objekten],
+  "shoppingList": [Array von Kategorie-Objekten]
+}
 - Rezepte als Markdown mit deutschen Namen
 - Einkaufsliste MUSS als Array von Kategorie-Objekten strukturiert sein
 - Jede Kategorie hat ein 'category' Feld und ein 'items' Array  
@@ -161,21 +165,35 @@ FORMAT:
     const result = await generateObject({
       model: openai("gpt-4o-mini"),
       schema: RecipeResponseSchema,
+      schemaName: "RecipeResponse",
+      schemaDescription: "A response containing recipes and a shopping list",
       prompt,
+      mode: "json",
     });
+
+    // Debug log to see what we're getting back
+    console.log("AI Response:", JSON.stringify(result.object, null, 2));
 
     return result.object;
   } catch (error) {
     console.error("Recipe generation error:", error);
 
     if (error instanceof z.ZodError) {
+      console.error("Validation error details:", error.issues);
       throw new Error(
-        `Invalid request parameters: ${error.issues
-          .map((issue) => issue.message)
+        `Invalid AI response structure: ${error.issues
+          .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
           .join(", ")}`,
       );
     }
 
-    throw new Error("Failed to generate recipes");
+    // Check if it's an AI SDK error and log more details
+    if (error && typeof error === "object" && "cause" in error) {
+      console.error("AI SDK error cause:", error.cause);
+    }
+
+    throw new Error(
+      `Failed to generate recipes: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
   }
 }
