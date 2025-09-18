@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { RecipeRequestParams } from "~/netlify/functions/generate-recipes/generate-recipes.mts";
+import type { RecipeRequestParams } from "~/utils/recipeGenerator";
 
 interface Props {
   noteId: string;

@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 
-// Import types from the API schema - single source of truth
+// Import types and utility from the client-side recipe generator
 import type {
   RecipeRequestParams,
   ShoppingListCategory,
   Recipe,
-  RecipeResponse,
-} from "~/netlify/functions/generate-recipes/generate-recipes.mts";
+} from "~/utils/recipeGenerator";
+import { generateRecipes } from "~/utils/recipeGenerator";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -15,26 +15,6 @@ export const useRecipeStore = defineStore("RecipeStore", () => {
   const isGenerating = ref(false);
   const lastGeneratedRecipes = ref<Recipe[]>([]);
   const lastShoppingList = ref<ShoppingListCategory[]>([]);
-
-  /**
-   * Calls the recipe generation API endpoint
-   */
-  const generateRecipes = async (
-    params: RecipeRequestParams,
-  ): Promise<RecipeResponse> => {
-    const response = await $fetch<RecipeResponse>(
-      "/.netlify/functions/generate-recipes",
-      {
-        method: "POST",
-        body: JSON.stringify(params),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-
-    return response;
-  };
 
   /**
    * Converts shopping list categories into Task items and Markdown headers for the note
@@ -90,7 +70,14 @@ ${recipe.description ? `**${recipe.description}**\n` : ""}
 - 📊 Schwierigkeit: ${recipe.difficulty}
 
 ### Zutaten
-${recipe.ingredients.map((ingredient) => `- ${ingredient.quantity} ${ingredient.name}`).join("\n")}
+${recipe.ingredients
+  .map((ingredient) => {
+    const ingredientText = ingredient.usageInfo
+      ? `- ${ingredient.quantity} ${ingredient.name} (${ingredient.usageInfo})`
+      : `- ${ingredient.quantity} ${ingredient.name}`;
+    return ingredientText;
+  })
+  .join("\n")}
 
 ### Anweisungen
 ${recipe.instructions.map((step, stepIndex) => `${stepIndex + 1}. ${step}`).join("\n")}
