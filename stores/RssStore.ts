@@ -40,7 +40,6 @@ export const useRssStore = defineStore("RssStore", () => {
         id: feed.id!,
         url: feed.url,
         user_id: feed.user_id,
-        data: feed.data as unknown as Json,
         created_items: feed.created_items as unknown as Json,
       };
       await client.from("rss").upsert(feedForDb);
@@ -105,7 +104,6 @@ export const useRssStore = defineStore("RssStore", () => {
     await client
       .from("rss")
       .update({
-        data: updatedFeed.data as unknown as Json,
         created_items: updatedFeed.created_items as unknown as Json,
       })
       .match({ id, user_id: user?.value?.id });
@@ -118,7 +116,7 @@ export const useRssStore = defineStore("RssStore", () => {
 
     const { data } = await client
       .from("rss")
-      .select("id, created_at, updated_at, url, data, user_id, created_items")
+      .select("id, created_at, updated_at, url, user_id, created_items")
       .match({ user_id: user?.value?.id })
       .order("created_at");
 
