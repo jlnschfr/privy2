@@ -166,6 +166,47 @@ export const useNoteStore = defineStore("NoteStore", () => {
     syncStore.setIsSyncing(false, 500);
   };
 
+  const syncLocalToServer = async () => {
+    if (!user?.value?.id || !notes.value?.length) return;
+
+    try {
+      const { data } = await client
+        .from("notes")
+        .select(
+          "id, created_at, edited_at, items, title, favorite, tags, user_id",
+        )
+        .match({ user_id: user.value.id })
+        .order("created_at");
+
+      const serverMap = new Map<string, Note>(
+        ((data as unknown as Note[]) || []).map((note) => [note.id, note]),
+      );
+
+      for (const local of notes.value) {
+        const server = serverMap.get(local.id);
+        const shouldUpsert =
+          !server ||
+          (local.edited_at ?? "") > (server.edited_at ?? "");
+
+        if (shouldUpsert) {
+          const noteForDb: Database["public"]["Tables"]["notes"]["Insert"] = {
+            id: local.id,
+            created_at: local.created_at,
+            edited_at: local.edited_at,
+            title: local.title,
+            items: local.items as unknown as Json,
+            favorite: local.favorite,
+            tags: local.tags as unknown as Json,
+            user_id: local.user_id,
+          };
+          await client.from("notes").upsert(noteForDb);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to sync local notes to server:", error);
+    }
+  };
+
   const sortNotes = () => {
     notes.value?.sort((a, b) => {
       if (a.favorite || b.favorite) {
@@ -195,5 +236,6 @@ export const useNoteStore = defineStore("NoteStore", () => {
     add,
     update,
     remove,
+    syncLocalToServer,
   };
 });

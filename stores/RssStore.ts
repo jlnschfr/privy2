@@ -42,8 +42,13 @@ export const useRssStore = defineStore("RssStore", () => {
         user_id: feed.user_id,
         created_items: feed.created_items as unknown as Json,
       };
-      await client.from("rss").upsert(feedForDb);
-      addFeedsToNotes();
+      try {
+        await client.from("rss").upsert(feedForDb);
+        addFeedsToNotes();
+      } catch (error) {
+        console.error("Failed to add RSS feed to DB:", error);
+        addFeedsToNotes();
+      }
     } else {
       snackbarStore.show({
         text: "Could not add feed. Please try again.",
@@ -60,7 +65,9 @@ export const useRssStore = defineStore("RssStore", () => {
     if (index >= 0) {
       const { id } = feeds.value[index];
       const deletedFeeds = feeds.value?.splice(index, 1);
-      await client.from("rss").delete().match({ id, user_id: user?.value?.id });
+      if (navigator?.onLine) {
+        await client.from("rss").delete().match({ id, user_id: user?.value?.id });
+      }
 
       const undoCallback = async () => {
         feeds.value?.splice(index, 0, deletedFeeds[0]);
@@ -101,46 +108,52 @@ export const useRssStore = defineStore("RssStore", () => {
       feed.id === updatedFeed.id ? updatedFeed : feed,
     );
 
-    await client
-      .from("rss")
-      .update({
-        created_items: updatedFeed.created_items as unknown as Json,
-      })
-      .match({ id, user_id: user?.value?.id });
+    if (navigator?.onLine) {
+      await client
+        .from("rss")
+        .update({ created_items: updatedFeed.created_items as unknown as Json })
+        .match({ id, user_id: user?.value?.id });
+    }
 
     syncStore.setIsSyncing(false, 500);
   };
 
   const fetchAll = async () => {
     syncStore.setIsSyncing(true);
+    try {
+      const { data } = await client
+        .from("rss")
+        .select("id, created_at, updated_at, url, user_id, created_items")
+        .match({ user_id: user?.value?.id })
+        .order("created_at");
 
-    const { data } = await client
-      .from("rss")
-      .select("id, created_at, updated_at, url, user_id, created_items")
-      .match({ user_id: user?.value?.id })
-      .order("created_at");
+      feeds.value = data as unknown as Feed[];
 
-    feeds.value = data as unknown as Feed[];
-
-    feeds.value?.forEach(async (feed) => {
-      const data = await fetchRssFromNetlifyFunction(feed.url);
-      if (data) {
-        feed.data = data;
-        addFeedsToNotes();
-      }
-    });
-
-    syncStore.setIsSyncing(false, 500);
+      feeds.value?.forEach(async (feed) => {
+        const data = await fetchRssFromNetlifyFunction(feed.url);
+        if (data) {
+          feed.data = data;
+          addFeedsToNotes();
+        }
+      });
+    } catch (error) {
+      console.error("Failed to fetch RSS feeds:", error);
+    } finally {
+      syncStore.setIsSyncing(false, 500);
+    }
   };
 
   const fetchRssFromNetlifyFunction = async (
     url: string,
-  ): Promise<FeedData> => {
+  ): Promise<FeedData | null> => {
     // TODO: check if feed is up to date and only update when older than 60min
-    const data = await $fetch("/.netlify/functions/rss", {
-      query: { url },
-    });
-    return (typeof data === "string" ? JSON.parse(data) : data) as FeedData;
+    try {
+      const data = await $fetch("/.netlify/functions/rss", { query: { url } });
+      return (typeof data === "string" ? JSON.parse(data) : data) as FeedData;
+    } catch (error) {
+      console.error("Failed to fetch RSS from Netlify function:", error);
+      return null;
+    }
   };
 
   const addFeedsToNotes = () => {

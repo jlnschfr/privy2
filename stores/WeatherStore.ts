@@ -31,18 +31,22 @@ export const useWeatherStore = defineStore("WeatherStore", () => {
   };
 
   const fetchWeather = async (location: PrivyLocation) => {
-    const url: URL = new URL("https://api.weatherapi.com/v1/current.json");
-    url.searchParams.set("aqi", "no");
-    url.searchParams.set("key", "8e53893c18944438bdf142917230811");
-    url.searchParams.set("q", `${location.lat},${location.long}`);
-    const response: Response = await fetch(url);
-    if (response.ok) {
-      const json: PrivyWeatherData = await response.json();
-      weather.value = {
-        timestamp: Date.now(),
-        location,
-        data: json,
-      };
+    try {
+      const url: URL = new URL("https://api.weatherapi.com/v1/current.json");
+      url.searchParams.set("aqi", "no");
+      url.searchParams.set("key", "8e53893c18944438bdf142917230811");
+      url.searchParams.set("q", `${location.lat},${location.long}`);
+      const response: Response = await fetch(url);
+      if (response.ok) {
+        const json: PrivyWeatherData = await response.json();
+        weather.value = {
+          timestamp: Date.now(),
+          location,
+          data: json,
+        };
+      }
+    } catch {
+      // silently fail when offline
     }
   };
 
