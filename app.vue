@@ -21,17 +21,12 @@ watchEffect(async () => {
   }
 });
 
-window.addEventListener("online", async () => {
-  await noteStore.syncLocalToServer();
-  await noteStore.fetchAll();
-  await rssStore.fetchAll();
-});
-
-initIdleFetch(async () => {
-  if (!navigator?.onLine) return;
-  await noteStore.fetchAll();
-  await rssStore.fetchAll();
-});
+if (navigator?.onLine) {
+  initIdleFetch(async () => {
+    await noteStore.fetchAll();
+    await rssStore.fetchAll();
+  });
+}
 </script>
 
 <template>

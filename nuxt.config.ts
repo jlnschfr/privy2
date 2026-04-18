@@ -103,7 +103,6 @@ export default defineNuxtConfig({
     workbox: {
       globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
       maximumFileSizeToCacheInBytes: 3000000, // 3MB limit
-      navigateFallback: "/",
     },
     client: {
       installPrompt: true,
