@@ -6,7 +6,8 @@
   },
   "overrides": {
     "@parcel/watcher": "~2.1.0",
-    "vue": "latest"
+    "vue": "latest",
+    "serialize-javascript": ">=7.0.5"
   },
   "scripts": {
     "ntl": "netlify dev",
@@ -31,7 +32,7 @@
     "@pinia/nuxt": "^0.11.2",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.isequal": "^4.5.8",
-    "@types/uuid": "^10.0.0",
+    "@types/uuid": "^11.0.0",
     "@vite-pwa/assets-generator": "^1.0.1",
     "@vite-pwa/nuxt": "^1.0.4",
     "@vueuse/core": "^13.9.0",
@@ -40,7 +41,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "nuxt": "^4.1.1",
-    "nuxt-svgo": "^4.2.6",
+    "nuxt-svgo": "4.0.2",
     "pinia": "^3.0.3",
     "postcss-html": "^1.8.0",
     "prettier": "^3.6.2",
@@ -55,12 +56,12 @@
   "dependencies": {
     "@rosskevin/ifvisible": "^3.3.6",
     "highlight.js": "^11.11.1",
-    "isomorphic-dompurify": "^2.26.0",
+    "isomorphic-dompurify": "^3.0.0",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
-    "marked": "^16.2.1",
-    "marked-highlight": "^2.2.2",
-    "uuid": "^13.0.0",
+    "marked": "^18.0.0",
+    "marked-highlight": "^2.2.4",
+    "uuid": "^14.0.0",
     "vuedraggable": "^4.1.0"
   }
 }
