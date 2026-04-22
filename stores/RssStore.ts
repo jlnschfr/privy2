@@ -26,7 +26,7 @@ export const useRssStore = defineStore("RssStore", () => {
     const feed: Feed = {
       id: uuid(),
       url,
-      user_id: user?.value?.id,
+      user_id: user?.value?.sub,
       created_items: [],
     };
 
@@ -60,7 +60,7 @@ export const useRssStore = defineStore("RssStore", () => {
     if (index >= 0) {
       const { id } = feeds.value[index];
       const deletedFeeds = feeds.value?.splice(index, 1);
-      await client.from("rss").delete().match({ id, user_id: user?.value?.id });
+      await client.from("rss").delete().match({ id, user_id: user?.value?.sub });
 
       const undoCallback = async () => {
         feeds.value?.splice(index, 0, deletedFeeds[0]);
@@ -106,7 +106,7 @@ export const useRssStore = defineStore("RssStore", () => {
       .update({
         created_items: updatedFeed.created_items as unknown as Json,
       })
-      .match({ id, user_id: user?.value?.id });
+      .match({ id, user_id: user?.value?.sub });
 
     syncStore.setIsSyncing(false, 500);
   };
@@ -117,7 +117,7 @@ export const useRssStore = defineStore("RssStore", () => {
     const { data } = await client
       .from("rss")
       .select("id, created_at, updated_at, url, user_id, created_items")
-      .match({ user_id: user?.value?.id })
+      .match({ user_id: user?.value?.sub })
       .order("created_at");
 
     feeds.value = data as unknown as Feed[];

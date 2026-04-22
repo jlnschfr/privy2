@@ -6,7 +6,7 @@ export const useLocationStore = defineStore("LocationStore", () => {
   const user = useSupabaseUser();
 
   const location: Ref<PrivyLocation> = useLocalStorage(
-    `location-${user?.value?.id}`,
+    `location-${user?.value?.sub}`,
     {},
   );
 

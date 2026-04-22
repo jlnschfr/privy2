@@ -8,10 +8,10 @@
     "@parcel/watcher": "~2.1.0",
     "vue": "latest",
     "serialize-javascript": ">=7.0.5",
-    "svgo": ">=3.3.3"
+    "svgo": ">=3.3.3 <4"
   },
   "scripts": {
-    "ntl": "netlify dev",
+    "ntl": "netlify dev --port 8881",
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
