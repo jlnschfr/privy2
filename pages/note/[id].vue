@@ -9,10 +9,10 @@ const isNew: ComputedRef<boolean> = computed(() => id.value === "new");
 
 if (isNew.value) {
   const emptyNote = createEmptyNote();
-  await noteStore.add(emptyNote, { redirect: true });
+  noteStore.add(emptyNote, { redirect: true });
 }
 </script>
 
 <template>
-  <PrivyNoteDetail :note-id="id" />
+  <PrivyNoteDetail v-if="!isNew" :note-id="id" />
 </template>

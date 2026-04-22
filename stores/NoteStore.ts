@@ -69,12 +69,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
         .match({ user_id: user.value.id })
         .order("created_at");
 
-      const serverNotes = (data as unknown as Note[]) || [];
-      const serverIds = new Set(serverNotes.map((n) => n.id));
-      const pendingLocal = (notes.value || []).filter(
-        (n) => !serverIds.has(n.id),
-      );
-      notes.value = [...serverNotes, ...pendingLocal];
+      notes.value = (data as unknown as Note[]) || [];
       sortNotes();
     } catch (error) {
       console.error("Failed to fetch notes:", error);

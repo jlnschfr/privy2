@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Tag } from "@/types/enums";
+import { createEmptyNote } from "@/utils/note";
 
 interface Props {
   isActive: boolean;
@@ -10,6 +11,10 @@ defineProps<Props>();
 const queryParams = useQueryParams();
 const snackbarStore = useSnackbarStore();
 const noteStore = useNoteStore();
+
+function createNote() {
+  noteStore.add(createEmptyNote(), { redirect: true });
+}
 
 const isTrashRoute = computed(() => {
   const { activeTag } = queryParams;
@@ -32,10 +37,10 @@ function clearTrash() {
 <template>
   <FloatingActionButton
     v-if="!isTrashRoute"
-    redirect="/note/new"
     label="Add a new note"
     tabindex="0"
     :is-active="isActive"
+    @click="createNote"
   >
     <SvgoPlus class="w-3 fill-current" />
   </FloatingActionButton>
