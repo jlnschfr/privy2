@@ -2,7 +2,6 @@
 import DOMPurify from "isomorphic-dompurify";
 import debounce from "lodash.debounce";
 import { Marked } from "marked";
-import { markedHighlight } from "marked-highlight";
 import { useTextareaHeight } from "@/composables/textareaHeight";
 import hljs from "@/utils/syntaxHighlight";
 
@@ -21,15 +20,18 @@ const textarea: Ref<HTMLTextAreaElement> = ref();
 const { updateTextareaHeight } = useTextareaHeight(textarea);
 
 const compiledMarkdown: ComputedRef<string> = computed(() => {
-  const marked = new Marked(
-    markedHighlight({
-      langPrefix: "hljs language-",
-      highlight(code, lang) {
-        const language = hljs.getLanguage(lang) ? lang : "plaintext";
-        return hljs.highlight(code, { language }).value;
+  const marked = new Marked({
+    renderer: {
+      code({ text, lang }) {
+        const highlighted =
+          lang && hljs.getLanguage(lang)
+            ? hljs.highlight(text, { language: lang }).value
+            : hljs.highlightAuto(text).value;
+        const langClass = lang ? ` language-${lang}` : "";
+        return `<pre><code class="hljs${langClass}">${highlighted}</code></pre>`;
       },
-    }),
-  );
+    },
+  });
 
   const convertedHTML: string = marked.parse(text.value) as string;
   const purifiedHTML = DOMPurify.sanitize(convertedHTML);
@@ -162,7 +164,50 @@ async function onClickOrEnter(): Promise<void> {
   margin-top: 3rem;
 }
 
-.Markdown code {
-  font-size: 0.75rem;
+/* Tables */
+.Markdown table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.Markdown th,
+.Markdown td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+}
+
+.Markdown tr:not(:last-child) th,
+.Markdown tr:not(:last-child) td {
+  border-bottom: 1px solid theme("colors.neutral.400");
+}
+
+.dark .Markdown tr:not(:last-child) th,
+.dark .Markdown tr:not(:last-child) td {
+  border-bottom-color: theme("colors.neutral.200");
+}
+
+/* Code blocks */
+.Markdown pre code {
+  display: block;
+  font-size: 0.8rem;
+  padding: 1em;
+  overflow: auto;
+}
+
+/* Inline code */
+.Markdown :not(pre) > code {
+  background-color: #2b2b2b;
+  color: #f8f8f2;
+  padding: 0.15em 0.4em;
+  font-size: 0.8em;
+}
+
+.dark .Markdown :not(pre) > code {
+  background-color: theme("colors.neutral.50");
+}
+
+.dark .Markdown pre code {
+  background-color: theme("colors.neutral.50");
 }
 </style>
