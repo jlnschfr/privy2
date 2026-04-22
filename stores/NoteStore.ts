@@ -7,7 +7,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
   const syncStore = useSyncStore();
-  const notes: Ref<Note[]> = useLocalStorage(`notes-${user?.value?.id}`, []);
+  const notes: Ref<Note[]> = useLocalStorage(`notes-${user?.value?.sub}`, []);
 
   const notesNotTrashed: ComputedRef<Note[]> = computed(() =>
     notes.value?.filter(
@@ -54,7 +54,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   };
 
   const fetchAll = async () => {
-    if (!user?.value?.id) {
+    if (!user?.value?.sub) {
       return;
     }
 
@@ -66,7 +66,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
         .select(
           "id, created_at, edited_at, items, title, favorite, tags, user_id",
         )
-        .match({ user_id: user.value.id })
+        .match({ user_id: user.value.sub })
         .order("created_at");
 
       notes.value = (data as unknown as Note[]) || [];
@@ -81,7 +81,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const add = async (note: Note, options: { redirect: boolean }) => {
     const noteWithUserId: Note = {
       ...note,
-      user_id: user?.value?.id,
+      user_id: user?.value?.sub,
     };
 
     syncStore.setIsSyncing(true);
@@ -141,7 +141,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
       await client
         .from("notes")
         .update(noteForDb)
-        .match({ id, user_id: user?.value?.id });
+        .match({ id, user_id: user?.value?.sub });
     }
 
     sortNotes();
@@ -158,7 +158,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
       await client
         .from("notes")
         .delete()
-        .match({ id, user_id: user?.value?.id });
+        .match({ id, user_id: user?.value?.sub });
     }
 
     sortNotes();

@@ -18,7 +18,7 @@ async function deleteAccount(): Promise<void> {
 
   const noteIdsToRemove = noteStore.notes.map(({ id }) => id);
   const rssUrlsToRemove = rssStore.feeds.map(({ url }) => url);
-  const userIdToBeDeleted = user.value.id;
+  const userIdToBeDeleted = user.value.sub;
 
   await Promise.all(
     noteIdsToRemove.map(async (id) => {
