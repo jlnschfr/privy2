@@ -172,8 +172,8 @@ async function onClickOrEnter(): Promise<void> {
 
 .Markdown th,
 .Markdown td {
-  text-align: left;
   padding: 0.5rem 0.75rem;
+  text-align: left;
   vertical-align: top;
 }
 
@@ -191,16 +191,16 @@ async function onClickOrEnter(): Promise<void> {
 .Markdown pre code {
   display: block;
   font-size: 0.8rem;
-  padding: 1em;
   overflow: auto;
+  padding: 1em;
 }
 
 /* Inline code */
 .Markdown :not(pre) > code {
   background-color: #2b2b2b;
   color: #f8f8f2;
-  padding: 0.15em 0.4em;
   font-size: 0.8em;
+  padding: 0.15em 0.4em;
 }
 
 .dark .Markdown :not(pre) > code {

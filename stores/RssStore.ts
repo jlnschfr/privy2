@@ -60,7 +60,10 @@ export const useRssStore = defineStore("RssStore", () => {
     if (index >= 0) {
       const { id } = feeds.value[index];
       const deletedFeeds = feeds.value?.splice(index, 1);
-      await client.from("rss").delete().match({ id, user_id: user?.value?.sub });
+      await client
+        .from("rss")
+        .delete()
+        .match({ id, user_id: user?.value?.sub });
 
       const undoCallback = async () => {
         feeds.value?.splice(index, 0, deletedFeeds[0]);
