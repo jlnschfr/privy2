@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useWeatherStore = defineStore("WeatherStore", () => {
   const DURATION = 1800000;
 
+  const client = useSupabaseClient();
   const locationStore = useLocationStore();
   const weather: Ref<PrivyWeather> = ref({});
 
@@ -31,13 +32,21 @@ export const useWeatherStore = defineStore("WeatherStore", () => {
   };
 
   const fetchWeather = async (location: PrivyLocation) => {
+    const {
+      data: { session },
+    } = await client.auth.getSession();
+    const accessToken = session?.access_token;
+    if (!accessToken) return;
+
     const url: URL = new URL(
       "/.netlify/functions/weather",
       window.location.origin,
     );
     url.searchParams.set("lat", String(location.lat));
     url.searchParams.set("long", String(location.long));
-    const response: Response = await fetch(url);
+    const response: Response = await fetch(url, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
     if (response.ok) {
       const json: PrivyWeatherData = await response.json();
       weather.value = {
