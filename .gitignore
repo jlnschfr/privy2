@@ -35,3 +35,10 @@ coverage
 # Local Netlify folder
 .netlify
 .env
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+tests/e2e/.auth/
