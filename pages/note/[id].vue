@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { createEmptyNote } from "@/utils/note";
 
+definePageMeta({
+  middleware: "auth",
+});
+
 const route = useRoute();
 const noteStore = useNoteStore();
 
