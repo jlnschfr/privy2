@@ -20,6 +20,11 @@ async function deleteAccount(): Promise<void> {
   const rssUrlsToRemove = rssStore.feeds.map(({ url }) => url);
   const userIdToBeDeleted = user.value.sub;
 
+  const {
+    data: { session },
+  } = await client.auth.getSession();
+  const accessToken = session?.access_token;
+
   await Promise.all(
     noteIdsToRemove.map(async (id) => {
       await noteStore.remove(id);
@@ -32,12 +37,13 @@ async function deleteAccount(): Promise<void> {
     }),
   );
 
-  await client.auth.signOut();
-  navigateTo("/");
-
   await $fetch("/.netlify/functions/delete", {
     query: { id: userIdToBeDeleted },
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
+
+  await client.auth.signOut();
+  navigateTo("/");
 
   syncStore.setIsSyncing(false);
 }
