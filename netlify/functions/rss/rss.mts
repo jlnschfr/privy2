@@ -2,7 +2,7 @@ import Parser from "rss-parser";
 import { createClient } from "@supabase/supabase-js";
 import type { Handler } from "@netlify/functions";
 
-const MAX_BYTES = 1_000_000;
+const MAX_BYTES = 5_000_000;
 
 export const handler: Handler = async (event) => {
   const authHeader = event.headers.authorization || event.headers.Authorization;

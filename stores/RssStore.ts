@@ -154,18 +154,22 @@ export const useRssStore = defineStore("RssStore", () => {
   const fetchRssFromNetlifyFunction = async (
     url: string,
   ): Promise<FeedData> => {
-    // TODO: check if feed is up to date and only update when older than 60min
     const {
       data: { session },
     } = await client.auth.getSession();
     const accessToken = session?.access_token;
     if (!accessToken) return undefined as unknown as FeedData;
 
-    const data = await $fetch("/.netlify/functions/rss", {
-      query: { url },
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    return (typeof data === "string" ? JSON.parse(data) : data) as FeedData;
+    try {
+      const data = await $fetch("/.netlify/functions/rss", {
+        query: { url },
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      return (typeof data === "string" ? JSON.parse(data) : data) as FeedData;
+    } catch (error) {
+      console.warn(`Failed to fetch RSS feed ${url}:`, error);
+      return undefined as unknown as FeedData;
+    }
   };
 
   const addFeedsToNotes = () => {
