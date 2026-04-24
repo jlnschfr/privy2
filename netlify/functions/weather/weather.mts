@@ -12,7 +12,7 @@ export const handler: Handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({}) };
   }
 
-  const apiKey = process.env.WEATHERAPI_KEY;
+  const apiKey = process.env.WEATHER_API_KEY;
   if (!apiKey) {
     return { statusCode: 500, body: JSON.stringify({}) };
   }
