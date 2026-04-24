@@ -7,10 +7,6 @@ export const useWeatherStore = defineStore("WeatherStore", () => {
   const locationStore = useLocationStore();
   const weather: Ref<PrivyWeather> = ref({});
 
-  locationStore.$subscribe(async (_, state) => {
-    await fetchWeather(state.location);
-  });
-
   // Does a weather object for the current location exist?
   const isValid: ComputedRef<boolean> = computed(
     () =>
@@ -22,6 +18,11 @@ export const useWeatherStore = defineStore("WeatherStore", () => {
   const isOutOfDate: ComputedRef<boolean> = computed(
     () => Date.now() - weather.value?.timestamp > DURATION,
   );
+
+  locationStore.$subscribe(async (_, state) => {
+    if (isValid.value && !isOutOfDate.value) return;
+    await fetchWeather(state.location);
+  });
 
   const init = async () => {
     if (locationStore.isEmpty) return;
