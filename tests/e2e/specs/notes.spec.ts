@@ -49,23 +49,35 @@ test("edit a note: title, markdown item, todo item persist across reload", async
 
   await createNote(page, title);
 
+  // Each field-level update triggers a debounced Supabase PATCH. In CI
+  // those PATCHes can stack up, so blur + wait between fields gives each
+  // save a chance to reach Supabase before the next update overwrites the
+  // in-memory note.
   const titleField = page.getByPlaceholder("Title");
   await titleField.fill(updatedTitle);
+  await titleField.blur();
+  await page.waitForTimeout(1000);
 
   await page.getByRole("button", { name: "Add Markdown", exact: true }).click();
-  // The app auto-focuses the new markdown item's textarea after ~100ms.
   const markdownTextarea = page.locator(".draggable-item textarea").first();
   await expect(markdownTextarea).toBeFocused();
   await markdownTextarea.fill(markdownText);
+  await markdownTextarea.blur();
+  await page.waitForTimeout(1000);
 
   await page.getByRole("button", { name: "Add Task", exact: true }).click();
   const taskInput = page.locator(".Task input[type=text]").last();
   await expect(taskInput).toBeFocused();
   await taskInput.fill(todoText);
-
-  // Let debounce (250–500ms) + Supabase upsert complete.
   await taskInput.blur();
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(1000);
+
+  // Belt and suspenders: also wait for network to settle so any in-flight
+  // Supabase writes complete before we reload. Capped because Nuxt can
+  // keep background polling alive and `networkidle` would otherwise hang.
+  await page
+    .waitForLoadState("networkidle", { timeout: 5000 })
+    .catch(() => null);
 
   // Full reload bounces through `/` because the auth middleware is
   // synchronous while session restoration from the cookie is async.
