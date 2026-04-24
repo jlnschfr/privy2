@@ -3,12 +3,9 @@ import { defineStore } from "pinia";
 export const useWeatherStore = defineStore("WeatherStore", () => {
   const DURATION = 1800000;
 
+  const client = useSupabaseClient();
   const locationStore = useLocationStore();
   const weather: Ref<PrivyWeather> = ref({});
-
-  locationStore.$subscribe(async (_, state) => {
-    await fetchWeather(state.location);
-  });
 
   // Does a weather object for the current location exist?
   const isValid: ComputedRef<boolean> = computed(
@@ -22,6 +19,11 @@ export const useWeatherStore = defineStore("WeatherStore", () => {
     () => Date.now() - weather.value?.timestamp > DURATION,
   );
 
+  locationStore.$subscribe(async (_, state) => {
+    if (isValid.value && !isOutOfDate.value) return;
+    await fetchWeather(state.location);
+  });
+
   const init = async () => {
     if (locationStore.isEmpty) return;
 
@@ -31,11 +33,21 @@ export const useWeatherStore = defineStore("WeatherStore", () => {
   };
 
   const fetchWeather = async (location: PrivyLocation) => {
-    const url: URL = new URL("https://api.weatherapi.com/v1/current.json");
-    url.searchParams.set("aqi", "no");
-    url.searchParams.set("key", "8e53893c18944438bdf142917230811");
-    url.searchParams.set("q", `${location.lat},${location.long}`);
-    const response: Response = await fetch(url);
+    const {
+      data: { session },
+    } = await client.auth.getSession();
+    const accessToken = session?.access_token;
+    if (!accessToken) return;
+
+    const url: URL = new URL(
+      "/.netlify/functions/weather",
+      window.location.origin,
+    );
+    url.searchParams.set("lat", String(location.lat));
+    url.searchParams.set("long", String(location.long));
+    const response: Response = await fetch(url, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
     if (response.ok) {
       const json: PrivyWeatherData = await response.json();
       weather.value = {
