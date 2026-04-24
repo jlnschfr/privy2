@@ -1,17 +1,22 @@
 name: E2E
 
-# Fires after Netlify posts a deployment_status event. We only want the
-# branch deploy for `develop` (served at develop--privy-notes2.netlify.app);
-# production deploys and PR previews are filtered out by matching the
-# target URL below.
+# Triggers on every push to develop. The job polls Netlify's API until the
+# branch deploy for this commit is `ready`, then runs Playwright against
+# the develop subdomain. We poll instead of relying on GitHub's
+# `deployment_status` events because Netlify isn't configured to post
+# those on this repo.
 on:
-  deployment_status:
+  push:
+    branches: [develop]
+
+concurrency:
+  group: e2e-develop
+  cancel-in-progress: true
 
 jobs:
   playwright:
-    if: github.event.deployment_status.state == 'success' && contains(github.event.deployment_status.target_url, 'develop--privy-notes2.netlify.app')
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     env:
       NODE_OPTIONS: --max-old-space-size=4096
@@ -26,8 +31,40 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.deployment.sha }}
+
+      - name: Wait for Netlify develop deploy
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          echo "Waiting for Netlify deploy of commit $COMMIT_SHA on branch develop..."
+          for attempt in $(seq 1 60); do
+            response=$(curl -sS -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
+              "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys?per_page=20&branch=develop")
+            state=$(echo "$response" | jq -r --arg sha "$COMMIT_SHA" \
+              '[.[] | select(.commit_ref==$sha)] | first | .state // empty')
+            case "$state" in
+              ready)
+                echo "Netlify deploy is ready"
+                exit 0
+                ;;
+              error)
+                echo "Netlify deploy failed"
+                exit 1
+                ;;
+              "")
+                echo "Attempt $attempt: no deploy record yet for $COMMIT_SHA, waiting 10s..."
+                ;;
+              *)
+                echo "Attempt $attempt: deploy state=$state, waiting 10s..."
+                ;;
+            esac
+            sleep 10
+          done
+          echo "Timed out waiting for Netlify deploy"
+          exit 1
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
