@@ -75,9 +75,11 @@ test("edit a note: title, markdown item, todo item persist across reload", async
   // Belt and suspenders: also wait for network to settle so any in-flight
   // Supabase writes complete before we reload. Capped because Nuxt can
   // keep background polling alive and `networkidle` would otherwise hang.
-  await page
-    .waitForLoadState("networkidle", { timeout: 5000 })
-    .catch(() => null);
+  try {
+    await page.waitForLoadState("networkidle", { timeout: 5000 });
+  } catch {
+    // timeout is fine here
+  }
 
   // Full reload bounces through `/` because the auth middleware is
   // synchronous while session restoration from the cookie is async.

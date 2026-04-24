@@ -41,6 +41,9 @@ export default defineNuxtConfig({
 
   typescript: {
     typeCheck: true,
+    tsConfig: {
+      exclude: ["../tests/**"],
+    },
   },
 
   colorMode: {
