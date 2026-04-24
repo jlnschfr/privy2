@@ -1,27 +1,12 @@
 import Parser from "rss-parser";
-import { createClient } from "@supabase/supabase-js";
 import type { Handler } from "@netlify/functions";
+import { requireUser } from "../_shared/auth";
 
 const MAX_BYTES = 5_000_000;
 
 export const handler: Handler = async (event) => {
-  const authHeader = event.headers.authorization || event.headers.Authorization;
-  const token = authHeader?.replace(/^Bearer\s+/i, "");
-  if (!token) {
-    return { statusCode: 401, body: "{}" };
-  }
-
-  const anonClient = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_KEY,
-  );
-  const {
-    data: { user },
-    error: authError,
-  } = await anonClient.auth.getUser(token);
-  if (authError || !user) {
-    return { statusCode: 401, body: "{}" };
-  }
+  const { response: authResponse } = await requireUser(event);
+  if (authResponse) return authResponse;
 
   const { url } = event.queryStringParameters ?? {};
   if (!url || typeof url !== "string") {
