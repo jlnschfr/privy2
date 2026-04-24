@@ -5,6 +5,8 @@ import type { Database, Json } from "@/types/database.types";
 import { Tag } from "@/types/enums";
 
 export const useRssStore = defineStore("RssStore", () => {
+  const STALE_MS = 60 * 60 * 1000;
+
   const syncStore = useSyncStore();
   const noteStore = useNoteStore();
   const client = useSupabaseClient<Database>();
@@ -12,6 +14,10 @@ export const useRssStore = defineStore("RssStore", () => {
   const snackbarStore = useSnackbarStore();
 
   const feeds: Ref<Feed[]> = ref([]);
+  const lastFetchedAt = new Map<string, number>();
+
+  const isStale = (url: string): boolean =>
+    Date.now() - (lastFetchedAt.get(url) ?? 0) > STALE_MS;
   const feedUrls: ComputedRef<string[]> = computed(() =>
     feeds.value?.map((feed) => feed.url),
   );
@@ -34,6 +40,7 @@ export const useRssStore = defineStore("RssStore", () => {
 
     if (data) {
       feed.data = data;
+      lastFetchedAt.set(feed.url, Date.now());
       feeds.value?.push(feed);
 
       const feedForDb: Database["public"]["Tables"]["rss"]["Insert"] = {
@@ -123,12 +130,20 @@ export const useRssStore = defineStore("RssStore", () => {
       .match({ user_id: user?.value?.sub })
       .order("created_at");
 
-    feeds.value = data as unknown as Feed[];
+    const existingDataByUrl = new Map(
+      (feeds.value ?? []).map((f) => [f.url, f.data]),
+    );
+    feeds.value = (data as unknown as Feed[]).map((f) => ({
+      ...f,
+      data: existingDataByUrl.get(f.url),
+    }));
 
     feeds.value?.forEach(async (feed) => {
-      const data = await fetchRssFromNetlifyFunction(feed.url);
-      if (data) {
-        feed.data = data;
+      if (feed.data && !isStale(feed.url)) return;
+      const feedData = await fetchRssFromNetlifyFunction(feed.url);
+      if (feedData) {
+        feed.data = feedData;
+        lastFetchedAt.set(feed.url, Date.now());
         addFeedsToNotes();
       }
     });
