@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import draggable from "vuedraggable";
-import isEqual from "lodash.isequal";
+import isEqual from "fast-deep-equal";
 
 interface Props {
   noteId: string;
