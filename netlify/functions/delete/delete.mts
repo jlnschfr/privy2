@@ -16,7 +16,7 @@ export const handler: Handler = async (event) => {
 
   const supabase = createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_KEY,
+    process.env.NUXT_SUPABASE_SECRET_KEY,
     {
       auth: {
         autoRefreshToken: false,

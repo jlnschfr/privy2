@@ -1,8 +1,6 @@
-import { v4 as uuid } from "uuid";
-
 export const createEmptyNote = (): Note => ({
   user_id: "",
-  id: uuid(),
+  id: crypto.randomUUID(),
   created_at: new Date().toISOString(),
   edited_at: new Date().toISOString(),
   title: "",

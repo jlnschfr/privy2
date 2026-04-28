@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import debounce from "lodash.debounce";
+import { useDebounceFn } from "@vueuse/core";
 
 interface Props {
   modelValue: string[];
@@ -20,7 +20,7 @@ const input: Ref<string> = ref("");
 
 watch(
   () => items.value.length,
-  debounce(() => {
+  useDebounceFn(() => {
     emit("update:modelValue", items.value);
   }, 250),
 );

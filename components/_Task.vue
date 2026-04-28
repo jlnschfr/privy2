@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import debounce from "lodash.debounce";
+import { useDebounceFn } from "@vueuse/core";
 
 interface Props {
   modelValue: Task;
@@ -15,7 +15,7 @@ const isValid: Ref<boolean> = ref(props.modelValue.data.isValid);
 
 watch(
   [text, isValid],
-  debounce(() => {
+  useDebounceFn(() => {
     emit("update:modelValue", {
       ...props.modelValue,
       data: { text: text.value, isValid: isValid.value },

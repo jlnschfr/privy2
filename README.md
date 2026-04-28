@@ -58,6 +58,15 @@ $ npm run generate
 
 See `package.json` for more scripts (e.g. linting, formatting)
 
+## Weather
+
+The weather widget uses [WeatherAPI.com](https://www.weatherapi.com) to fetch current conditions based on the user's geolocation.
+
+1. Create a free account at https://www.weatherapi.com — the free tier includes current weather lookups.
+2. Copy your API key from the dashboard.
+3. **Local development**: add `WEATHER_API_KEY=<your_key>` to your `.env` file.
+4. **Netlify deployment**: add `WEATHER_API_KEY` as an environment variable in the Netlify site dashboard under **Site configuration → Environment variables**.
+
 ## Deployment
 
 Find here a deployed version: [Privy2 on Netlify](https://privy-notes2.netlify.app)

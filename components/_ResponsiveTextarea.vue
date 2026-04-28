@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import debounce from "lodash.debounce";
+import { useDebounceFn } from "@vueuse/core";
 import { useTextareaHeight } from "@/composables/textareaHeight";
 
 interface Props {
@@ -14,7 +14,7 @@ const emit = defineEmits<Emits>();
 const textarea: Ref<HTMLTextAreaElement | null> = ref(null);
 const { updateTextareaHeight } = useTextareaHeight(textarea);
 
-const onInput = debounce((e) => {
+const onInput = useDebounceFn((e) => {
   updateTextareaHeight();
 
   emit("update:modelValue", (e.target as HTMLTextAreaElement).value);
