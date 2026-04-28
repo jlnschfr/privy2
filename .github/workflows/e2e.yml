@@ -19,10 +19,8 @@ jobs:
     timeout-minutes: 20
 
     env:
-      NODE_OPTIONS: --max-old-space-size=4096
       NPM_CONFIG_FUND: false
       NPM_CONFIG_AUDIT: false
-      FORCE_COLOR: 0
       BASE_URL: https://develop--privy-notes2.netlify.app
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
@@ -70,9 +68,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
+          cache: "npm"
 
       - name: Install dependencies
-        run: npm ci || npm install
+        run: npm install --no-audit --no-fund
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
