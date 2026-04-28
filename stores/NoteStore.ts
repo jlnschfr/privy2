@@ -7,6 +7,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
   const user = useSupabaseUser();
   const syncStore = useSyncStore();
+  const snackbarStore = useSnackbarStore();
   const notes: Ref<Note[]> = useLocalStorage(`notes-${user?.value?.sub}`, []);
 
   const notesNotTrashed: ComputedRef<Note[]> = computed(() =>
@@ -61,7 +62,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
     syncStore.setIsSyncing(true);
 
     try {
-      const { data } = await client
+      const { data, error } = await client
         .from("notes")
         .select(
           "id, created_at, edited_at, items, title, favorite, tags, user_id",
@@ -69,10 +70,13 @@ export const useNoteStore = defineStore("NoteStore", () => {
         .match({ user_id: user.value.sub })
         .order("created_at");
 
+      if (error) throw error;
+
       notes.value = (data as unknown as Note[]) || [];
       sortNotes();
     } catch (error) {
       console.error("Failed to fetch notes:", error);
+      snackbarStore.show({ text: "Failed to load notes. Please try again." });
     } finally {
       syncStore.setIsSyncing(false, 500);
     }
@@ -88,22 +92,29 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
     notes.value?.push(noteWithUserId);
 
-    if (navigator?.onLine) {
-      const noteForDb: Database["public"]["Tables"]["notes"]["Insert"] = {
-        id: noteWithUserId.id,
-        created_at: noteWithUserId.created_at,
-        edited_at: noteWithUserId.edited_at,
-        title: noteWithUserId.title,
-        items: noteWithUserId.items as unknown as Json,
-        favorite: noteWithUserId.favorite,
-        tags: noteWithUserId.tags as unknown as Json,
-        user_id: noteWithUserId.user_id,
-      };
-      await client.from("notes").upsert(noteForDb);
-    }
+    try {
+      if (navigator?.onLine) {
+        const noteForDb: Database["public"]["Tables"]["notes"]["Insert"] = {
+          id: noteWithUserId.id,
+          created_at: noteWithUserId.created_at,
+          edited_at: noteWithUserId.edited_at,
+          title: noteWithUserId.title,
+          items: noteWithUserId.items as unknown as Json,
+          favorite: noteWithUserId.favorite,
+          tags: noteWithUserId.tags as unknown as Json,
+          user_id: noteWithUserId.user_id,
+        };
+        const { error } = await client.from("notes").upsert(noteForDb);
+        if (error) throw error;
+      }
 
-    sortNotes();
-    syncStore.setIsSyncing(false, 500);
+      sortNotes();
+    } catch (error) {
+      console.error("Failed to add note:", error);
+      snackbarStore.show({ text: "Failed to save note. Please try again." });
+    } finally {
+      syncStore.setIsSyncing(false, 500);
+    }
 
     if (options.redirect) {
       await navigateTo({
@@ -127,25 +138,32 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
     notes.value = notes.value?.map((n) => (n.id === note.id ? note : n));
 
-    if (navigator?.onLine) {
-      const noteForDb: Database["public"]["Tables"]["notes"]["Update"] = {
-        id: note.id,
-        created_at: note.created_at,
-        edited_at: note.edited_at,
-        title: note.title,
-        items: note.items as unknown as Json,
-        favorite: note.favorite,
-        tags: note.tags as unknown as Json,
-        user_id: note.user_id,
-      };
-      await client
-        .from("notes")
-        .update(noteForDb)
-        .match({ id, user_id: user?.value?.sub });
-    }
+    try {
+      if (navigator?.onLine) {
+        const noteForDb: Database["public"]["Tables"]["notes"]["Update"] = {
+          id: note.id,
+          created_at: note.created_at,
+          edited_at: note.edited_at,
+          title: note.title,
+          items: note.items as unknown as Json,
+          favorite: note.favorite,
+          tags: note.tags as unknown as Json,
+          user_id: note.user_id,
+        };
+        const { error } = await client
+          .from("notes")
+          .update(noteForDb)
+          .match({ id, user_id: user?.value?.sub });
+        if (error) throw error;
+      }
 
-    sortNotes();
-    syncStore.setIsSyncing(false, 500);
+      sortNotes();
+    } catch (error) {
+      console.error("Failed to update note:", error);
+      snackbarStore.show({ text: "Failed to update note. Please try again." });
+    } finally {
+      syncStore.setIsSyncing(false, 500);
+    }
   };
 
   const remove = async (id: string) => {
@@ -154,15 +172,22 @@ export const useNoteStore = defineStore("NoteStore", () => {
     const index = notes.value?.findIndex((note) => note.id === id);
     notes.value?.splice(index, 1);
 
-    if (navigator?.onLine) {
-      await client
-        .from("notes")
-        .delete()
-        .match({ id, user_id: user?.value?.sub });
-    }
+    try {
+      if (navigator?.onLine) {
+        const { error } = await client
+          .from("notes")
+          .delete()
+          .match({ id, user_id: user?.value?.sub });
+        if (error) throw error;
+      }
 
-    sortNotes();
-    syncStore.setIsSyncing(false, 500);
+      sortNotes();
+    } catch (error) {
+      console.error("Failed to delete note:", error);
+      snackbarStore.show({ text: "Failed to delete note. Please try again." });
+    } finally {
+      syncStore.setIsSyncing(false, 500);
+    }
   };
 
   const sortNotes = () => {
