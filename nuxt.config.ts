@@ -104,8 +104,52 @@ export default defineNuxtConfig({
       ],
     },
     workbox: {
-      globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+      globPatterns: [
+        "**/*.{css,html,ico,png,svg}",
+        "_nuxt/entry.*.{js,css}",
+        "_nuxt/builds/**",
+        "manifest.webmanifest",
+      ],
+      globIgnores: ["_nuxt/*.js"],
       maximumFileSizeToCacheInBytes: 3000000, // 3MB limit
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/[^/]+\.supabase\.co\/(rest|auth)\/v1\//,
+          handler: "NetworkFirst",
+          options: {
+            cacheName: "supabase-api",
+            networkTimeoutSeconds: 5,
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        },
+        {
+          urlPattern: /\/\.netlify\/functions\/rss/,
+          handler: "StaleWhileRevalidate",
+          options: {
+            cacheName: "netlify-rss",
+            expiration: { maxAgeSeconds: 60 * 60 * 24 * 7 },
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        },
+        {
+          urlPattern: /\/\.netlify\/functions\/weather/,
+          handler: "NetworkFirst",
+          options: {
+            cacheName: "netlify-weather",
+            networkTimeoutSeconds: 5,
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        },
+        {
+          urlPattern: /\/_nuxt\/.*\.js$/,
+          handler: "CacheFirst",
+          options: {
+            cacheName: "nuxt-js-chunks",
+            expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 30 },
+            cacheableResponse: { statuses: [0, 200] },
+          },
+        },
+      ],
     },
     client: {
       installPrompt: true,
