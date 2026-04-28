@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
 import type { Database, Json } from "@/types/database.types";
 import { Filter, Tag } from "@/types/enums";
+import { mapNoteRow } from "@/utils/mappers/note";
 
 export const useNoteStore = defineStore("NoteStore", () => {
   const client = useSupabaseClient<Database>();
@@ -72,7 +73,7 @@ export const useNoteStore = defineStore("NoteStore", () => {
 
       if (error) throw error;
 
-      notes.value = (data as unknown as Note[]) || [];
+      notes.value = (data ?? []).map(mapNoteRow);
       sortNotes();
     } catch (error) {
       console.error("Failed to fetch notes:", error);
