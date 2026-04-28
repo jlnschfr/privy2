@@ -71,7 +71,7 @@ export default <Partial<Config>>{
       },
       maxWidth: {
         drawer: "18rem",
-        tags: "14rem;",
+        tags: "14rem",
       },
       transitionProperty: {
         bgColor: "background-color",
