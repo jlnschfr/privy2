@@ -36,6 +36,15 @@ This project uses Nuxt for static asset generation and Netlify for deployment, b
 - Enable the GitHub Oauth Provider in your Supabase project (Authentication -> Providers):
 - Add the needed site url (and redirect urls) in your Supabase project (Authentication -> URL Configuration):
 
+## Setup
+
+> **Warning — secret hygiene**
+> `.env` must **never** be committed to version control. It is listed in `.gitignore` for this reason.
+> If a secret is accidentally committed, rotating the key is not enough: the plaintext remains in git history.
+> You must also scrub history using a tool such as [`git filter-repo`](https://github.com/newren/git-filter-repo) and force-push all branches, then invalidate and regenerate every exposed credential.
+>
+> Copy `.env.example` to `.env` and fill in real values. Never copy real secrets back into `.env.example`.
+
 ## Build Setup
 
 ```
