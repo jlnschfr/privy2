@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { v4 as uuid } from "uuid";
-
 interface Props {
   modelValue: boolean;
 }
@@ -10,7 +8,7 @@ interface Emits {
 defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const id: Ref<string> = ref(uuid());
+const id: Ref<string> = ref(crypto.randomUUID());
 </script>
 
 <template>

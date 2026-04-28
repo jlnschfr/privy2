@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { v4 as uuid } from "uuid";
 import { createEmptyNote } from "@/utils/note";
 import type { Database, Json } from "@/types/database.types";
 import { Tag } from "@/types/enums";
@@ -30,7 +29,7 @@ export const useRssStore = defineStore("RssStore", () => {
   const add = async (url: string) => {
     syncStore.setIsSyncing(true);
     const feed: Feed = {
-      id: uuid(),
+      id: crypto.randomUUID(),
       url,
       user_id: user?.value?.sub,
       created_items: [],
@@ -196,7 +195,7 @@ export const useRssStore = defineStore("RssStore", () => {
           note.title = title;
           note.tags.push({ text: Tag.Rss });
           note.items.push({
-            id: uuid(),
+            id: crypto.randomUUID(),
             type: "Markdown",
             data: {
               text: content,

@@ -61,7 +61,6 @@
     "isomorphic-dompurify": "^3.0.0",
     "marked": "^18.0.0",
     "marked-highlight": "^2.2.4",
-    "uuid": "^14.0.0",
     "vuedraggable": "^4.1.0"
   }
 }

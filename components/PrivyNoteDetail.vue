@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { v4 as uuid } from "uuid";
-
 interface Props {
   noteId: string;
 }
@@ -59,7 +57,7 @@ function handleKeyUp(event: KeyboardEvent) {
 
 function getMarkdownTemplate(): Markdown {
   return {
-    id: uuid(),
+    id: crypto.randomUUID(),
     type: "Markdown",
     data: {
       text: "",
@@ -69,7 +67,7 @@ function getMarkdownTemplate(): Markdown {
 
 function getTaskTemplate(): Task {
   return {
-    id: uuid(),
+    id: crypto.randomUUID(),
     type: "Task",
     data: {
       text: "",
