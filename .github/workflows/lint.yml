@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "develop"]
   pull_request:
-    branches: ["main"]
+    branches: ["main", "develop"]
 
 jobs:
   build:
@@ -41,3 +41,6 @@ jobs:
 
       - name: Lint CSS
         run: npm run lint:css
+
+      - name: Build
+        run: npm run build
