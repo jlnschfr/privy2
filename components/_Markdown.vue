@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import DOMPurify from "isomorphic-dompurify";
-import debounce from "lodash.debounce";
+import { useDebounceFn } from "@vueuse/core";
 import { Marked } from "marked";
 import { useTextareaHeight } from "@/composables/textareaHeight";
 import hljs from "@/utils/syntaxHighlight";
@@ -40,7 +40,7 @@ const compiledMarkdown: ComputedRef<string> = computed(() => {
 
 watch(
   text,
-  debounce(() => {
+  useDebounceFn(() => {
     emit("update:modelValue", {
       ...props.modelValue,
       data: { text: text.value },

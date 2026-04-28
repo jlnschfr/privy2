@@ -1,21 +1,21 @@
-import debounce from "lodash.debounce";
+import { useDebounceFn } from "@vueuse/core";
 
 export function useViewport(): { isMobile: Ref<boolean> } {
-  const resizeHandler: Ref<ReturnType<typeof debounce> | undefined> = ref();
   const isMobile: Ref<boolean> = ref();
 
   function handleResize(): void {
     isMobile.value = !window.matchMedia("(min-width: 1024px)").matches;
   }
 
+  const debouncedResize = useDebounceFn(handleResize, 150);
+
   onMounted(() => {
-    resizeHandler.value = debounce(handleResize, 150);
-    window.addEventListener("resize", resizeHandler.value);
+    window.addEventListener("resize", debouncedResize);
     handleResize();
   });
 
   onUnmounted(() => {
-    window.removeEventListener("resize", resizeHandler.value);
+    window.removeEventListener("resize", debouncedResize);
   });
 
   return { isMobile };

@@ -1,10 +1,8 @@
-import debounce from "lodash.debounce";
+import { useDebounceFn } from "@vueuse/core";
 
 export function useTextareaHeight(textArea: Ref<HTMLTextAreaElement>): {
   updateTextareaHeight: () => void;
 } {
-  const resizeHandler: Ref<ReturnType<typeof debounce> | undefined> = ref();
-
   function updateTextareaHeight(): void {
     if (textArea.value) {
       if (textArea.value?.clientHeight < textArea.value?.scrollHeight) {
@@ -13,14 +11,15 @@ export function useTextareaHeight(textArea: Ref<HTMLTextAreaElement>): {
     }
   }
 
+  const debouncedResize = useDebounceFn(updateTextareaHeight, 500);
+
   onMounted(() => {
-    resizeHandler.value = debounce(updateTextareaHeight, 500);
-    window.addEventListener("resize", resizeHandler.value);
+    window.addEventListener("resize", debouncedResize);
     updateTextareaHeight();
   });
 
   onUnmounted(() => {
-    window.removeEventListener("resize", resizeHandler.value);
+    window.removeEventListener("resize", debouncedResize);
   });
 
   return { updateTextareaHeight };
