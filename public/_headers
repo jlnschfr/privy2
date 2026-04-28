@@ -1,5 +1,18 @@
 /*
+  # TODO(security): Remove 'unsafe-inline' from script-src.
+  # @nuxtjs/color-mode injects an inline script for dark/light-mode detection
+  # before hydration. Dropping 'unsafe-inline' from script-src would block
+  # that inline script and break the color-mode feature. The fix requires
+  # either (a) switching to 'strict-dynamic' with a per-request nonce
+  # (incompatible with pure SSG/static Netlify deploy) or (b) computing a
+  # SHA-256 hash of the injected script at generate time and pinning it here.
+  # Until the color-mode module exposes a stable script hash, 'unsafe-inline'
+  # is retained for script-src only. 'unsafe-inline' for style-src is
+  # intentionally kept because Tailwind/PurgeCSS and the PWA workbox runtime
+  # emit inline <style> tags during hydration.
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://hdlsghxipygwfigudzuw.supabase.co https://api.bigdatacloud.net; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), camera=(), microphone=()

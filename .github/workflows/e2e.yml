@@ -1,16 +1,18 @@
 name: E2E
 
-# Triggers on every push to develop. The job polls Netlify's API until the
-# branch deploy for this commit is `ready`, then runs Playwright against
-# the develop subdomain. We poll instead of relying on GitHub's
-# `deployment_status` events because Netlify isn't configured to post
-# those on this repo.
+# Triggers on every push to develop and main, and on PRs targeting either
+# branch. The job polls Netlify's API until the branch deploy for this commit
+# is `ready`, then runs Playwright against the appropriate subdomain. We poll
+# instead of relying on GitHub's `deployment_status` events because Netlify
+# isn't configured to post those on this repo.
 on:
   push:
-    branches: [develop]
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
 
 concurrency:
-  group: e2e-develop
+  group: e2e-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -21,7 +23,8 @@ jobs:
     env:
       NPM_CONFIG_FUND: false
       NPM_CONFIG_AUDIT: false
-      BASE_URL: https://develop--privy-notes2.netlify.app
+      NETLIFY_BRANCH: ${{ github.ref_name == 'main' && 'main' || 'develop' }}
+      BASE_URL: ${{ github.ref_name == 'main' && 'https://privy-notes2.netlify.app' || 'https://develop--privy-notes2.netlify.app' }}
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
@@ -30,17 +33,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Wait for Netlify develop deploy
+      - name: Wait for Netlify deploy
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           COMMIT_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          echo "Waiting for Netlify deploy of commit $COMMIT_SHA on branch develop..."
+          echo "Waiting for Netlify deploy of commit $COMMIT_SHA on branch $NETLIFY_BRANCH..."
           for attempt in $(seq 1 60); do
             response=$(curl -sS -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" \
-              "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys?per_page=20&branch=develop")
+              "https://api.netlify.com/api/v1/sites/$NETLIFY_SITE_ID/deploys?per_page=20&branch=$NETLIFY_BRANCH")
             state=$(echo "$response" | jq -r --arg sha "$COMMIT_SHA" \
               '[.[] | select(.commit_ref==$sha)] | first | .state // empty')
             case "$state" in
